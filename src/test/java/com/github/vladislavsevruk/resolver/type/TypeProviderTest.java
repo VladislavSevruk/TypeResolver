@@ -44,6 +44,32 @@ public class TypeProviderTest {
     private TypeVariableMapper realTypeVariableMapper = new TypeVariableMapperImpl();
 
     @Test
+    public void compareTest() {
+        TypeProvider<Short> provider1 = new TypeProvider<Short>() {};
+        TypeProvider<Short> provider2 = new TypeProvider<Short>() {};
+        Assertions.assertEquals(0, provider1.compareTo(provider2));
+    }
+
+    @Test
+    public void equalsNullTest() {
+        TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
+        Assertions.assertNotEquals(provider1, null);
+    }
+
+    @Test
+    public void equalsTest() {
+        TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
+        TypeProvider<HashMap<String, List<Integer>>> provider2 = new TypeProvider<HashMap<String, List<Integer>>>() {};
+        Assertions.assertEquals(provider1, provider2);
+    }
+
+    @Test
+    public void hashCodeTest() {
+        TypeProvider<Map<Byte, Boolean[]>> provider = new TypeProvider<Map<Byte, Boolean[]>>() {};
+        Assertions.assertEquals(provider.hashCode(), provider.getTypeMeta().hashCode());
+    }
+
+    @Test
     public void mockMapperInnerParameterizedClassTest() {
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> expectedMeta = new TypeMeta<>(HashMap.class,
@@ -71,6 +97,13 @@ public class TypeProviderTest {
     }
 
     @Test
+    public void notEqualsTest() {
+        TypeProvider<HashMap<String, Set<Number>>> provider1 = new TypeProvider<HashMap<String, Set<Number>>>() {};
+        TypeProvider<HashMap<String, Set<Double>>> provider2 = new TypeProvider<HashMap<String, Set<Double>>>() {};
+        Assertions.assertNotEquals(provider1, provider2);
+    }
+
+    @Test
     public void realMapperInnerParameterizedClassTest() {
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> expectedMeta = new TypeMeta<>(HashMap.class,
@@ -95,6 +128,12 @@ public class TypeProviderTest {
     }
 
     @Test
+    public void typeMetaCacheTest() {
+        TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
+        Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta());
+    }
+
+    @Test
     public void withoutArgumentMapperInnerParameterizedClassTest() {
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> expectedMeta = new TypeMeta<>(HashMap.class,
@@ -115,33 +154,6 @@ public class TypeProviderTest {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> actualMeta = new TypeProvider<Long>() {}.getTypeMeta();
         Assertions.assertEquals(expectedMeta, actualMeta);
-    }
-
-    @Test
-    public void equalsTest() {
-        TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
-        TypeProvider<HashMap<String, List<Integer>>> provider2 = new TypeProvider<HashMap<String, List<Integer>>>() {};
-        Assertions.assertEquals(provider1, provider2);
-    }
-
-    @Test
-    public void notEqualsTest() {
-        TypeProvider<HashMap<String, Set<Number>>> provider1 = new TypeProvider<HashMap<String, Set<Number>>>() {};
-        TypeProvider<HashMap<String, Set<Double>>> provider2 = new TypeProvider<HashMap<String, Set<Double>>>() {};
-        Assertions.assertNotEquals(provider1, provider2);
-    }
-
-    @Test
-    public void hashCodeTest() {
-        TypeProvider<Map<Byte, Boolean[]>> provider = new TypeProvider<Map<Byte, Boolean[]>>() {};
-        Assertions.assertEquals(provider.hashCode(), provider.getTypeMeta().hashCode());
-    }
-
-    @Test
-    public void compareTest() {
-        TypeProvider<Short> provider1 = new TypeProvider<Short>() {};
-        TypeProvider<Short> provider2 = new TypeProvider<Short>() {};
-        Assertions.assertEquals(0, provider1.compareTo(provider2));
     }
 
     @SuppressWarnings("unchecked")
