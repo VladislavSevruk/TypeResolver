@@ -29,22 +29,47 @@ import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 import java.lang.reflect.TypeVariable;
 
 /**
- * Class that used for generating type meta for generic classes. Should be overridden for providing values. Uses similar
- * principle as e.g. Jackson mapper lib. <br> E.g., to provide meta data for list of strings properly anonymous
- * descendant of <code>TypeProvider</code> can be used: <br>
+ * Class that used for generating type meta for generic classes. Should be overridden for providing values. Class has
+ * similar principle as Jackson mapper lib and is based on ideas from
+ * <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">http://gafter.blogspot.com/2006/12/super-type-tokens.html</a>
+ * <br>E.g., to provide meta data for list of strings properly anonymous descendant of <code>TypeProvider</code> can be
+ * used: <br>
  * <code>new TypeProvider&lt;List&lt;String&gt;&gt;() {}</code>
  *
  * @param <T> actual type.
  */
-@SuppressWarnings({ "java:S2326", "java:S1610", "unused" })
-public abstract class TypeProvider<T> {
+public abstract class TypeProvider<T> implements Comparable<TypeProvider<T>> {
+
+    private TypeMeta<?> typeMeta;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(TypeProvider<T> o) {
+        return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof TypeProvider) {
+            return getTypeMeta().equals(((TypeProvider) o).getTypeMeta());
+        }
+        return false;
+    }
 
     /**
      * Returns type meta for this instance.
      */
     @SuppressWarnings("java:S1452")
     public TypeMeta<?> getTypeMeta() {
-        return getTypeMeta(ResolvingContextManager.getContext().getTypeVariableMapper());
+        if (typeMeta == null) {
+            typeMeta = resolveGenericParameter(ResolvingContextManager.getContext().getTypeVariableMapper());
+        }
+        return typeMeta;
     }
 
     /**
@@ -55,6 +80,21 @@ public abstract class TypeProvider<T> {
      */
     @SuppressWarnings("java:S1452")
     public TypeMeta<?> getTypeMeta(TypeVariableMapper typeVariableMapper) {
+        if (typeMeta == null) {
+            typeMeta = resolveGenericParameter(typeVariableMapper);
+        }
+        return typeMeta;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return getTypeMeta().hashCode();
+    }
+
+    private TypeMeta<?> resolveGenericParameter(TypeVariableMapper typeVariableMapper) {
         TypeVariable<? extends Class<?>> typeVariable = TypeProvider.class.getTypeParameters()[0];
         return typeVariableMapper.mapTypeVariables(getClass()).getTypeVariableMap(TypeProvider.class)
                 .getActualType(typeVariable);
