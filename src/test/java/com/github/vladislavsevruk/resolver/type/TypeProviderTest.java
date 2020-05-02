@@ -53,7 +53,7 @@ public class TypeProviderTest {
     @Test
     public void equalsNullTest() {
         TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
-        Assertions.assertNotEquals(null, provider1);
+        Assertions.assertFalse(provider1.equals(null));
     }
 
     @Test
@@ -61,6 +61,18 @@ public class TypeProviderTest {
         TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
         TypeProvider<HashMap<String, List<Integer>>> provider2 = new TypeProvider<HashMap<String, List<Integer>>>() {};
         Assertions.assertEquals(provider1, provider2);
+    }
+
+    @Test
+    public void getTypeMetaCacheTest() {
+        TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
+        Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta());
+    }
+
+    @Test
+    public void getTypeMetaWithMapperCacheTest() {
+        TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
+        Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta(realTypeVariableMapper));
     }
 
     @Test
@@ -125,12 +137,6 @@ public class TypeProviderTest {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> actualMeta = new TypeProvider<Long>() {}.getTypeMeta(realTypeVariableMapper);
         Assertions.assertEquals(expectedMeta, actualMeta);
-    }
-
-    @Test
-    public void typeMetaCacheTest() {
-        TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
-        Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta());
     }
 
     @Test
