@@ -53,7 +53,7 @@ public class TypeProviderTest {
     @Test
     public void equalsNullTest() {
         TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
-        Assertions.assertNotEquals(provider1, null);
+        Assertions.assertNotEquals(null, provider1);
     }
 
     @Test
