@@ -4,16 +4,16 @@
 
 # Java Type Resolver
 This utility library helps to determine real types for generics, arrays, wildcards and other complex types on runtime. 
-Receiving type for generics can be a problem because of Java doesn't store information about generic types parameters 
-on runtime so this library helps to solve this problem.
+Receiving type for generics can be a problem because of [Java doesn't store information about generic types parameters 
+on runtime](https://docs.oracle.com/javase/tutorial/java/generics/erasure.html) so this library helps to solve this problem.
 
 * [Getting started](#getting-started)
   * [Maven](#maven)
   * [Gradle](#gradle)
 * [Main entities](#main-entities)
 * [Usage](#usage)
-  * [Resolve field types](#resolve-field-types)
-  * [Resolve methods arguments and return types](#resolve-methods-arguments-and-return-types)
+  * [Determine field types](#determine-field-types)
+  * [Determine methods arguments and return types](#determine-methods-arguments-and-return-types)
 * [License](#license)
 
 ## Getting started
@@ -34,7 +34,7 @@ implementation 'com.github.vladislavsevruk:type-resolver:1.0.0'
 
 ## Main entities
 * [TypeMeta](src/main/java/com/github/vladislavsevruk/resolver/type/TypeMeta.java) represents metadata about type and its 
-type parameters for generic types and arrays.  
+type parameters for generics and arrays.  
 Examples of resulted __TypeMeta__ structure for different cases:
   - __List&lt;Long&gt;__:
   ```
@@ -48,10 +48,9 @@ Examples of resulted __TypeMeta__ structure for different cases:
   ```
   { type: Map[], genericTypes: [{ type: Map, genericTypes: [{ type: String }, { type: Integer }]}]}
   ```
-  - etc.
 
-* [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use methods for 
-generating __TypeMeta__ for generic types. 
+* [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use methods 
+for generating __TypeMeta__ for generics.
   - with __TypeProvider__:
   ```
   TypeMeta<?> typeMeta = new TypeProvider<Map<String, List<Integer>>> () {}.getTypeMeta();
@@ -74,16 +73,17 @@ used to determine __TypeMeta__ for return and arguments types of provided method
 of this interface.
 
 ## Usage
-### Resolve field types
-For resolving fields type can be used [FieldTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java).
+### Determine field types
+To determine fields type [FieldTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java)
+can be used.
 ```
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
 Field fieldToResolve = ...; // get class field to determine it's type
 Class<?> classWhereFieldDeclared = ...; // get class where field declared
 TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(classWhereFieldDeclared, fieldToResolve);
 ```
-or with descendant of [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) for classes 
-that use generic parameters at its definition.
+Also you can use subclass of [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) 
+for classes that use generic parameters at its definition.
 ```
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
 Field fieldToResolve = ...; // get class field to determine it's type
@@ -91,8 +91,9 @@ TypeProvider<?> typeProvider = new TypeProvider<GenericClass<Parameter>>() {}; /
 TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(typeProvider, fieldToResolve);
 ```
 
-### Resolve methods arguments and return types
-For resolving arguments or return type of method can be used [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java).
+### Determine methods arguments and return types
+To determine arguments or return type of method [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java)
+can be used.
 ```
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
 Method methodToResolve = ...; // get method to determine it's return and arguments types
@@ -101,8 +102,8 @@ TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(classWhe
 List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
         .getParameterTypes(classWhereMethodDeclared, methodToResolve);
 ```
-or with descendant of [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) for classes 
-that use generic parameters at its definition.
+Also you can use subclass of [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) 
+for classes that use generic parameters at its definition.
 ```
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
 Method methodToResolve = ...; // get method to determine it's return and arguments types
