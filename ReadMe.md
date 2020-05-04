@@ -36,17 +36,17 @@ implementation 'com.github.vladislavsevruk:type-resolver:1.0.0'
 * [TypeMeta](src/main/java/com/github/vladislavsevruk/resolver/type/TypeMeta.java) represents metadata about type and its 
 type parameters for generics and arrays.  
 Examples of resulted __TypeMeta__ structure for different cases:
-  - __List&lt;Long&gt;__:
+  - __List&lt;? extends Number&gt;__:
   ```
-  { type: List, genericTypes: [{ type: Long }]}
+  { type: List, wildcard: false, genericTypes: [{ type: Number, wildcard: true }]}
   ```
   - __long[]__:
   ```
-  { type: long[], genericTypes: [{ type: long }]}
+  { type: long[], wildcard: false, genericTypes: [{ type: long, wildcard: false }]}
   ```
   - __Map&lt;String, Integer&gt;[]__:
   ```
-  { type: Map[], genericTypes: [{ type: Map, genericTypes: [{ type: String }, { type: Integer }]}]}
+  { type: Map[], wildcard: false, genericTypes: [{ type: Map, wildcard: false, genericTypes: [{ type: String, wildcard: false }, { type: Integer, wildcard: false }]}]}
   ```
 
 * [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use methods 
