@@ -38,15 +38,15 @@ type parameters for generics and arrays.
 Examples of resulted __TypeMeta__ structure for different cases:
   - __List&lt;? extends Number&gt;__:
   ```
-  { type: List, wildcard: false, genericTypes: [{ type: Number, wildcard: true }]}
+  { type: List, wildcard: false, genericTypes: [{ type: Number, wildcard: true, genericTypes:[] }] }
   ```
   - __long[]__:
   ```
-  { type: long[], wildcard: false, genericTypes: [{ type: long, wildcard: false }]}
+  { type: long[], wildcard: false, genericTypes: [{ type: long, wildcard: false, genericTypes:[] }] }
   ```
   - __Map&lt;String, Integer&gt;[]__:
   ```
-  { type: Map[], wildcard: false, genericTypes: [{ type: Map, wildcard: false, genericTypes: [{ type: String, wildcard: false }, { type: Integer, wildcard: false }]}]}
+  { type: Map[], wildcard: false, genericTypes: [{ type: Map, wildcard: false, genericTypes: [{ type: String, wildcard: false, genericTypes:[] }, { type: Integer, wildcard: false, genericTypes:[] }] }] }
   ```
 
 * [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use methods 
@@ -74,43 +74,93 @@ of this interface.
 
 ## Usage
 ### Determine field types
-To determine fields type [FieldTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java)
-can be used.
+Let's assume that we have following generic class:
+```
+public class Cake<T> {
+    private List<String> ingredients;
+    private T filling;
+}
+```
+
+and we need to determine its fields type. We can use [FieldTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java)
+for this purpose:
 ```
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
-Field fieldToResolve = ...; // get class field to determine it's type
-Class<?> classWhereFieldDeclared = ...; // get class where field declared
-TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(classWhereFieldDeclared, fieldToResolve);
+Field fieldToResolve = Cake.class.getDeclaredField("ingredients"); // get class field to determine it's type
+TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(Cake.class, fieldToResolve);
 ```
-Also you can use subclass of [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) 
-for classes that use generic parameters at its definition.
+
+Resulted __TypeMeta__ will have following structure:
+```
+{ type: List, wildcard: false, genericTypes: [{ type: String, wildcard: false, genericTypes:[] }] }
+```
+
+If we need to determine type of field that use generic parameters we should use subclass of 
+[TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
-Field fieldToResolve = ...; // get class field to determine it's type
-TypeProvider<?> typeProvider = new TypeProvider<GenericClass<Parameter>>() {}; // type provider with generic class where field declared
+Field fieldToResolve = Cake.class.getDeclaredField("filling"); // get class field to determine it's type
+TypeProvider<?> typeProvider = new TypeProvider<Cake<String>>() {}; // type provider with generic class where field declared
 TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(typeProvider, fieldToResolve);
 ```
 
+And as a result will have following __TypeMeta__ structure:
+```
+{ type: String, wildcard: false, genericTypes:[] }
+```
+
 ### Determine methods arguments and return types
-To determine arguments or return type of method [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java)
-can be used.
+Let's assume that our generic class have following methods:
+```
+public class Cake<T> {
+    ...
+    public List<String> getIngredients() {
+        ...
+    }
+
+    public void setFilling(T filling) {
+        ...
+    }
+}
+```
+
+To determine their arguments or return types we can use [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java):
 ```
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
-Method methodToResolve = ...; // get method to determine it's return and arguments types
-Class<?> classWhereMethodDeclared = ...; // get class where method declared
-TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(classWhereMethodDeclared, methodToResolve);
-List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
-        .getParameterTypes(classWhereMethodDeclared, methodToResolve);
+Method methodToResolve = Cake.class.getDeclaredMethod("getIngredients"); // get method to determine it's return and arguments types
+TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(Cake.class, methodToResolve);
+List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver.getParameterTypes(Cake.class, methodToResolve);
 ```
-Also you can use subclass of [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) 
-for classes that use generic parameters at its definition.
+
+Resulted __TypeMeta__ will have following structures:
+  - return type:
+  ```
+  { type: List, wildcard: false, genericTypes: [{ type: String, wildcard: false, genericTypes:[] }]}
+  ```
+  - argument types:
+  ```
+  []
+  ```
+
+If we need to determine types of method that use generic parameters we should use subclass of 
+[TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
-Method methodToResolve = ...; // get method to determine it's return and arguments types
-TypeProvider<?> typeProvider = new TypeProvider<GenericClass<Parameter>>() {}; // type provider with generic class where method declared
+Method methodToResolve = Cake.class.getDeclaredMethod("setFilling", Object.class); // get method to determine it's return and arguments types
+TypeProvider<?> typeProvider = new TypeProvider<Cake<String>>() {}; // type provider with generic class where method declared
 TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(typeProvider, methodToResolve);
 List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver.getParameterTypes(typeProvider, methodToResolve);
 ```
+
+And as a result will have following __TypeMeta__ structures:
+  - return type:
+  ```
+  { type: void, wildcard: false, genericTypes: [] }
+  ```
+  - argument types:
+  ```
+  [{ type: String, wildcard: false, genericTypes:[] }]
+  ```
 
 ## License
 This project is licensed under the MIT License, you can read the full text [here](LICENSE).
