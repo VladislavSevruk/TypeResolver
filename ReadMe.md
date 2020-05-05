@@ -53,7 +53,7 @@ Examples of resulted __TypeMeta__ structure for different cases:
 for generating __TypeMeta__ for generics.
   - with __TypeProvider__:
   ```
-  TypeMeta<?> typeMeta = new TypeProvider<Map<String, List<Integer>>> () {}.getTypeMeta();
+  TypeMeta<?> typeMeta = new TypeProvider<Map<String, List<Integer>>>() {}.getTypeMeta();
   ```
   - without __TypeProvider__:
   ```
