@@ -45,19 +45,19 @@ implementation 'com.github.vladislavsevruk:type-resolver:1.0.0'
 parameters for generics and arrays.  
 Examples of resulted __TypeMeta__ structure for different cases:
   - __List&lt;? extends Number&gt;__:
-  ```
+  ```javascript
   { type: List, wildcard: false, genericTypes: [
       { type: Number, wildcard: true, genericTypes:[] }
   ] }
   ```
   - __long[]__:
-  ```
+  ```javascript
   { type: long[], wildcard: false, genericTypes: [
       { type: long, wildcard: false, genericTypes:[] }
   ] }
   ```
   - __Map&lt;String, Integer&gt;[]__:
-  ```
+  ```javascript
   { type: Map[], wildcard: false, genericTypes: [
       { type: Map, wildcard: false, genericTypes: [
           { type: String, wildcard: false, genericTypes:[] },
@@ -70,11 +70,11 @@ Examples of resulted __TypeMeta__ structure for different cases:
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use methods 
 for generating __TypeMeta__ for generics.
   - With __TypeProvider__:
-  ```java
+  ```kotlin
   TypeMeta<?> typeMeta = new TypeProvider<Map<String, List<Integer>>>() {}.getTypeMeta();
   ```
   - Without __TypeProvider__:
-  ```java
+  ```kotlin
   TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(String.class);
   TypeMeta<?> deepInnerTypeMeta = new TypeMeta<>(Integer.class);
   TypeMeta<?>[] deepInnerTypeMetas = new TypeMeta<?>[] { deepInnerTypeMeta };
@@ -105,7 +105,7 @@ public class Cake<T> {
 
 and we need to determine its fields type. We can use [FieldTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java)
 for this purpose:
-```java
+```kotlin
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
 // get class field to determine it's type
 Field fieldToResolve = Cake.class.getDeclaredField("ingredients");
@@ -113,7 +113,7 @@ TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(Cake.class, fieldToRe
 ```
 
 Resulted __TypeMeta__ will have following structure:
-```
+```javascript
 { type: List, wildcard: false, genericTypes: [
     { type: String, wildcard: false, genericTypes:[] }
 ] }
@@ -121,7 +121,7 @@ Resulted __TypeMeta__ will have following structure:
 
 If we need to determine type of field that use generic parameters we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
-```java
+```kotlin
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
 // get class field to determine it's type
 Field fieldToResolve = Cake.class.getDeclaredField("filling");
@@ -132,7 +132,7 @@ TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(typeProvider, fieldTo
 ```
 
 And as a result will have following __TypeMeta__ structure:
-```
+```javascript
 { type: String, wildcard: false, genericTypes:[] }
 ```
 
@@ -152,7 +152,7 @@ public class Cake<T> {
 ```
 
 To determine their arguments or return types we can use [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java):
-```java
+```kotlin
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
 // get method to determine it's return and arguments types
 Method methodToResolve = Cake.class.getDeclaredMethod("getIngredients");
@@ -163,19 +163,19 @@ List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
 
 Resulted __TypeMeta__ will have following structures:
   - return type:
-  ```
+  ```javascript
   { type: List, wildcard: false, genericTypes: [
       { type: String, wildcard: false, genericTypes:[] }
   ] }
   ```
   - argument types:
-  ```
+  ```javascript
   []
   ```
 
 If we need to determine types of method that use generic parameters we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
-```java
+```kotlin
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
 // get method to determine it's return and arguments types
 Method methodToResolve = Cake.class.getDeclaredMethod("setFilling", Object.class);
@@ -189,11 +189,11 @@ List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
 
 And as a result will have following __TypeMeta__ structures:
   - return type:
-  ```
+  ```javascript
   { type: void, wildcard: false, genericTypes: [] }
   ```
   - argument types:
-  ```
+  ```javascript
   [{ type: String, wildcard: false, genericTypes:[] }]
   ```
 
