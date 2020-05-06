@@ -26,7 +26,7 @@ To add library to your project perform next steps:
 
 ### Maven
 Add the following dependency to your pom.xml:
-```
+```xml
 <dependency>
       <groupId>com.github.vladislavsevruk</groupId>
       <artifactId>type-resolver</artifactId>
@@ -35,7 +35,7 @@ Add the following dependency to your pom.xml:
 ```
 ### Gradle
 Add the following dependency to your build.gradle:
-```
+```groovy
 implementation 'com.github.vladislavsevruk:type-resolver:1.0.0'
 ```
 
@@ -70,11 +70,11 @@ Examples of resulted __TypeMeta__ structure for different cases:
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use methods 
 for generating __TypeMeta__ for generics.
   - With __TypeProvider__:
-  ```
+  ```java
   TypeMeta<?> typeMeta = new TypeProvider<Map<String, List<Integer>>>() {}.getTypeMeta();
   ```
   - Without __TypeProvider__:
-  ```
+  ```java
   TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(String.class);
   TypeMeta<?> deepInnerTypeMeta = new TypeMeta<>(Integer.class);
   TypeMeta<?>[] deepInnerTypeMetas = new TypeMeta<?>[] { deepInnerTypeMeta };
@@ -96,7 +96,7 @@ of this interface.
 ## Usage
 ### Determine field types
 Let's assume that we have following generic class:
-```
+```java
 public class Cake<T> {
     private List<String> ingredients;
     private T filling;
@@ -105,7 +105,7 @@ public class Cake<T> {
 
 and we need to determine its fields type. We can use [FieldTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java)
 for this purpose:
-```
+```java
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
 // get class field to determine it's type
 Field fieldToResolve = Cake.class.getDeclaredField("ingredients");
@@ -121,11 +121,12 @@ Resulted __TypeMeta__ will have following structure:
 
 If we need to determine type of field that use generic parameters we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
-```
+```java
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
 // get class field to determine it's type
 Field fieldToResolve = Cake.class.getDeclaredField("filling");
 // type provider with generic class where field declared
+// we use String as Cake's type parameter for this example
 TypeProvider<?> typeProvider = new TypeProvider<Cake<String>>() {};
 TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(typeProvider, fieldToResolve);
 ```
@@ -137,7 +138,7 @@ And as a result will have following __TypeMeta__ structure:
 
 ### Determine methods arguments and return types
 Let's assume that our generic class have following methods:
-```
+```java
 public class Cake<T> {
     ...
     public List<String> getIngredients() {
@@ -151,7 +152,7 @@ public class Cake<T> {
 ```
 
 To determine their arguments or return types we can use [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java):
-```
+```java
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
 // get method to determine it's return and arguments types
 Method methodToResolve = Cake.class.getDeclaredMethod("getIngredients");
@@ -174,11 +175,12 @@ Resulted __TypeMeta__ will have following structures:
 
 If we need to determine types of method that use generic parameters we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
-```
+```java
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
 // get method to determine it's return and arguments types
 Method methodToResolve = Cake.class.getDeclaredMethod("setFilling", Object.class);
 // type provider with generic class where method declared
+// we use String as Cake's type parameter for this example
 TypeProvider<?> typeProvider = new TypeProvider<Cake<String>>() {};
 TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(typeProvider, methodToResolve);
 List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
