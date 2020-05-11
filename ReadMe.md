@@ -4,7 +4,7 @@
 
 # Java Type Resolver
 This utility library helps to determine real types for generics, arrays, wildcards and other complex types on runtime. 
-Receiving type for generics can be a problem because of [Java doesn't store information about generic types parameters 
+Receiving type for generics can be a problem because of [Java doesn't store information about generic type parameters 
 on runtime](https://docs.oracle.com/javase/tutorial/java/generics/erasure.html) so this library helps to solve this problem.
 
 ## Table of contents
@@ -90,7 +90,7 @@ of this interface.
 
 ### ExecutableTypeResolver
 [ExecutableTypeResolver](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolver.java) can be 
-used to determine __TypeMeta__ for return and arguments types of provided method. Library has [default implementation](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java) 
+used to determine __TypeMeta__ for return and argument types of provided method. Library has [default implementation](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java) 
 of this interface.
 
 ## Usage
@@ -107,7 +107,7 @@ and we need to determine its fields type. We can use [FieldTypeResolverImpl](src
 for this purpose:
 ```kotlin
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
-// get class field to determine it's type
+// get class field to determine its type
 Field fieldToResolve = Cake.class.getDeclaredField("ingredients");
 TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(Cake.class, fieldToResolve);
 ```
@@ -123,7 +123,7 @@ If we need to determine type of field that use generic parameter(s) we may use s
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```kotlin
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
-// get class field to determine it's type
+// get class field to determine its type
 Field fieldToResolve = Cake.class.getDeclaredField("filling");
 // create type provider with generic class where field declared
 // we use String as Cake's type parameter for this example
@@ -154,7 +154,7 @@ public class Cake<T> {
 To determine their argument or return types we can use [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java):
 ```kotlin
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
-// get method to determine it's return and argument types
+// get method to determine its return and argument types
 Method methodToResolve = Cake.class.getDeclaredMethod("getIngredients");
 TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(Cake.class, methodToResolve);
 List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
@@ -177,7 +177,7 @@ If we need to determine types of method that uses generic parameters we may use 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```kotlin
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
-// get method to determine it's return and argument types
+// get method to determine its return and argument types
 Method methodToResolve = Cake.class.getDeclaredMethod("setFilling", Object.class);
 // create type provider with generic class where field declared
 // we use String as Cake's type parameter for this example
