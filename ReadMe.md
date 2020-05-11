@@ -161,7 +161,7 @@ List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
         .getParameterTypes(Cake.class, methodToResolve);
 ```
 
-Resulted __TypeMeta__ will have following structures:
+Resulted __TypeMeta__ items will have following structures:
   - return type:
   ```javascript
   { type: List, wildcard: false, genericTypes: [
@@ -187,7 +187,7 @@ List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
         .getParameterTypes(typeProvider, methodToResolve);
 ```
 
-And as a result __TypeMeta__ will have following structure:
+And as a result __TypeMeta__ items will have following structure:
   - return type:
   ```javascript
   { type: void, wildcard: false, genericTypes: [] }
