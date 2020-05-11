@@ -42,7 +42,7 @@ implementation 'com.github.vladislavsevruk:type-resolver:1.0.0'
 ## Main entities
 ### TypeMeta
 [TypeMeta](src/main/java/com/github/vladislavsevruk/resolver/type/TypeMeta.java) represents metadata about type 
-parameters for generics and arrays.  
+parameter(s) for generics and arrays.  
 Examples of resulted __TypeMeta__ structure for different cases:
   - __List&lt;? extends Number&gt;__:
   ```javascript
@@ -67,7 +67,7 @@ Examples of resulted __TypeMeta__ structure for different cases:
   ```
 
 ### TypeProvider
-[TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use methods 
+[TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java) provides easy to use method 
 for generating __TypeMeta__ for generics.
   - With __TypeProvider__:
   ```kotlin
@@ -162,18 +162,18 @@ List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
 ```
 
 Resulted __TypeMeta__ items will have following structures:
-  - return type:
+  - Return type (_methodReturnTypeMeta_):
   ```javascript
   { type: List, wildcard: false, genericTypes: [
       { type: String, wildcard: false, genericTypes:[] }
   ] }
   ```
-  - argument types:
+  - Argument types (_methodArgumentsTypeMetaList_):
   ```javascript
   []
   ```
 
-If we need to determine types of method that use generic parameters we may use subclass of 
+If we need to determine types of method that uses generic parameters we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```kotlin
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
@@ -188,11 +188,11 @@ List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
 ```
 
 And as a result __TypeMeta__ items will have following structure:
-  - return type:
+  - Return type (_methodReturnTypeMeta_):
   ```javascript
   { type: void, wildcard: false, genericTypes: [] }
   ```
-  - argument types:
+  - Argument types (_methodArgumentsTypeMetaList_):
   ```javascript
   [{ type: String, wildcard: false, genericTypes:[] }]
   ```
