@@ -18,7 +18,7 @@ on runtime](https://docs.oracle.com/javase/tutorial/java/generics/erasure.html) 
   * [ExecutableTypeResolver](#executabletyperesolver)
 * [Usage](#usage)
   * [Determine field type](#determine-field-type)
-  * [Determine method arguments and return types](#determine-method-arguments-and-return-types)
+  * [Determine method argument and return types](#determine-method-argument-and-return-types)
 * [License](#license)
 
 ## Getting started
@@ -136,7 +136,7 @@ And as a result __TypeMeta__ will have following structure:
 { type: String, wildcard: false, genericTypes:[] }
 ```
 
-### Determine method arguments and return types
+### Determine method argument and return types
 Let's assume that our generic class have following methods:
 ```java
 public class Cake<T> {
@@ -151,10 +151,10 @@ public class Cake<T> {
 }
 ```
 
-To determine their arguments or return types we can use [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java):
+To determine their argument or return types we can use [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java):
 ```kotlin
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
-// get method to determine it's return and arguments types
+// get method to determine it's return and argument types
 Method methodToResolve = Cake.class.getDeclaredMethod("getIngredients");
 TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(Cake.class, methodToResolve);
 List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
@@ -177,7 +177,7 @@ If we need to determine types of method that use generic parameters we may use s
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```kotlin
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
-// get method to determine it's return and arguments types
+// get method to determine it's return and argument types
 Method methodToResolve = Cake.class.getDeclaredMethod("setFilling", Object.class);
 // create type provider with generic class where field declared
 // we use String as Cake's type parameter for this example
