@@ -17,8 +17,8 @@ on runtime](https://docs.oracle.com/javase/tutorial/java/generics/erasure.html) 
   * [FieldTypeResolver](#fieldtyperesolver)
   * [ExecutableTypeResolver](#executabletyperesolver)
 * [Usage](#usage)
-  * [Determine field types](#determine-field-types)
-  * [Determine methods arguments and return types](#determine-methods-arguments-and-return-types)
+  * [Determine field type](#determine-field-type)
+  * [Determine method arguments and return types](#determine-method-arguments-and-return-types)
 * [License](#license)
 
 ## Getting started
@@ -94,7 +94,7 @@ used to determine __TypeMeta__ for return and arguments types of provided method
 of this interface.
 
 ## Usage
-### Determine field types
+### Determine field type
 Let's assume that we have following generic class:
 ```java
 public class Cake<T> {
@@ -119,24 +119,24 @@ Resulted __TypeMeta__ will have following structure:
 ] }
 ```
 
-If we need to determine type of field that use generic parameters we may use subclass of 
+If we need to determine type of field that use generic parameter(s) we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```kotlin
 FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
 // get class field to determine it's type
 Field fieldToResolve = Cake.class.getDeclaredField("filling");
-// type provider with generic class where field declared
+// create type provider with generic class where field declared
 // we use String as Cake's type parameter for this example
 TypeProvider<?> typeProvider = new TypeProvider<Cake<String>>() {};
 TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(typeProvider, fieldToResolve);
 ```
 
-And as a result will have following __TypeMeta__ structure:
+And as a result __TypeMeta__ will have following structure:
 ```javascript
 { type: String, wildcard: false, genericTypes:[] }
 ```
 
-### Determine methods arguments and return types
+### Determine method arguments and return types
 Let's assume that our generic class have following methods:
 ```java
 public class Cake<T> {
@@ -179,7 +179,7 @@ If we need to determine types of method that use generic parameters we may use s
 ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
 // get method to determine it's return and arguments types
 Method methodToResolve = Cake.class.getDeclaredMethod("setFilling", Object.class);
-// type provider with generic class where method declared
+// create type provider with generic class where field declared
 // we use String as Cake's type parameter for this example
 TypeProvider<?> typeProvider = new TypeProvider<Cake<String>>() {};
 TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(typeProvider, methodToResolve);
@@ -187,7 +187,7 @@ List<TypeMeta<?>> methodArgumentsTypeMetaList = executableTypeResolver
         .getParameterTypes(typeProvider, methodToResolve);
 ```
 
-And as a result will have following __TypeMeta__ structures:
+And as a result __TypeMeta__ will have following structure:
   - return type:
   ```javascript
   { type: void, wildcard: false, genericTypes: [] }
