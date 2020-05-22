@@ -83,6 +83,11 @@ publishing {
                         email = 'vladislavsevruk@gmail.com'
                     }
                 }
+                scm {
+                    connection = 'scm:git:git://VladislavSevruk/TypeResolver.git'
+                    developerConnection = 'scm:git:ssh://VladislavSevruk/TypeResolver.git'
+                    url = 'https://github.com/VladislavSevruk/TypeResolver/tree/master'
+                }
             }
         }
     }
