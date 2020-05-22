@@ -35,12 +35,51 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 public class TypeProviderTest {
 
     private TypeVariableMapper realTypeVariableMapper = new TypeVariableMapperImpl();
+
+    @Test
+    public void compareTest() {
+        TypeProvider<Short> provider1 = new TypeProvider<Short>() {};
+        TypeProvider<Short> provider2 = new TypeProvider<Short>() {};
+        Assertions.assertEquals(0, provider1.compareTo(provider2));
+    }
+
+    @Test
+    public void equalsNullTest() {
+        TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
+        Assertions.assertFalse(provider1.equals(null));
+    }
+
+    @Test
+    public void equalsTest() {
+        TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
+        TypeProvider<HashMap<String, List<Integer>>> provider2 = new TypeProvider<HashMap<String, List<Integer>>>() {};
+        Assertions.assertEquals(provider1, provider2);
+    }
+
+    @Test
+    public void getTypeMetaCacheTest() {
+        TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
+        Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta());
+    }
+
+    @Test
+    public void getTypeMetaWithMapperCacheTest() {
+        TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
+        Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta(realTypeVariableMapper));
+    }
+
+    @Test
+    public void hashCodeTest() {
+        TypeProvider<Map<Byte, Boolean[]>> provider = new TypeProvider<Map<Byte, Boolean[]>>() {};
+        Assertions.assertEquals(provider.hashCode(), provider.getTypeMeta().hashCode());
+    }
 
     @Test
     public void mockMapperInnerParameterizedClassTest() {
@@ -67,6 +106,13 @@ public class TypeProviderTest {
         TypeVariableMapper mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
         TypeMeta<?> actualMeta = new TypeProvider<Long>() {}.getTypeMeta(mockTypeVariableMapper);
         Assertions.assertEquals(expectedMeta, actualMeta);
+    }
+
+    @Test
+    public void notEqualsTest() {
+        TypeProvider<HashMap<String, Set<Number>>> provider1 = new TypeProvider<HashMap<String, Set<Number>>>() {};
+        TypeProvider<HashMap<String, Set<Double>>> provider2 = new TypeProvider<HashMap<String, Set<Double>>>() {};
+        Assertions.assertNotEquals(provider1, provider2);
     }
 
     @Test
