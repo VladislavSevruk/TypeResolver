@@ -45,20 +45,20 @@ import java.lang.reflect.TypeVariable;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class GenericArrayTypeResolverTest {
+class GenericArrayTypeResolverTest {
 
     private GenericArrayTypeResolver realGenericArrayTypeResolver = new GenericArrayTypeResolver(
             new TypeResolverPickerImpl());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(Type type, Boolean expectedValue) {
+    void canResolveTest(Type type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realGenericArrayTypeResolver.canResolve(type));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveGenericArrayTypeRealContextTest() {
+    void resolveGenericArrayTypeRealContextTest() {
         TypeVariable typeVariable = Mockito.mock(TypeVariable.class);
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
         Mockito.when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[]{ typeVariable });
@@ -76,7 +76,7 @@ public class GenericArrayTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveGenericArrayTypeTest() {
+    void resolveGenericArrayTypeTest() {
         GenericArrayType genericArrayType = Mockito.mock(GenericArrayType.class);
         Type type = Mockito.mock(Type.class);
         Mockito.when(genericArrayType.getGenericComponentType()).thenReturn(type);

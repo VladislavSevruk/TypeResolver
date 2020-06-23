@@ -32,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.lang.reflect.TypeVariable;
 
 @ExtendWith(MockitoExtension.class)
-public class TypeVariableMapTest {
+class TypeVariableMapTest {
 
     private TypeMeta<?> typeMeta1 = new TypeMeta<>(String.class);
     private TypeMeta<?> typeMeta2 = new TypeMeta<>(Byte.class);
@@ -44,19 +44,19 @@ public class TypeVariableMapTest {
     private TypeVariable<? extends Class<?>> typeVariable3;
 
     @Test
-    public void mapNotPresentTypeVariableEmptyMapTest() {
+    void mapNotPresentTypeVariableEmptyMapTest() {
         Assertions.assertNull(new TypeVariableMap().getActualType(typeVariable1));
     }
 
     @Test
-    public void mapNotPresentTypeVariableNonEmptyMapTest() {
+    void mapNotPresentTypeVariableNonEmptyMapTest() {
         TypeVariableMap typeVariableMap = new TypeVariableMap();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         Assertions.assertNull(new TypeVariableMap().getActualType(typeVariable2));
     }
 
     @Test
-    public void mapNotPresentTypeVariableSeveralItemsMapTest() {
+    void mapNotPresentTypeVariableSeveralItemsMapTest() {
         TypeVariableMap typeVariableMap = new TypeVariableMap();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         typeVariableMap.addTypeVariable(typeVariable2, typeMeta2);
@@ -64,19 +64,19 @@ public class TypeVariableMapTest {
     }
 
     @Test
-    public void mapNullTypeVariableEmptyMapTest() {
+    void mapNullTypeVariableEmptyMapTest() {
         Assertions.assertNull(new TypeVariableMap().getActualType(null));
     }
 
     @Test
-    public void mapNullTypeVariableNonEmptyMapTest() {
+    void mapNullTypeVariableNonEmptyMapTest() {
         TypeVariableMap typeVariableMap = new TypeVariableMap();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         Assertions.assertNull(typeVariableMap.getActualType(null));
     }
 
     @Test
-    public void mapNullTypeVariableSeveralItemsMapTest() {
+    void mapNullTypeVariableSeveralItemsMapTest() {
         TypeVariableMap typeVariableMap = new TypeVariableMap();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         typeVariableMap.addTypeVariable(typeVariable2, typeMeta2);
@@ -84,14 +84,14 @@ public class TypeVariableMapTest {
     }
 
     @Test
-    public void mapPresentTypeVariableNonEmptyMapTest() {
+    void mapPresentTypeVariableNonEmptyMapTest() {
         TypeVariableMap typeVariableMap = new TypeVariableMap();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         Assertions.assertEquals(typeMeta1, typeVariableMap.getActualType(typeVariable1));
     }
 
     @Test
-    public void mapPresentTypeVariableSeveralItemsMapTest() {
+    void mapPresentTypeVariableSeveralItemsMapTest() {
         TypeVariableMap typeVariableMap = new TypeVariableMap();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         typeVariableMap.addTypeVariable(typeVariable2, typeMeta2);

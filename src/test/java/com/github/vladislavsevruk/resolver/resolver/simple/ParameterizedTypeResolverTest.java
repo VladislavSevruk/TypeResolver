@@ -44,20 +44,20 @@ import java.lang.reflect.TypeVariable;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class ParameterizedTypeResolverTest {
+class ParameterizedTypeResolverTest {
 
     private ParameterizedTypeResolver realParameterizedTypeResolver = new ParameterizedTypeResolver(
             new TypeResolverPickerImpl());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(Type type, Boolean expectedValue) {
+    void canResolveTest(Type type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realParameterizedTypeResolver.canResolve(type));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveSeveralArgumentTypesParameterizedTypeRealContextTest() {
+    void resolveSeveralArgumentTypesParameterizedTypeRealContextTest() {
         TypeVariable typeVariable1 = Mockito.mock(TypeVariable.class);
         TypeVariable typeVariable2 = Mockito.mock(TypeVariable.class);
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
@@ -75,7 +75,7 @@ public class ParameterizedTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveSeveralArgumentTypesParameterizedTypeTest() {
+    void resolveSeveralArgumentTypesParameterizedTypeTest() {
         TypeVariable typeVariable1 = Mockito.mock(TypeVariable.class);
         TypeVariable typeVariable2 = Mockito.mock(TypeVariable.class);
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
@@ -98,7 +98,7 @@ public class ParameterizedTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveSingleArgumentTypeParameterizedTypeRealContextTest() {
+    void resolveSingleArgumentTypeParameterizedTypeRealContextTest() {
         TypeVariable typeVariable = Mockito.mock(TypeVariable.class);
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
         Mockito.when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[]{ typeVariable });
@@ -113,7 +113,7 @@ public class ParameterizedTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveSingleArgumentTypeParameterizedTypeTest() {
+    void resolveSingleArgumentTypeParameterizedTypeTest() {
         TypeVariable typeVariable = Mockito.mock(TypeVariable.class);
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
         Mockito.when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[]{ typeVariable });

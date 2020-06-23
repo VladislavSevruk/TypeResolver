@@ -43,7 +43,7 @@ import java.lang.reflect.Type;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class ClassTypeResolverTest {
+class ClassTypeResolverTest {
 
     @Mock
     private TypeResolverPicker mockTypeResolverPicker;
@@ -52,12 +52,12 @@ public class ClassTypeResolverTest {
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(Type type, Boolean expectedValue) {
+    void canResolveTest(Type type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realClassTypeResolver.canResolve(type));
     }
 
     @Test
-    public void resolveArrayTypeRealContextTest() {
+    void resolveArrayTypeRealContextTest() {
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> result = realClassTypeResolver.resolve(typeVariableMap, String[].class);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(String[].class,
@@ -67,7 +67,7 @@ public class ClassTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveArrayTypeTest() {
+    void resolveArrayTypeTest() {
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta typeMeta = new TypeMeta<>(Long.class);
         TypeResolver typeResolver = Mockito.mock(TypeResolver.class);
@@ -81,14 +81,14 @@ public class ClassTypeResolverTest {
     }
 
     @Test
-    public void resolveClassTypeTest() {
+    void resolveClassTypeTest() {
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> result = mockClassTypeResolver.resolve(typeVariableMap, String.class);
         Assertions.assertEquals(new TypeMeta<>(String.class), result);
     }
 
     @Test
-    public void resolvePrimitiveArrayTypeRealContextTest() {
+    void resolvePrimitiveArrayTypeRealContextTest() {
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> result = realClassTypeResolver.resolve(typeVariableMap, byte[].class);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(byte[].class, new TypeMeta<?>[]{ new TypeMeta<>(byte.class) });
@@ -96,14 +96,14 @@ public class ClassTypeResolverTest {
     }
 
     @Test
-    public void resolvePrimitiveClassTypeTest() {
+    void resolvePrimitiveClassTypeTest() {
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> result = mockClassTypeResolver.resolve(typeVariableMap, long.class);
         Assertions.assertEquals(new TypeMeta<>(long.class), result);
     }
 
     @Test
-    public void resolveWrapperArrayTypeRealContextTest() {
+    void resolveWrapperArrayTypeRealContextTest() {
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> result = realClassTypeResolver.resolve(typeVariableMap, Short[].class);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Short[].class, new TypeMeta<?>[]{ new TypeMeta<>(Short.class) });
@@ -111,7 +111,7 @@ public class ClassTypeResolverTest {
     }
 
     @Test
-    public void resolveWrapperClassTypeTest() {
+    void resolveWrapperClassTypeTest() {
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> result = mockClassTypeResolver.resolve(typeVariableMap, Integer.class);
         Assertions.assertEquals(new TypeMeta<>(Integer.class), result);

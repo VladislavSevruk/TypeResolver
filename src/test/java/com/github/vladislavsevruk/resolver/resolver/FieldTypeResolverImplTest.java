@@ -34,19 +34,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FieldTypeResolverImplTest {
+class FieldTypeResolverImplTest {
 
     private FieldTypeResolverImpl fieldTypeResolver = new FieldTypeResolverImpl();
 
     @Test
-    public void getGenericFieldTypeClassTest() throws NoSuchFieldException {
+    void getGenericFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("genericField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         Assertions.assertEquals(TypeMeta.OBJECT_META, result);
     }
 
     @Test
-    public void getGenericFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getGenericFieldTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Double.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Short.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -57,7 +57,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getGenericFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getGenericFieldTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Double, Short>>() {};
         Field field = TestModel.class.getDeclaredField("genericField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -66,7 +66,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedArrayFieldTypeClassTest() throws NoSuchFieldException {
+    void getParameterizedArrayFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("parameterizedArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -74,7 +74,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedArrayFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getParameterizedArrayFieldTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> firstClassParameterTypeMeta = new TypeMeta<>(Float.class);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -86,7 +86,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedArrayFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getParameterizedArrayFieldTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Float, Long>>() {};
         Field field = TestModel.class.getDeclaredField("parameterizedArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -96,7 +96,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerArrayTypeClassTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerArrayTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("parameterizedFieldInnerArray");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Long[].class, new TypeMeta<?>[]{ new TypeMeta<>(Long.class) });
@@ -105,7 +105,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerArrayTypeTypeMetaTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerArrayTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Character.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(String.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -118,7 +118,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerArrayTypeTypeProviderTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerArrayTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Character, String>>() {};
         Field field = TestModel.class.getDeclaredField("parameterizedFieldInnerArray");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -128,7 +128,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerParameterTypeClassTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerParameterTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("parameterizedFieldInnerParameter");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -137,7 +137,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerParameterTypeTypeMetaTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerParameterTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> firstClassParameterTypeMeta = new TypeMeta<>(Integer.class);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Boolean.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -150,7 +150,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerParameterTypeTypeProviderTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerParameterTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Integer, Boolean>>() {};
         Field field = TestModel.class.getDeclaredField("parameterizedFieldInnerParameter");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -161,7 +161,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerParameterizedArrayTypeClassTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerParameterizedArrayTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("parameterizedFieldInnerParameterizedArray");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -170,7 +170,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerParameterizedArrayTypeTypeMetaTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerParameterizedArrayTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Boolean.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -183,7 +183,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeInnerParameterizedArrayTypeTypeProviderTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeInnerParameterizedArrayTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Long, Boolean>>() {};
         Field field = TestModel.class.getDeclaredField("parameterizedFieldInnerParameterizedArray");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -194,7 +194,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSeveralInnerParameterTypesClassTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSeveralInnerParameterTypesClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("parameterizedFieldSeveralInnerParameters");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> setTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -204,7 +204,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSeveralInnerParameterTypesTypeMetaTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSeveralInnerParameterTypesTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Short.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Byte.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -217,7 +217,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSeveralInnerParameterTypesTypeProviderTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSeveralInnerParameterTypesTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Short, Byte>>() {};
         Field field = TestModel.class.getDeclaredField("parameterizedFieldSeveralInnerParameters");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -230,7 +230,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSeveralParameterTypesClassTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSeveralParameterTypesClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("parameterizedFieldSeveralParameters");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Map.class,
@@ -239,7 +239,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSeveralParameterTypesTypeMetaTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSeveralParameterTypesTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Byte.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(String.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -250,7 +250,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSeveralParameterTypesTypeProviderTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSeveralParameterTypesTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Byte, String>>() {};
         Field field = TestModel.class.getDeclaredField("parameterizedFieldSeveralParameters");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -261,7 +261,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSingleParameterTypeClassTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSingleParameterTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("parameterizedFieldSingleParameter");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -269,7 +269,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSingleParameterTypeTypeMetaTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSingleParameterTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Integer.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Float.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -280,7 +280,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedFieldTypeSingleParameterTypeTypeProviderTest() throws NoSuchFieldException {
+    void getParameterizedFieldTypeSingleParameterTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Integer, Float>>() {};
         Field field = TestModel.class.getDeclaredField("parameterizedFieldSingleParameter");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -290,7 +290,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayFieldTypeClassTest() throws NoSuchFieldException {
+    void getPrimitiveArrayFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("primitiveArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(int.class);
@@ -299,7 +299,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getPrimitiveArrayFieldTypeTypeMetaTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("primitiveArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(new TypeMeta<>(TestModel.class), field);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(int.class);
@@ -308,7 +308,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getPrimitiveArrayFieldTypeTypeProviderTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("primitiveArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(new TypeProvider<TestModel>() {}, field);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(int.class);
@@ -317,7 +317,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveFieldTypeClassTest() throws NoSuchFieldException {
+    void getPrimitiveFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("primitiveField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(long.class);
@@ -325,7 +325,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getPrimitiveFieldTypeTypeMetaTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("primitiveField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(new TypeMeta<>(TestModel.class), field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(long.class);
@@ -333,7 +333,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getPrimitiveFieldTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         Field field = TestModel.class.getDeclaredField("primitiveField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -342,7 +342,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getSimpleFieldTypeClassTest() throws NoSuchFieldException {
+    void getSimpleFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("simpleField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(String.class);
@@ -350,7 +350,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getSimpleFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getSimpleFieldTypeTypeMetaTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("simpleField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(new TypeMeta<>(TestModel.class), field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(String.class);
@@ -358,7 +358,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getSimpleFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getSimpleFieldTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         Field field = TestModel.class.getDeclaredField("simpleField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -367,7 +367,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWildcardFieldTypeClassTest() throws NoSuchFieldException {
+    void getWildcardFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("wildcardField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META }, true);
@@ -376,7 +376,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWildcardFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getWildcardFieldTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> firstClassParameterTypeMeta = new TypeMeta<>(Character.class);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Double.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -389,7 +389,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWildcardFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getWildcardFieldTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Character, Double>>() {};
         Field field = TestModel.class.getDeclaredField("wildcardField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
@@ -400,7 +400,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayFieldTypeClassTest() throws NoSuchFieldException {
+    void getWrapperArrayFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("wrapperArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Integer.class);
@@ -409,7 +409,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getWrapperArrayFieldTypeTypeMetaTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("wrapperArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(new TypeMeta<>(TestModel.class), field);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Integer.class);
@@ -418,7 +418,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getWrapperArrayFieldTypeTypeProviderTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("wrapperArrayField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(new TypeProvider<TestModel>() {}, field);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Integer.class);
@@ -427,7 +427,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperFieldTypeClassTest() throws NoSuchFieldException {
+    void getWrapperFieldTypeClassTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("wrapperField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Short.class);
@@ -435,7 +435,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getWrapperFieldTypeTypeMetaTest() throws NoSuchFieldException {
         Field field = TestModel.class.getDeclaredField("wrapperField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(new TypeMeta<>(TestModel.class), field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Short.class);
@@ -443,7 +443,7 @@ public class FieldTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getWrapperFieldTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         Field field = TestModel.class.getDeclaredField("wrapperField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);

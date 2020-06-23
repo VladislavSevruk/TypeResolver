@@ -77,7 +77,7 @@ public final class ResolvingContextManager {
     }
 
     /**
-     * Reinitialized <code>ResolvingContext</code> with values from <code>ResolvingModuleFactory</code>.
+     * Re-initializes <code>ResolvingContext</code> with values from <code>ResolvingModuleFactory</code>.
      *
      * @see ResolvingModuleFactory
      */

@@ -43,18 +43,18 @@ import java.lang.reflect.WildcardType;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class WildcardTypeResolverTest {
+class WildcardTypeResolverTest {
 
     private WildcardTypeResolver realWildcardTypeResolver = new WildcardTypeResolver(new TypeResolverPickerImpl());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(Type type, Boolean expectedValue) {
+    void canResolveTest(Type type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realWildcardTypeResolver.canResolve(type));
     }
 
     @Test
-    public void resolveWildcardRealContextType() {
+    void resolveWildcardRealContextType() {
         Class<?> boundType = Boolean.class;
         WildcardType wildcardType = Mockito.mock(WildcardType.class);
         Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
@@ -65,7 +65,7 @@ public class WildcardTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveWildcardTypeTest() {
+    void resolveWildcardTypeTest() {
         Type boundType = Mockito.mock(Type.class);
         WildcardType wildcardType = Mockito.mock(WildcardType.class);
         Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });

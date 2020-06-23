@@ -47,20 +47,20 @@ import java.lang.reflect.WildcardType;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class AnnotatedTypeBaseResolverTest {
+class AnnotatedTypeBaseResolverTest {
 
     private AnnotatedTypeBaseResolver realAnnotatedTypeBaseResolver = new AnnotatedTypeBaseResolver(
             new TypeResolverPickerImpl());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(AnnotatedType type, Boolean expectedValue) {
+    void canResolveTest(AnnotatedType type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realAnnotatedTypeBaseResolver.canResolve(type));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveAnnotatedTypeVariableRealContextTest() {
+    void resolveAnnotatedTypeVariableRealContextTest() {
         TypeVariable<? extends Class<?>> typeVariable = Mockito.mock(TypeVariable.class);
         AnnotatedTypeVariable annotatedTypeVariable = Mockito.mock(AnnotatedTypeVariable.class);
         Mockito.when(annotatedTypeVariable.getType()).thenReturn(typeVariable);
@@ -73,7 +73,7 @@ public class AnnotatedTypeBaseResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveAnnotatedTypeVariableTest() {
+    void resolveAnnotatedTypeVariableTest() {
         Type innerType = Mockito.mock(Type.class);
         AnnotatedTypeVariable annotatedTypeVariable = Mockito.mock(AnnotatedTypeVariable.class);
         Mockito.when(annotatedTypeVariable.getType()).thenReturn(innerType);
@@ -89,7 +89,7 @@ public class AnnotatedTypeBaseResolverTest {
     }
 
     @Test
-    public void resolveAnnotatedWildcardTypeRealContextTest() {
+    void resolveAnnotatedWildcardTypeRealContextTest() {
         Class<?> boundType = Character[].class;
         WildcardType wildcardType = Mockito.mock(WildcardType.class);
         Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
@@ -104,7 +104,7 @@ public class AnnotatedTypeBaseResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveAnnotatedWildcardTypeTest() {
+    void resolveAnnotatedWildcardTypeTest() {
         Type innerType = Mockito.mock(Type.class);
         AnnotatedWildcardType annotatedWildcardType = Mockito.mock(AnnotatedWildcardType.class);
         Mockito.when(annotatedWildcardType.getType()).thenReturn(innerType);

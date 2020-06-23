@@ -44,19 +44,19 @@ import java.lang.reflect.Type;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class AnnotatedArrayTypeResolverTest {
+class AnnotatedArrayTypeResolverTest {
 
     private AnnotatedArrayTypeResolver realAnnotatedArrayTypeResolver = new AnnotatedArrayTypeResolver(
             new TypeResolverPickerImpl());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(AnnotatedType type, Boolean expectedValue) {
+    void canResolveTest(AnnotatedType type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realAnnotatedArrayTypeResolver.canResolve(type));
     }
 
     @Test
-    public void resolveAnnotatedArrayTypeRealContextTest() {
+    void resolveAnnotatedArrayTypeRealContextTest() {
         AnnotatedType annotatedInnerType = Mockito.mock(AnnotatedType.class);
         Mockito.when(annotatedInnerType.getType()).thenReturn(Short.class);
         AnnotatedArrayType annotatedArrayType = Mockito.mock(AnnotatedArrayType.class);
@@ -71,7 +71,7 @@ public class AnnotatedArrayTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveAnnotatedArrayTypeTest() {
+    void resolveAnnotatedArrayTypeTest() {
         Type innerType = Mockito.mock(Type.class);
         AnnotatedType annotatedInnerType = Mockito.mock(AnnotatedType.class);
         Mockito.when(annotatedInnerType.getType()).thenReturn(innerType);

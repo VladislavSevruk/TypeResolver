@@ -37,7 +37,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ResolvingContextManagerTest {
+class ResolvingContextManagerTest {
 
     private static boolean initialAutoRefreshContext;
     private static ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage>
@@ -53,7 +53,7 @@ public class ResolvingContextManagerTest {
     private TypeVariableMapper typeVariableMapper;
 
     @BeforeAll
-    public static void disableContextRefresh() {
+    static void disableContextRefresh() {
         initialAutoRefreshContext = ResolvingContextManager.isAutoRefreshContext();
         initialMappedVariableHierarchyStorageFactoryMethod = ResolvingModuleFactory.mappedVariableHierarchyStorage();
         initialTypeResolverPickerFactoryMethod = ResolvingModuleFactory.typeResolverPicker();
@@ -62,7 +62,7 @@ public class ResolvingContextManagerTest {
     }
 
     @AfterAll
-    public static void setInitialAutoContextRefresh() {
+    static void setInitialAutoContextRefresh() {
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingModuleFactory
                 .replaceMappedVariableHierarchyStorage(initialMappedVariableHierarchyStorageFactoryMethod);
@@ -75,7 +75,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void autoRefreshContextAfterAllModulesUpdatesTest() {
+    void autoRefreshContextAfterAllModulesUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.enableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -90,7 +90,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void autoRefreshContextAfterMappedVariableHierarchyStorageUpdatesTest() {
+    void autoRefreshContextAfterMappedVariableHierarchyStorageUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.enableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -103,7 +103,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void autoRefreshContextAfterTypeResolverPickerUpdatesTest() {
+    void autoRefreshContextAfterTypeResolverPickerUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.enableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -122,7 +122,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void autoRefreshContextAfterTypeVariableMapperUpdatesTest() {
+    void autoRefreshContextAfterTypeVariableMapperUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.enableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -138,7 +138,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void equalContextAfterRefreshWithoutUpdatesTest() {
+    void equalContextAfterRefreshWithoutUpdatesTest() {
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
         ResolvingContextManager.refreshContext();
         ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
@@ -147,7 +147,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void newContextAfterRefreshAfterAllModulesUpdatesTest() {
+    void newContextAfterRefreshAfterAllModulesUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -163,7 +163,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void newContextAfterRefreshAfterMappedVariableHierarchyStorageUpdatesTest() {
+    void newContextAfterRefreshAfterMappedVariableHierarchyStorageUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -179,7 +179,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void newContextAfterRefreshAfterTypeResolverPickerUpdatesTest() {
+    void newContextAfterRefreshAfterTypeResolverPickerUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -199,7 +199,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void newContextAfterRefreshAfterTypeVariableMapperUpdatesTest() {
+    void newContextAfterRefreshAfterTypeVariableMapperUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -216,7 +216,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void sameContextIsReturnedIfAutoRefreshDisabledAfterMappedVariableHierarchyStorageUpdatesTest() {
+    void sameContextIsReturnedIfAutoRefreshDisabledAfterMappedVariableHierarchyStorageUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -226,7 +226,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void sameContextIsReturnedIfAutoRefreshDisabledAfterRefreshAfterAllModulesUpdatesTest() {
+    void sameContextIsReturnedIfAutoRefreshDisabledAfterRefreshAfterAllModulesUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -238,7 +238,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void sameContextIsReturnedIfAutoRefreshDisabledAfterTypeResolverPickerUpdatesTest() {
+    void sameContextIsReturnedIfAutoRefreshDisabledAfterTypeResolverPickerUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -248,7 +248,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void sameContextIsReturnedIfAutoRefreshDisabledAfterTypeVariableMapperUpdatesTest() {
+    void sameContextIsReturnedIfAutoRefreshDisabledAfterTypeVariableMapperUpdatesTest() {
         resetModulesAndContext();
         ResolvingContextManager.disableContextAutoRefresh();
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
@@ -258,7 +258,7 @@ public class ResolvingContextManagerTest {
     }
 
     @Test
-    public void sameContextIsReturnedTest() {
+    void sameContextIsReturnedTest() {
         ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
         ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
         Assertions.assertSame(resolvingContext1, resolvingContext2);

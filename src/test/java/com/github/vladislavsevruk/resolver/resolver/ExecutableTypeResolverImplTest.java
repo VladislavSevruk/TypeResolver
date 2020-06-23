@@ -30,6 +30,7 @@ import com.github.vladislavsevruk.resolver.type.TypeProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,19 +38,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ExecutableTypeResolverImplTest {
+class ExecutableTypeResolverImplTest {
 
     private ExecutableTypeResolverImpl executableTypeResolver = new ExecutableTypeResolverImpl();
 
     @Test
-    public void getGenericReturnTypeClassTest() throws NoSuchMethodException {
+    void getGenericReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getGenericReturnType"));
         Assertions.assertEquals(TypeMeta.OBJECT_META, result);
     }
 
     @Test
-    public void getGenericReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getGenericReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Float.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -60,7 +61,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getGenericReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getGenericReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Float, Long>>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getGenericReturnType"));
@@ -69,7 +70,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getNoParameterTypeClassTest() throws NoSuchMethodException {
+    void getNoParameterTypeClassTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver
                 .getParameterTypes(TestModel.class, TestModel.class.getMethod("getNoParameterType"));
         Assertions.assertNotNull(result);
@@ -77,7 +78,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getNoParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getNoParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver
                 .getParameterTypes(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("getNoParameterType"));
         Assertions.assertNotNull(result);
@@ -85,7 +86,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getNoParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getNoParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<?> result = executableTypeResolver
                 .getParameterTypes(typeProvider, TestModel.class.getMethod("getNoParameterType"));
@@ -94,26 +95,33 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterTypeNotOverridenObjectMethodThrowsExceptionClassTest() {
+    void getParameterTypeNotOverridenObjectMethodThrowsExceptionClassTest()
+            throws NoSuchMethodException, SecurityException {
+        Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
-                () -> executableTypeResolver.getParameterTypes(TestModel.class, TestModel.class.getMethod("wait")));
+                () -> executableTypeResolver.getParameterTypes(TestModel.class, method));
     }
 
     @Test
-    public void getParameterTypeNotOverridenObjectMethodThrowsExceptionTypeMetaTest() {
-        Assertions.assertThrows(TypeResolvingException.class, () -> executableTypeResolver
-                .getParameterTypes(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("wait")));
+    void getParameterTypeNotOverridenObjectMethodThrowsExceptionTypeMetaTest()
+            throws NoSuchMethodException, SecurityException {
+        TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class);
+        Method method = TestModel.class.getMethod("wait");
+        Assertions.assertThrows(TypeResolvingException.class,
+                () -> executableTypeResolver.getParameterTypes(typeMeta, method));
     }
 
     @Test
-    public void getParameterTypeNotOverridenObjectMethodThrowsExceptionTypeProviderTest() {
+    void getParameterTypeNotOverridenObjectMethodThrowsExceptionTypeProviderTest()
+            throws NoSuchMethodException, SecurityException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
+        Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
-                () -> executableTypeResolver.getParameterTypes(typeProvider, TestModel.class.getMethod("wait")));
+                () -> executableTypeResolver.getParameterTypes(typeProvider, method));
     }
 
     @Test
-    public void getParameterizedArrayReturnTypeClassTest() throws NoSuchMethodException {
+    void getParameterizedArrayReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getParameterizedArrayReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -121,7 +129,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedArrayReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getParameterizedArrayReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Character.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Integer.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -133,7 +141,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedArrayReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getParameterizedArrayReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Character, Integer>>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getParameterizedArrayReturnType"));
@@ -143,7 +151,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerArrayTypeClassTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerArrayTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getParameterizedReturnTypeInnerArrayType"));
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Integer[].class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
@@ -152,7 +160,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerArrayTypeTypeMetaTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerArrayTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver.getReturnType(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getParameterizedReturnTypeInnerArrayType"));
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Integer[].class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
@@ -161,7 +169,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerArrayTypeTypeProviderTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerArrayTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getParameterizedReturnTypeInnerArrayType"));
@@ -171,7 +179,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerParameterTypeClassTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerParameterTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver.getReturnType(TestModel.class,
                 TestModel.class.getMethod("getParameterizedReturnTypeInnerParameterType"));
         TypeMeta<?> setTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -180,7 +188,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerParameterTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Short.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -193,7 +201,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Short, Long>>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getParameterizedReturnTypeInnerParameterType"));
@@ -204,7 +212,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerParameterizedArrayTypeClassTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerParameterizedArrayTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver.getReturnType(TestModel.class,
                 TestModel.class.getMethod("getParameterizedReturnTypeInnerParameterizedArrayType"));
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -213,7 +221,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerParameterizedArrayTypeTypeMetaTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerParameterizedArrayTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Short.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(String.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -226,7 +234,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeInnerParameterizedArrayTypeTypeProviderTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeInnerParameterizedArrayTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Short, String>>() {};
         TypeMeta<?> result = executableTypeResolver.getReturnType(typeProvider,
                 TestModel.class.getMethod("getParameterizedReturnTypeInnerParameterizedArrayType"));
@@ -237,7 +245,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSeveralInnerParameterTypesClassTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSeveralInnerParameterTypesClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver.getReturnType(TestModel.class,
                 TestModel.class.getMethod("getParameterizedReturnTypeSeveralInnerParameterTypes"));
         TypeMeta<?> mapTypeMeta = new TypeMeta<>(Map.class,
@@ -247,7 +255,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSeveralInnerParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSeveralInnerParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Short.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Byte.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -259,7 +267,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSeveralInnerParameterTypesTypeProviderTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSeveralInnerParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Short, Byte>>() {};
         TypeMeta<?> result = executableTypeResolver.getReturnType(typeProvider,
                 TestModel.class.getMethod("getParameterizedReturnTypeSeveralInnerParameterTypes"));
@@ -271,7 +279,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSeveralParameterTypesClassTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSeveralParameterTypesClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver.getReturnType(TestModel.class,
                 TestModel.class.getMethod("getParameterizedReturnTypeSeveralParameterTypes"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Map.class,
@@ -280,7 +288,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSeveralParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSeveralParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(String.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Boolean.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -291,7 +299,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSeveralParameterTypesTypeProviderTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSeveralParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<String, Boolean>>() {};
         TypeMeta<?> result = executableTypeResolver.getReturnType(typeProvider,
                 TestModel.class.getMethod("getParameterizedReturnTypeSeveralParameterTypes"));
@@ -302,7 +310,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSingleParameterTypesClassTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSingleParameterTypesClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver.getReturnType(TestModel.class,
                 TestModel.class.getMethod("getParameterizedReturnTypeSingleParameterTypes"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -310,7 +318,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSingleParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSingleParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Character.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Byte.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -322,7 +330,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getParameterizedReturnTypeSingleParameterTypesTypeProviderTest() throws NoSuchMethodException {
+    void getParameterizedReturnTypeSingleParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Character, Byte>>() {};
         TypeMeta<?> result = executableTypeResolver.getReturnType(typeProvider,
                 TestModel.class.getMethod("getParameterizedReturnTypeSingleParameterTypes"));
@@ -332,7 +340,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayParameterTypeClassTest() throws NoSuchMethodException {
+    void getPrimitiveArrayParameterTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getPrimitiveArrayParameterType", short[].class));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(short.class);
@@ -341,7 +349,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getPrimitiveArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getPrimitiveArrayParameterType", short[].class));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(short.class);
@@ -350,7 +358,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getPrimitiveArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getPrimitiveArrayParameterType", short[].class));
@@ -360,7 +368,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayReturnTypeClassTest() throws NoSuchMethodException {
+    void getPrimitiveArrayReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getPrimitiveArrayReturnType"));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(int.class);
@@ -369,7 +377,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getPrimitiveArrayReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver.getReturnType(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getPrimitiveArrayReturnType"));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(int.class);
@@ -378,7 +386,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveArrayReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getPrimitiveArrayReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getPrimitiveArrayReturnType"));
@@ -388,7 +396,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveReturnTypeClassTest() throws NoSuchMethodException {
+    void getPrimitiveReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getPrimitiveReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(int.class);
@@ -396,7 +404,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getPrimitiveReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("getPrimitiveReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(int.class);
@@ -404,7 +412,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getPrimitiveReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getPrimitiveReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getPrimitiveReturnType"));
@@ -413,33 +421,40 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getReturnTypeNotOverridenObjectMethodThrowsExceptionClassTest() {
-        Assertions.assertThrows(TypeResolvingException.class, () -> executableTypeResolver
-                .getReturnType(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("wait")));
-    }
-
-    @Test
-    public void getReturnTypeNotOverridenObjectMethodThrowsExceptionTypeMetaTest() {
-        Assertions.assertThrows(TypeResolvingException.class, () -> executableTypeResolver
-                .getReturnType(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("wait")));
-    }
-
-    @Test
-    public void getReturnTypeNotOverridenObjectMethodThrowsExceptionTypeProviderTest() {
-        TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
+    void getReturnTypeNotOverridenObjectMethodThrowsExceptionClassTest()
+            throws NoSuchMethodException, SecurityException {
+        Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
-                () -> executableTypeResolver.getReturnType(typeProvider, TestModel.class.getMethod("wait")));
+                () -> executableTypeResolver.getReturnType(TestModel.class, method));
     }
 
     @Test
-    public void getSeveralGenericParameterTypesClassTest() throws NoSuchMethodException {
+    void getReturnTypeNotOverridenObjectMethodThrowsExceptionTypeMetaTest()
+            throws NoSuchMethodException, SecurityException {
+        TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class);
+        Method method = TestModel.class.getMethod("wait");
+        Assertions.assertThrows(TypeResolvingException.class,
+                () -> executableTypeResolver.getReturnType(typeMeta, method));
+    }
+
+    @Test
+    void getReturnTypeNotOverridenObjectMethodThrowsExceptionTypeProviderTest()
+            throws NoSuchMethodException, SecurityException {
+        TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
+        Method method = TestModel.class.getMethod("wait");
+        Assertions.assertThrows(TypeResolvingException.class,
+                () -> executableTypeResolver.getReturnType(typeProvider, method));
+    }
+
+    @Test
+    void getSeveralGenericParameterTypesClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSeveralGenericParameterTypes", Object.class, Object.class));
         Assertions.assertEquals(Arrays.asList(TypeMeta.OBJECT_META, TypeMeta.OBJECT_META), result);
     }
 
     @Test
-    public void getSeveralGenericParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getSeveralGenericParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Long.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Integer.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -449,7 +464,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralGenericParameterTypesTypeProviderTest() throws NoSuchMethodException {
+    void getSeveralGenericParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Long, Integer>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSeveralGenericParameterTypes", Object.class, Object.class));
@@ -459,7 +474,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralParameterizedParameterTypeSeveralInnerParameterTypesClassTest() throws NoSuchMethodException {
+    void getSeveralParameterizedParameterTypeSeveralInnerParameterTypesClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class, TestModel.class
                 .getMethod("getSeveralParameterizedParameterTypeSeveralInnerParameterTypes", List.class, Set.class));
         TypeMeta<?> mapTypeMeta = new TypeMeta<>(Map.class,
@@ -472,8 +487,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralParameterizedParameterTypeSeveralInnerParameterTypesTypeMetaTest()
-            throws NoSuchMethodException {
+    void getSeveralParameterizedParameterTypeSeveralInnerParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Long.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Integer.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -488,8 +502,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralParameterizedParameterTypeSeveralInnerParameterTypesTypeProviderTest()
-            throws NoSuchMethodException {
+    void getSeveralParameterizedParameterTypeSeveralInnerParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Long, Integer>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider, TestModel.class
                 .getMethod("getSeveralParameterizedParameterTypeSeveralInnerParameterTypes", List.class, Set.class));
@@ -504,7 +517,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralParameterizedParameterTypesClassTest() throws NoSuchMethodException {
+    void getSeveralParameterizedParameterTypesClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSeveralParameterizedParameterTypes", List.class, Set.class));
         TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -513,7 +526,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralParameterizedParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getSeveralParameterizedParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Byte.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Float.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -525,7 +538,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralParameterizedParameterTypesTypeProviderTest() throws NoSuchMethodException {
+    void getSeveralParameterizedParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Byte, Float>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSeveralParameterizedParameterTypes", List.class, Set.class));
@@ -537,7 +550,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralSimpleParameterTypesClassTest() throws NoSuchMethodException {
+    void getSeveralSimpleParameterTypesClassTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSeveralSimpleParameterTypes", Character.class, int.class));
         TypeMeta<?> expectedTypeMeta1 = new TypeMeta<>(Character.class);
@@ -546,7 +559,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralSimpleParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getSeveralSimpleParameterTypesTypeMetaTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getSeveralSimpleParameterTypes", Character.class, int.class));
         TypeMeta<?> expectedTypeMeta1 = new TypeMeta<>(Character.class);
@@ -555,7 +568,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSeveralSimpleParameterTypesTypeProviderTest() throws NoSuchMethodException {
+    void getSeveralSimpleParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<?> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSeveralSimpleParameterTypes", Character.class, int.class));
@@ -565,7 +578,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSimpleReturnTypeClassTest() throws NoSuchMethodException {
+    void getSimpleReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getSimpleReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(String.class);
@@ -573,7 +586,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSimpleReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSimpleReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("getSimpleReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(String.class);
@@ -581,7 +594,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSimpleReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSimpleReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getSimpleReturnType"));
@@ -590,14 +603,14 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleGenericParameterTypeClassTest() throws NoSuchMethodException {
+    void getSingleGenericParameterTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleGenericParameterType", Object.class));
         Assertions.assertEquals(Collections.singletonList(TypeMeta.OBJECT_META), result);
     }
 
     @Test
-    public void getSingleGenericParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleGenericParameterTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Character.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(String.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -608,7 +621,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleGenericParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleGenericParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Character, String>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleGenericParameterType", Object.class));
@@ -617,7 +630,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedArrayParameterTypeClassTest() throws NoSuchMethodException {
+    void getSingleParameterizedArrayParameterTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleParameterizedArrayParameterType", Object[].class));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -625,7 +638,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleParameterizedArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> firstClassParameterTypeMeta = new TypeMeta<>(Boolean.class);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(String.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -637,7 +650,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleParameterizedArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Boolean, String>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleParameterizedArrayParameterType", Object[].class));
@@ -647,7 +660,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerArrayTypeClassTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerArrayTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeInnerArrayType", List.class));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Integer.class);
@@ -657,7 +670,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerArrayTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerArrayTypeTypeMetaTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeInnerArrayType", List.class));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Integer.class);
@@ -667,7 +680,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerArrayTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerArrayTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeInnerArrayType", List.class));
@@ -678,7 +691,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerParameterTypeClassTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerParameterTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeInnerParameterType", Set.class));
         TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -687,7 +700,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerParameterTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Float.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Character.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -699,7 +712,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Float, Character>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeInnerParameterType", Set.class));
@@ -711,7 +724,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerParameterizedArrayTypeClassTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerParameterizedArrayTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class, TestModel.class
                 .getMethod("getSingleParameterizedParameterTypeInnerParameterizedArrayType", List.class));
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -720,8 +733,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerParameterizedArrayTypeTypeMetaTest()
-            throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerParameterizedArrayTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Double.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Boolean.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -733,8 +745,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeInnerParameterizedArrayTypeTypeProviderTest()
-            throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeInnerParameterizedArrayTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Double, Boolean>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider, TestModel.class
                 .getMethod("getSingleParameterizedParameterTypeInnerParameterizedArrayType", List.class));
@@ -745,7 +756,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSeveralInnerParameterTypesClassTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSeveralInnerParameterTypesClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeSeveralInnerParameterTypes", List.class));
         TypeMeta<?> mapTypeMeta = new TypeMeta<>(Map.class,
@@ -755,8 +766,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSeveralInnerParameterTypesTypeMetaTest()
-            throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSeveralInnerParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Short.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Long.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -768,8 +778,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSeveralInnerParameterTypesTypeProviderTest()
-            throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSeveralInnerParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Short, Long>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeSeveralInnerParameterTypes", List.class));
@@ -781,7 +790,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSeveralParameterTypesClassTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSeveralParameterTypesClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeSeveralParameterTypes", Map.class));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Map.class,
@@ -790,7 +799,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSeveralParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSeveralParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(String.class);
         TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Boolean.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class, new TypeMeta<?>[]{ innerTypeMeta1, innerTypeMeta2 });
@@ -801,8 +810,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSeveralParameterTypesTypeProviderTest()
-            throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSeveralParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<String, Boolean>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeSeveralParameterTypes", Map.class));
@@ -813,7 +821,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSingleParameterTypesClassTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSingleParameterTypesClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeSingleParameterTypes", Collection.class));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Collection.class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META });
@@ -821,7 +829,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSingleParameterTypesTypeMetaTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSingleParameterTypesTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Byte.class);
         TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Boolean.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
@@ -833,7 +841,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleParameterizedParameterTypeSingleParameterTypesTypeProviderTest() throws NoSuchMethodException {
+    void getSingleParameterizedParameterTypeSingleParameterTypesTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Byte, Boolean>>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeSingleParameterTypes", Collection.class));
@@ -843,7 +851,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSinglePrimitiveParameterTypeClassTest() throws NoSuchMethodException {
+    void getSinglePrimitiveParameterTypeClassTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSinglePrimitiveParameterType", int.class));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(int.class);
@@ -851,7 +859,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSinglePrimitiveParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSinglePrimitiveParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getSinglePrimitiveParameterType", int.class));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(int.class);
@@ -859,7 +867,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSinglePrimitiveParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSinglePrimitiveParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<?> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSinglePrimitiveParameterType", int.class));
@@ -868,21 +876,21 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleSimpleParameterTypeClassTest() throws NoSuchMethodException {
+    void getSingleSimpleParameterTypeClassTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleSimpleParameterType", Object.class));
         Assertions.assertEquals(Collections.singletonList(TypeMeta.OBJECT_META), result);
     }
 
     @Test
-    public void getSingleSimpleParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleSimpleParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getSingleSimpleParameterType", Object.class));
         Assertions.assertEquals(Collections.singletonList(TypeMeta.OBJECT_META), result);
     }
 
     @Test
-    public void getSingleSimpleParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleSimpleParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<?> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleSimpleParameterType", Object.class));
@@ -890,7 +898,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleWildcardArrayParameterTypeClassTest() throws NoSuchMethodException {
+    void getSingleWildcardArrayParameterTypeClassTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleWildcardArrayParameterType", List[].class));
         TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, true);
@@ -900,7 +908,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleWildcardArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleWildcardArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getSingleWildcardArrayParameterType", List[].class));
         TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, true);
@@ -910,7 +918,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleWildcardArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleWildcardArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<?> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleWildcardArrayParameterType", List[].class));
@@ -921,7 +929,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleWrapperParameterTypeClassTest() throws NoSuchMethodException {
+    void getSingleWrapperParameterTypeClassTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleWrapperParameterType", Long.class));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Long.class);
@@ -929,7 +937,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleWrapperParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleWrapperParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getSingleWrapperParameterType", Long.class));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Long.class);
@@ -937,7 +945,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getSingleWrapperParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleWrapperParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<?> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleWrapperParameterType", Long.class));
@@ -946,7 +954,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getVoidReturnTypeClassTest() throws NoSuchMethodException {
+    void getVoidReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getVoidReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(void.class);
@@ -954,7 +962,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getVoidReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getVoidReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("getVoidReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(void.class);
@@ -962,7 +970,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getVoidReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getVoidReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getVoidReturnType"));
@@ -971,7 +979,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayParameterTypeClassTest() throws NoSuchMethodException {
+    void getWrapperArrayParameterTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getWrapperArrayParameterType", Short[].class));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Short.class);
@@ -980,7 +988,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getWrapperArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
                 TestModel.class.getMethod("getWrapperArrayParameterType", Short[].class));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Short.class);
@@ -989,7 +997,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getWrapperArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getWrapperArrayParameterType", Short[].class));
@@ -999,7 +1007,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayReturnTypeClassTest() throws NoSuchMethodException {
+    void getWrapperArrayReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getWrapperArrayReturnType"));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Integer.class);
@@ -1008,7 +1016,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getWrapperArrayReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("getWrapperArrayReturnType"));
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Integer.class);
@@ -1017,7 +1025,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperArrayReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getWrapperArrayReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getWrapperArrayReturnType"));
@@ -1027,7 +1035,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperReturnTypeClassTest() throws NoSuchMethodException {
+    void getWrapperReturnTypeClassTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(TestModel.class, TestModel.class.getMethod("getWrapperReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Double.class);
@@ -1035,7 +1043,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperReturnTypeTypeMetaTest() throws NoSuchMethodException {
+    void getWrapperReturnTypeTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(new TypeMeta<>(TestModel.class), TestModel.class.getMethod("getWrapperReturnType"));
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Double.class);
@@ -1043,7 +1051,7 @@ public class ExecutableTypeResolverImplTest {
     }
 
     @Test
-    public void getWrapperReturnTypeTypeProviderTest() throws NoSuchMethodException {
+    void getWrapperReturnTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         TypeMeta<?> result = executableTypeResolver
                 .getReturnType(typeProvider, TestModel.class.getMethod("getWrapperReturnType"));

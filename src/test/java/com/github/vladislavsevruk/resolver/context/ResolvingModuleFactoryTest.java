@@ -35,7 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ResolvingModuleFactoryTest {
+class ResolvingModuleFactoryTest {
 
     private static boolean initialAutoRefreshContext;
 
@@ -47,27 +47,27 @@ public class ResolvingModuleFactoryTest {
     private TypeVariableMapper typeVariableMapper;
 
     @BeforeAll
-    public static void disableContextRefresh() {
+    static void disableContextRefresh() {
         initialAutoRefreshContext = ResolvingContextManager.isAutoRefreshContext();
         ResolvingContextManager.disableContextAutoRefresh();
     }
 
     @AfterAll
-    public static void setInitialAutoContextRefresh() {
+    static void setInitialAutoContextRefresh() {
         if (initialAutoRefreshContext) {
             ResolvingContextManager.enableContextAutoRefresh();
         }
     }
 
     @Test
-    public void defaultModulesTest() {
+    void defaultModulesTest() {
         Assertions.assertNull(ResolvingModuleFactory.mappedVariableHierarchyStorage());
         Assertions.assertNull(ResolvingModuleFactory.typeResolverPicker());
         Assertions.assertNull(ResolvingModuleFactory.typeVariableMapper());
     }
 
     @Test
-    public void replaceTypeConverterStorageTest() {
+    void replaceTypeConverterStorageTest() {
         ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage> factoryMethod
                 = context -> mappedVariableHierarchyStorage;
         ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(factoryMethod);
@@ -75,14 +75,14 @@ public class ResolvingModuleFactoryTest {
     }
 
     @Test
-    public void replaceTypeResolverPickerTest() {
+    void replaceTypeResolverPickerTest() {
         ResolvingModuleFactoryMethod<TypeResolverPicker> factoryMethod = context -> typeResolverPicker;
         ResolvingModuleFactory.replaceTypeResolverPicker(factoryMethod);
         Assertions.assertEquals(factoryMethod, ResolvingModuleFactory.typeResolverPicker());
     }
 
     @Test
-    public void replaceTypeVariableMapperTest() {
+    void replaceTypeVariableMapperTest() {
         ResolvingModuleFactoryMethod<TypeVariableMapper> factoryMethod = context -> typeVariableMapper;
         ResolvingModuleFactory.replaceTypeVariableMapper(factoryMethod);
         Assertions.assertEquals(factoryMethod, ResolvingModuleFactory.typeVariableMapper());

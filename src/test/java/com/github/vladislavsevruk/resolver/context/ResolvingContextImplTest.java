@@ -36,7 +36,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ResolvingContextImplTest {
+class ResolvingContextImplTest {
 
     @Mock
     private MappedVariableHierarchyStorage mappedVariableHierarchyStorage;
@@ -46,7 +46,7 @@ public class ResolvingContextImplTest {
     private TypeVariableMapper typeVariableMapper;
 
     @Test
-    public void customMappedVariableHierarchyStorageFactoryMethodReturnsNullTest() {
+    void customMappedVariableHierarchyStorageFactoryMethodReturnsNullTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(context -> null, null, null);
         Assertions.assertEquals(MappedVariableHierarchyStorageImpl.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -55,7 +55,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void customMappedVariableHierarchyStorageTest() {
+    void customMappedVariableHierarchyStorageTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(context -> mappedVariableHierarchyStorage, null,
                 null);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext.getMappedVariableHierarchyStorage());
@@ -64,7 +64,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void customModulesFactoryMethodReturnNullTest() {
+    void customModulesFactoryMethodReturnNullTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(context -> null, context -> null, context -> null);
         Assertions.assertEquals(MappedVariableHierarchyStorageImpl.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -73,7 +73,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void customModulesTest() {
+    void customModulesTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(context -> mappedVariableHierarchyStorage,
                 context -> typeResolverPicker, context -> typeVariableMapper);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext.getMappedVariableHierarchyStorage());
@@ -82,7 +82,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void customTypeResolverPickerFactoryMethodReturnsNullTest() {
+    void customTypeResolverPickerFactoryMethodReturnsNullTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(null, context -> null, null);
         Assertions.assertEquals(MappedVariableHierarchyStorageImpl.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -91,7 +91,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void customTypeResolverPickerTest() {
+    void customTypeResolverPickerTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(null, context -> typeResolverPicker, null);
         Assertions.assertEquals(MappedVariableHierarchyStorageImpl.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -100,7 +100,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void customTypeVariableMapperFactoryMethodReturnsNullTest() {
+    void customTypeVariableMapperFactoryMethodReturnsNullTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(null, null, context -> null);
         Assertions.assertEquals(MappedVariableHierarchyStorageImpl.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -109,7 +109,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void customTypeVariableMapperTest() {
+    void customTypeVariableMapperTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(null, null, context -> typeVariableMapper);
         Assertions.assertEquals(MappedVariableHierarchyStorageImpl.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -118,7 +118,7 @@ public class ResolvingContextImplTest {
     }
 
     @Test
-    public void defaultModulesTest() {
+    void defaultModulesTest() {
         ResolvingContext resolvingContext = new ResolvingContextImpl(null, null, null);
         Assertions.assertEquals(MappedVariableHierarchyStorageImpl.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
