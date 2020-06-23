@@ -46,20 +46,20 @@ import java.lang.reflect.TypeVariable;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class AnnotatedParameterizedTypeResolverTest {
+class AnnotatedParameterizedTypeResolverTest {
 
     private AnnotatedParameterizedTypeResolver realAnnotatedParameterizedTypeResolver
             = new AnnotatedParameterizedTypeResolver(new TypeResolverPickerImpl());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(AnnotatedType type, Boolean expectedValue) {
+    void canResolveTest(AnnotatedType type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realAnnotatedParameterizedTypeResolver.canResolve(type));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveSeveralArgumentsAnnotatedParameterizedTypeRealContextTest() {
+    void resolveSeveralArgumentsAnnotatedParameterizedTypeRealContextTest() {
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
         Mockito.when(parameterizedType.getRawType()).thenReturn(Double.class);
         AnnotatedType innerType1 = Mockito.mock(AnnotatedType.class);
@@ -85,7 +85,7 @@ public class AnnotatedParameterizedTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveSeveralArgumentsTypeAnnotatedParameterizedTypeTest() {
+    void resolveSeveralArgumentsTypeAnnotatedParameterizedTypeTest() {
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
         Mockito.when(parameterizedType.getRawType()).thenReturn(Double.class);
         AnnotatedType innerType1 = Mockito.mock(AnnotatedType.class);
@@ -115,7 +115,7 @@ public class AnnotatedParameterizedTypeResolverTest {
     }
 
     @Test
-    public void resolveSingleArgumentAnnotatedParameterizedTypeRealContextTest() {
+    void resolveSingleArgumentAnnotatedParameterizedTypeRealContextTest() {
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
         Mockito.when(parameterizedType.getRawType()).thenReturn(Byte.class);
         AnnotatedType innerType = Mockito.mock(AnnotatedType.class);
@@ -135,7 +135,7 @@ public class AnnotatedParameterizedTypeResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveSingleArgumentTypeAnnotatedParameterizedTypeTest() {
+    void resolveSingleArgumentTypeAnnotatedParameterizedTypeTest() {
         ParameterizedType parameterizedType = Mockito.mock(ParameterizedType.class);
         Mockito.when(parameterizedType.getRawType()).thenReturn(Byte.class);
         AnnotatedType innerType = Mockito.mock(AnnotatedType.class);

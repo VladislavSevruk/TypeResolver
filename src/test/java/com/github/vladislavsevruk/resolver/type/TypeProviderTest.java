@@ -39,50 +39,50 @@ import java.util.Map;
 import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
-public class TypeProviderTest {
+class TypeProviderTest {
 
     private TypeVariableMapper realTypeVariableMapper = new TypeVariableMapperImpl();
 
     @Test
-    public void compareTest() {
+    void compareTest() {
         TypeProvider<Short> provider1 = new TypeProvider<Short>() {};
         TypeProvider<Short> provider2 = new TypeProvider<Short>() {};
         Assertions.assertEquals(0, provider1.compareTo(provider2));
     }
 
     @Test
-    public void equalsNullTest() {
+    void equalsNullTest() {
         TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
-        Assertions.assertFalse(provider1.equals(null));
+        Assertions.assertNotEquals(null, provider1);
     }
 
     @Test
-    public void equalsTest() {
+    void equalsTest() {
         TypeProvider<HashMap<String, List<Integer>>> provider1 = new TypeProvider<HashMap<String, List<Integer>>>() {};
         TypeProvider<HashMap<String, List<Integer>>> provider2 = new TypeProvider<HashMap<String, List<Integer>>>() {};
         Assertions.assertEquals(provider1, provider2);
     }
 
     @Test
-    public void getTypeMetaCacheTest() {
+    void getTypeMetaCacheTest() {
         TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
         Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta());
     }
 
     @Test
-    public void getTypeMetaWithMapperCacheTest() {
+    void getTypeMetaWithMapperCacheTest() {
         TypeProvider<List<Double>> provider = new TypeProvider<List<Double>>() {};
         Assertions.assertSame(provider.getTypeMeta(), provider.getTypeMeta(realTypeVariableMapper));
     }
 
     @Test
-    public void hashCodeTest() {
+    void hashCodeTest() {
         TypeProvider<Map<Byte, Boolean[]>> provider = new TypeProvider<Map<Byte, Boolean[]>>() {};
         Assertions.assertEquals(provider.hashCode(), provider.getTypeMeta().hashCode());
     }
 
     @Test
-    public void mockMapperInnerParameterizedClassTest() {
+    void mockMapperInnerParameterizedClassTest() {
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> expectedMeta = new TypeMeta<>(HashMap.class,
                 new TypeMeta<?>[]{ new TypeMeta<>(String.class), listMeta });
@@ -93,7 +93,7 @@ public class TypeProviderTest {
     }
 
     @Test
-    public void mockMapperParameterizedClassTest() {
+    void mockMapperParameterizedClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ new TypeMeta<>(Date.class) });
         TypeVariableMapper mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
         TypeMeta<?> actualMeta = new TypeProvider<Set<Date>>() {}.getTypeMeta(mockTypeVariableMapper);
@@ -101,7 +101,7 @@ public class TypeProviderTest {
     }
 
     @Test
-    public void mockMapperSimpleClassTest() {
+    void mockMapperSimpleClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Long.class);
         TypeVariableMapper mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
         TypeMeta<?> actualMeta = new TypeProvider<Long>() {}.getTypeMeta(mockTypeVariableMapper);
@@ -109,14 +109,14 @@ public class TypeProviderTest {
     }
 
     @Test
-    public void notEqualsTest() {
+    void notEqualsTest() {
         TypeProvider<HashMap<String, Set<Number>>> provider1 = new TypeProvider<HashMap<String, Set<Number>>>() {};
         TypeProvider<HashMap<String, Set<Double>>> provider2 = new TypeProvider<HashMap<String, Set<Double>>>() {};
         Assertions.assertNotEquals(provider1, provider2);
     }
 
     @Test
-    public void realMapperInnerParameterizedClassTest() {
+    void realMapperInnerParameterizedClassTest() {
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> expectedMeta = new TypeMeta<>(HashMap.class,
                 new TypeMeta<?>[]{ new TypeMeta<>(String.class), listMeta });
@@ -126,21 +126,21 @@ public class TypeProviderTest {
     }
 
     @Test
-    public void realMapperParameterizedClassTest() {
+    void realMapperParameterizedClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ new TypeMeta<>(Date.class) });
         TypeMeta<?> actualMeta = new TypeProvider<Set<Date>>() {}.getTypeMeta(realTypeVariableMapper);
         Assertions.assertEquals(expectedMeta, actualMeta);
     }
 
     @Test
-    public void realMapperSimpleClassTest() {
+    void realMapperSimpleClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> actualMeta = new TypeProvider<Long>() {}.getTypeMeta(realTypeVariableMapper);
         Assertions.assertEquals(expectedMeta, actualMeta);
     }
 
     @Test
-    public void withoutArgumentMapperInnerParameterizedClassTest() {
+    void withoutArgumentMapperInnerParameterizedClassTest() {
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> expectedMeta = new TypeMeta<>(HashMap.class,
                 new TypeMeta<?>[]{ new TypeMeta<>(String.class), listMeta });
@@ -149,14 +149,14 @@ public class TypeProviderTest {
     }
 
     @Test
-    public void withoutArgumentMapperParameterizedClassTest() {
+    void withoutArgumentMapperParameterizedClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ new TypeMeta<>(Date.class) });
         TypeMeta<?> actualMeta = new TypeProvider<Set<Date>>() {}.getTypeMeta();
         Assertions.assertEquals(expectedMeta, actualMeta);
     }
 
     @Test
-    public void withoutArgumentMapperSimpleClassTest() {
+    void withoutArgumentMapperSimpleClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Long.class);
         TypeMeta<?> actualMeta = new TypeProvider<Long>() {}.getTypeMeta();
         Assertions.assertEquals(expectedMeta, actualMeta);

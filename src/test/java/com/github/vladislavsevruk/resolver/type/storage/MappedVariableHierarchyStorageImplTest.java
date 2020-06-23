@@ -30,12 +30,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class MappedVariableHierarchyStorageImplTest {
+class MappedVariableHierarchyStorageImplTest {
 
     private MappedVariableHierarchyStorageImpl realStorage = new MappedVariableHierarchyStorageImpl();
 
     @Test
-    public void getAlreadyPresentHierarchyTest() {
+    void getAlreadyPresentHierarchyTest() {
         MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Long.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(Long.class);
         expectedHierarchy.addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], typeMeta);
@@ -46,7 +46,7 @@ public class MappedVariableHierarchyStorageImplTest {
     }
 
     @Test
-    public void getHierarchyForTest() {
+    void getHierarchyForTest() {
         MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Short.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(Short.class);
         expectedHierarchy.addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], typeMeta);
@@ -54,7 +54,7 @@ public class MappedVariableHierarchyStorageImplTest {
     }
 
     @Test
-    public void hierarchyWithSameGenericClassTest() {
+    void hierarchyWithSameGenericClassTest() {
         TypeMeta<?> typeMeta1 = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> typeMeta2 = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Number.class) });
         MappedVariableHierarchy firstHierarchy = realStorage.get(typeMeta1);

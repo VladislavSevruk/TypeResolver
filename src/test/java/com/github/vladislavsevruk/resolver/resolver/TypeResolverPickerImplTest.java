@@ -47,12 +47,12 @@ import java.lang.reflect.Type;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class TypeResolverPickerImplTest {
+class TypeResolverPickerImplTest {
 
     private TypeResolverPickerImpl typeResolverPicker = new TypeResolverPickerImpl();
 
     @Test
-    public void pickAnnotatedTypeResolverForUnknownAnnotatedTypeReturnsDefaultTypeResolvedTest() {
+    void pickAnnotatedTypeResolverForUnknownAnnotatedTypeReturnsDefaultTypeResolvedTest() {
         AnnotatedType annotatedType = Mockito.mock(AnnotatedType.class);
         AnnotatedTypeResolver pickedAnnotatedTypeResolver = typeResolverPicker.pickAnnotatedTypeResolver(annotatedType);
         AnnotatedTypeResolver expectedAnnotatedTypeResolver = new AnnotatedTypeBaseResolver(typeResolverPicker);
@@ -61,20 +61,20 @@ public class TypeResolverPickerImplTest {
 
     @ParameterizedTest
     @MethodSource("pickAnnotatedTypeResolverProvider")
-    public void pickAnnotatedTypeResolverTest(AnnotatedType type, AnnotatedTypeResolver expectedAnnotatedTypeResolver) {
+    void pickAnnotatedTypeResolverTest(AnnotatedType type, AnnotatedTypeResolver expectedAnnotatedTypeResolver) {
         AnnotatedTypeResolver pickedAnnotatedTypeResolver = typeResolverPicker.pickAnnotatedTypeResolver(type);
         Assertions.assertEquals(expectedAnnotatedTypeResolver, pickedAnnotatedTypeResolver);
     }
 
     @Test
-    public void pickTypeResolverForUnknownTypeThrowsExceptionTest() {
+    void pickTypeResolverForUnknownTypeThrowsExceptionTest() {
         Type type = Mockito.mock(Type.class);
         Assertions.assertThrows(TypeResolvingException.class, () -> typeResolverPicker.pickTypeResolver(type));
     }
 
     @ParameterizedTest
     @MethodSource("pickTypeResolverProvider")
-    public void pickTypeResolverTest(Type type, TypeResolver expectedTypeResolver) {
+    void pickTypeResolverTest(Type type, TypeResolver expectedTypeResolver) {
         TypeResolver pickedTypeResolver = typeResolverPicker.pickTypeResolver(type);
         Assertions.assertEquals(expectedTypeResolver, pickedTypeResolver);
     }

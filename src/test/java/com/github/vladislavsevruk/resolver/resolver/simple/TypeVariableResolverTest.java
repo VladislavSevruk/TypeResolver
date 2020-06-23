@@ -40,19 +40,19 @@ import java.lang.reflect.TypeVariable;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class TypeVariableResolverTest {
+class TypeVariableResolverTest {
 
     private TypeVariableResolver resolver = new TypeVariableResolver();
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(Type type, Boolean expectedValue) {
+    void canResolveTest(Type type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, resolver.canResolve(type));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveTypeVariableTest() {
+    void resolveTypeVariableTest() {
         TypeVariable<? extends Class<?>> typeVariable = Mockito.mock(TypeVariable.class);
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta typeMeta = new TypeMeta<>(Boolean.class);
@@ -63,7 +63,7 @@ public class TypeVariableResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveUnknownTypeVariableTest() {
+    void resolveUnknownTypeVariableTest() {
         TypeVariable<? extends Class<?>> typeVariable = Mockito.mock(TypeVariable.class);
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         Mockito.when(typeVariableMap.getActualType(typeVariable)).thenReturn(null);
