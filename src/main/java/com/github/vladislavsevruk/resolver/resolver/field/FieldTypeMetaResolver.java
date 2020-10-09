@@ -21,23 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.type.storage;
+package com.github.vladislavsevruk.resolver.resolver.field;
 
-import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
+import com.github.vladislavsevruk.resolver.context.ResolvingContext;
+import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.type.TypeProvider;
+import lombok.EqualsAndHashCode;
+
+import java.lang.reflect.Field;
 
 /**
- * Storage with mapped variable hierarchy.
+ * Implementation of <code>FieldTypeResolver</code> for TypeMeta.
  *
- * @param <T> type of mapped value for type variable.
+ * @see FieldTypeResolver
+ * @see TypeMeta
  */
-public interface MappedVariableHierarchyStorage<T> {
+@EqualsAndHashCode(callSuper = true)
+public final class FieldTypeMetaResolver extends BaseFieldTypeResolver<TypeMeta<?>> {
+
+    public FieldTypeMetaResolver() {
+        this(TypeMetaResolvingContextManager.getContext());
+    }
+
+    public FieldTypeMetaResolver(ResolvingContext<TypeMeta<?>> context) {
+        super(context);
+    }
 
     /**
-     * Returns stored mapped variable hierarchy for received type meta.
-     *
-     * @param typeMeta <code>TypeMeta</code> to get <code>MappedVariableHierarchy</code> for.
-     * @return <code>MappedVariableHierarchy</code> for received <code>TypeMeta</code>.
+     * {@inheritDoc}
      */
-    MappedVariableHierarchy<T> get(TypeMeta<?> typeMeta);
+    @Override
+    public TypeMeta<?> resolveField(TypeProvider<?> typeProvider, Field field) {
+        return resolveField(typeProvider.getTypeMeta(context.getTypeVariableMapper()), field);
+    }
 }

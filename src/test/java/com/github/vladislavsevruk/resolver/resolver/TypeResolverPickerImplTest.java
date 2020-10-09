@@ -33,6 +33,7 @@ import com.github.vladislavsevruk.resolver.resolver.simple.ParameterizedTypeReso
 import com.github.vladislavsevruk.resolver.resolver.simple.TypeVariableResolver;
 import com.github.vladislavsevruk.resolver.resolver.simple.WildcardTypeResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +50,7 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 class TypeResolverPickerImplTest {
 
-    private TypeResolverPickerImpl typeResolverPicker = new TypeResolverPickerImpl();
+    private TypeMetaResolverPicker typeResolverPicker = new TypeMetaResolverPicker();
 
     @Test
     void pickAnnotatedTypeResolverForUnknownAnnotatedTypeReturnsDefaultTypeResolvedTest() {
@@ -80,7 +81,7 @@ class TypeResolverPickerImplTest {
     }
 
     private static Stream<Arguments> pickAnnotatedTypeResolverProvider() {
-        TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
+        TypeResolverPicker<TypeMeta<?>> typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
         return Stream.of(Arguments
                         .of(TestTypeProvider.annotatedArrayType(), new AnnotatedArrayTypeResolver(typeResolverPicker)),
                 Arguments.of(TestTypeProvider.annotatedParameterizedType(),
@@ -92,7 +93,7 @@ class TypeResolverPickerImplTest {
     }
 
     private static Stream<Arguments> pickTypeResolverProvider() {
-        TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
+        TypeResolverPicker<TypeMeta<?>> typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
         return Stream.of(Arguments
                         .of(TestTypeProvider.parameterizedType(), new ParameterizedTypeResolver(typeResolverPicker)),
                 Arguments.of(TestTypeProvider.arrayType(), new ClassTypeResolver(typeResolverPicker)),

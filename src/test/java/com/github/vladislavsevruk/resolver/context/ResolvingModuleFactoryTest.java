@@ -24,6 +24,7 @@
 package com.github.vladislavsevruk.resolver.context;
 
 import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
 import org.junit.jupiter.api.AfterAll;
@@ -40,51 +41,53 @@ class ResolvingModuleFactoryTest {
     private static boolean initialAutoRefreshContext;
 
     @Mock
-    private MappedVariableHierarchyStorage mappedVariableHierarchyStorage;
+    private MappedVariableHierarchyStorage<TypeMeta<?>> mappedVariableHierarchyStorage;
     @Mock
-    private TypeResolverPicker typeResolverPicker;
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
     @Mock
-    private TypeVariableMapper typeVariableMapper;
+    private TypeVariableMapper<TypeMeta<?>> typeVariableMapper;
 
     @BeforeAll
     static void disableContextRefresh() {
-        initialAutoRefreshContext = ResolvingContextManager.isAutoRefreshContext();
-        ResolvingContextManager.disableContextAutoRefresh();
+        initialAutoRefreshContext = TypeMetaResolvingContextManager.isAutoRefreshContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
     }
 
     @AfterAll
     static void setInitialAutoContextRefresh() {
         if (initialAutoRefreshContext) {
-            ResolvingContextManager.enableContextAutoRefresh();
+            TypeMetaResolvingContextManager.enableContextAutoRefresh();
         }
     }
 
     @Test
     void defaultModulesTest() {
-        Assertions.assertNull(ResolvingModuleFactory.mappedVariableHierarchyStorage());
-        Assertions.assertNull(ResolvingModuleFactory.typeResolverPicker());
-        Assertions.assertNull(ResolvingModuleFactory.typeVariableMapper());
+        Assertions.assertNull(TypeMetaResolvingModuleFactory.mappedVariableHierarchyStorage());
+        Assertions.assertNull(TypeMetaResolvingModuleFactory.typeResolverPicker());
+        Assertions.assertNull(TypeMetaResolvingModuleFactory.typeVariableMapper());
     }
 
     @Test
     void replaceTypeConverterStorageTest() {
-        ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage> factoryMethod
+        ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>> factoryMethod
                 = context -> mappedVariableHierarchyStorage;
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(factoryMethod);
-        Assertions.assertEquals(factoryMethod, ResolvingModuleFactory.mappedVariableHierarchyStorage());
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(factoryMethod);
+        Assertions.assertEquals(factoryMethod, TypeMetaResolvingModuleFactory.mappedVariableHierarchyStorage());
     }
 
     @Test
     void replaceTypeResolverPickerTest() {
-        ResolvingModuleFactoryMethod<TypeResolverPicker> factoryMethod = context -> typeResolverPicker;
-        ResolvingModuleFactory.replaceTypeResolverPicker(factoryMethod);
-        Assertions.assertEquals(factoryMethod, ResolvingModuleFactory.typeResolverPicker());
+        ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> factoryMethod
+                = context -> typeResolverPicker;
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(factoryMethod);
+        Assertions.assertEquals(factoryMethod, TypeMetaResolvingModuleFactory.typeResolverPicker());
     }
 
     @Test
     void replaceTypeVariableMapperTest() {
-        ResolvingModuleFactoryMethod<TypeVariableMapper> factoryMethod = context -> typeVariableMapper;
-        ResolvingModuleFactory.replaceTypeVariableMapper(factoryMethod);
-        Assertions.assertEquals(factoryMethod, ResolvingModuleFactory.typeVariableMapper());
+        ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> factoryMethod
+                = context -> typeVariableMapper;
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(factoryMethod);
+        Assertions.assertEquals(factoryMethod, TypeMetaResolvingModuleFactory.typeVariableMapper());
     }
 }

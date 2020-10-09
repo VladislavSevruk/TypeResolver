@@ -32,6 +32,7 @@ import com.github.vladislavsevruk.resolver.resolver.simple.GenericArrayTypeResol
 import com.github.vladislavsevruk.resolver.resolver.simple.ParameterizedTypeResolver;
 import com.github.vladislavsevruk.resolver.resolver.simple.TypeVariableResolver;
 import com.github.vladislavsevruk.resolver.resolver.simple.WildcardTypeResolver;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import lombok.EqualsAndHashCode;
 
 import java.lang.reflect.AnnotatedType;
@@ -40,17 +41,18 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Implementation of <code>TypeResolverPicker</code>.
+ * Implementation of <code>TypeResolverPicker</code> for TypeMeta.
  *
  * @see TypeResolverPicker
+ * @see TypeMeta
  */
 @EqualsAndHashCode
-public final class TypeResolverPickerImpl implements TypeResolverPicker {
+public final class TypeMetaResolverPicker implements TypeResolverPicker<TypeMeta<?>> {
 
-    private final List<AnnotatedTypeResolver> annotatedTypeResolvers;
-    private final List<TypeResolver> typeResolvers;
+    private final List<AnnotatedTypeResolver<TypeMeta<?>>> annotatedTypeResolvers;
+    private final List<TypeResolver<TypeMeta<?>>> typeResolvers;
 
-    public TypeResolverPickerImpl() {
+    public TypeMetaResolverPicker() {
         annotatedTypeResolvers = Arrays
                 .asList(new AnnotatedArrayTypeResolver(this), new AnnotatedParameterizedTypeResolver(this),
                         new AnnotatedTypeBaseResolver(this));
@@ -62,8 +64,8 @@ public final class TypeResolverPickerImpl implements TypeResolverPicker {
      * {@inheritDoc}
      */
     @Override
-    public AnnotatedTypeResolver pickAnnotatedTypeResolver(AnnotatedType annotatedType) {
-        for (AnnotatedTypeResolver annotatedTypeResolver : annotatedTypeResolvers) {
+    public AnnotatedTypeResolver<TypeMeta<?>> pickAnnotatedTypeResolver(AnnotatedType annotatedType) {
+        for (AnnotatedTypeResolver<TypeMeta<?>> annotatedTypeResolver : annotatedTypeResolvers) {
             if (annotatedTypeResolver.canResolve(annotatedType)) {
                 return annotatedTypeResolver;
             }
@@ -75,8 +77,8 @@ public final class TypeResolverPickerImpl implements TypeResolverPicker {
      * {@inheritDoc}
      */
     @Override
-    public TypeResolver pickTypeResolver(Type type) {
-        for (TypeResolver typeResolver : typeResolvers) {
+    public TypeResolver<TypeMeta<?>> pickTypeResolver(Type type) {
+        for (TypeResolver<TypeMeta<?>> typeResolver : typeResolvers) {
             if (typeResolver.canResolve(type)) {
                 return typeResolver;
             }

@@ -28,8 +28,7 @@ import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -37,14 +36,13 @@ import java.lang.reflect.Type;
 /**
  * Resolves actual types for parameterized types.
  */
+@Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class ParameterizedTypeResolver implements TypeResolver {
+public final class ParameterizedTypeResolver implements TypeResolver<TypeMeta<?>> {
 
-    private static final Logger logger = LogManager.getLogger(ParameterizedTypeResolver.class);
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
 
-    private TypeResolverPicker typeResolverPicker;
-
-    public ParameterizedTypeResolver(TypeResolverPicker typeResolverPicker) {
+    public ParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -60,8 +58,8 @@ public final class ParameterizedTypeResolver implements TypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, Type argumentType) {
-        logger.debug(() -> String.format("'%s' is parameterized type.", argumentType.getTypeName()));
+    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type argumentType) {
+        log.debug(() -> String.format("'%s' is parameterized type.", argumentType.getTypeName()));
         ParameterizedType parameterizedArgumentType = (ParameterizedType) argumentType;
         Type[] actualTypes = parameterizedArgumentType.getActualTypeArguments();
         TypeMeta<?>[] argumentTypes = new TypeMeta<?>[actualTypes.length];

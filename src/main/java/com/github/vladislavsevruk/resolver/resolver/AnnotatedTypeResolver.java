@@ -23,15 +23,16 @@
  */
 package com.github.vladislavsevruk.resolver.resolver;
 
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 
 import java.lang.reflect.AnnotatedType;
 
 /**
  * Resolves actual types for generic parameters of annotated type.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface AnnotatedTypeResolver {
+public interface AnnotatedTypeResolver<T> {
 
     /**
      * Checks if type resolver can deal with specific annotated type.
@@ -47,8 +48,7 @@ public interface AnnotatedTypeResolver {
      *
      * @param typeVariableMap <code>TypeVariableMap</code> with declared class type variables.
      * @param annotatedType   <code>AnnotatedType</code> to resolve.
-     * @return <code>TypeMeta</code> with actual types for received type.
+     * @return actual type for received type.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> resolve(TypeVariableMap typeVariableMap, AnnotatedType annotatedType);
+    T resolve(TypeVariableMap<T> typeVariableMap, AnnotatedType annotatedType);
 }

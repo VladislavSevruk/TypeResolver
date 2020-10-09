@@ -23,9 +23,9 @@
  */
 package com.github.vladislavsevruk.resolver.resolver.annotated;
 
+import com.github.vladislavsevruk.resolver.resolver.TypeMetaResolverPicker;
 import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
 import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPickerImpl;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
@@ -47,7 +47,7 @@ import java.util.stream.Stream;
 class AnnotatedArrayTypeResolverTest {
 
     private AnnotatedArrayTypeResolver realAnnotatedArrayTypeResolver = new AnnotatedArrayTypeResolver(
-            new TypeResolverPickerImpl());
+            new TypeMetaResolverPicker());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
@@ -62,7 +62,7 @@ class AnnotatedArrayTypeResolverTest {
         AnnotatedArrayType annotatedArrayType = Mockito.mock(AnnotatedArrayType.class);
         Mockito.when(annotatedArrayType.getAnnotatedGenericComponentType()).thenReturn(annotatedInnerType);
         Mockito.when(annotatedArrayType.getType()).thenReturn(Short[].class);
-        TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta innerTypeMeta = new TypeMeta<>(Short.class);
         TypeMeta<?> result = realAnnotatedArrayTypeResolver.resolve(typeVariableMap, annotatedArrayType);
         TypeMeta<?> expectedMeta = new TypeMeta<>(Short[].class, new TypeMeta<?>[]{ innerTypeMeta });

@@ -23,8 +23,8 @@
  */
 package com.github.vladislavsevruk.resolver.type;
 
+import com.github.vladislavsevruk.resolver.type.mapper.TypeMetaVariableMapper;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
-import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapperImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +41,7 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 class TypeProviderTest {
 
-    private TypeVariableMapper realTypeVariableMapper = new TypeVariableMapperImpl();
+    private TypeVariableMapper realTypeVariableMapper = new TypeMetaVariableMapper();
 
     @Test
     void compareTest() {

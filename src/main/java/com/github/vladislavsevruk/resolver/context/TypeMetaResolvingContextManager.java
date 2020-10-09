@@ -23,20 +23,22 @@
  */
 package com.github.vladislavsevruk.resolver.context;
 
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
+
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Provides resolving context and refreshes it.
  */
-public final class ResolvingContextManager {
+public final class TypeMetaResolvingContextManager {
 
     private static final ReadWriteLock DEFAULT_CONTEXT_LOCK = new ReentrantReadWriteLock();
     private static final ReadWriteLock SETTINGS_LOCK = new ReentrantReadWriteLock();
     private static boolean autoRefreshContext = true;
-    private static ResolvingContext defaultContext = newContext();
+    private static ResolvingContext<TypeMeta<?>> defaultContext = newContext();
 
-    private ResolvingContextManager() {
+    private TypeMetaResolvingContextManager() {
     }
 
     /**
@@ -56,11 +58,12 @@ public final class ResolvingContextManager {
     /**
      * Returns default context with values from <code>ResolvingModuleFactory</code>.
      *
-     * @see ResolvingModuleFactory
+     * @see TypeMetaResolvingModuleFactory
      */
-    public static ResolvingContext getContext() {
+    @SuppressWarnings("java:S1452")
+    public static ResolvingContext<TypeMeta<?>> getContext() {
         DEFAULT_CONTEXT_LOCK.readLock().lock();
-        ResolvingContext contextToReturn = defaultContext;
+        ResolvingContext<TypeMeta<?>> contextToReturn = defaultContext;
         DEFAULT_CONTEXT_LOCK.readLock().unlock();
         return contextToReturn;
     }
@@ -79,7 +82,7 @@ public final class ResolvingContextManager {
     /**
      * Re-initializes <code>ResolvingContext</code> with values from <code>ResolvingModuleFactory</code>.
      *
-     * @see ResolvingModuleFactory
+     * @see TypeMetaResolvingModuleFactory
      */
     static void refreshContext() {
         DEFAULT_CONTEXT_LOCK.writeLock().lock();
@@ -93,8 +96,9 @@ public final class ResolvingContextManager {
         SETTINGS_LOCK.writeLock().unlock();
     }
 
-    private static ResolvingContext newContext() {
-        return new ResolvingContextImpl(ResolvingModuleFactory.mappedVariableHierarchyStorage(),
-                ResolvingModuleFactory.typeResolverPicker(), ResolvingModuleFactory.typeVariableMapper());
+    private static ResolvingContext<TypeMeta<?>> newContext() {
+        return new TypeMetaResolvingContext(TypeMetaResolvingModuleFactory.mappedVariableHierarchyStorage(),
+                TypeMetaResolvingModuleFactory.typeResolverPicker(),
+                TypeMetaResolvingModuleFactory.typeVariableMapper());
     }
 }

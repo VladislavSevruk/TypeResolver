@@ -21,38 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.field;
 
 import com.github.vladislavsevruk.resolver.context.ResolvingContext;
-import com.github.vladislavsevruk.resolver.context.ResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 
-/**
- * Implementation of <code>FieldTypeResolver</code>.
- *
- * @see FieldTypeResolver
- */
+@Log4j2
 @EqualsAndHashCode
-public final class FieldTypeResolverImpl implements FieldTypeResolver {
+public class BaseFieldTypeResolver<T> implements FieldTypeResolver<T> {
 
-    private static final Logger logger = LogManager.getLogger(FieldTypeResolverImpl.class);
+    protected final ResolvingContext<T> context;
 
-    private final ResolvingContext context;
-
-    public FieldTypeResolverImpl() {
-        this(ResolvingContextManager.getContext());
-    }
-
-    public FieldTypeResolverImpl(ResolvingContext context) {
+    public BaseFieldTypeResolver(ResolvingContext<T> context) {
         this.context = context;
     }
 
@@ -60,7 +48,7 @@ public final class FieldTypeResolverImpl implements FieldTypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolveField(Class<?> clazz, Field field) {
+    public T resolveField(Class<?> clazz, Field field) {
         return resolveField(new TypeMeta<>(clazz), field);
     }
 
@@ -68,10 +56,10 @@ public final class FieldTypeResolverImpl implements FieldTypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolveField(TypeMeta<?> typeMeta, Field field) {
-        logger.debug(() -> String.format("Getting parameterized type for field '%s'.", field.getName()));
-        MappedVariableHierarchy hierarchy = context.getMappedVariableHierarchyStorage().get(typeMeta);
-        TypeVariableMap typeVariableMap = hierarchy.getTypeVariableMap(field.getDeclaringClass());
+    public T resolveField(TypeMeta<?> typeMeta, Field field) {
+        log.debug(() -> String.format("Getting parameterized type for field '%s'.", field.getName()));
+        MappedVariableHierarchy<T> hierarchy = context.getMappedVariableHierarchyStorage().get(typeMeta);
+        TypeVariableMap<T> typeVariableMap = hierarchy.getTypeVariableMap(field.getDeclaringClass());
         AnnotatedType annotatedType = field.getAnnotatedType();
         return context.getTypeResolverPicker().pickAnnotatedTypeResolver(annotatedType)
                 .resolve(typeVariableMap, annotatedType);
@@ -81,7 +69,7 @@ public final class FieldTypeResolverImpl implements FieldTypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolveField(TypeProvider<?> typeProvider, Field field) {
-        return resolveField(typeProvider.getTypeMeta(context.getTypeVariableMapper()), field);
+    public T resolveField(TypeProvider<?> typeProvider, Field field) {
+        return resolveField(typeProvider.getTypeMeta(), field);
     }
 }

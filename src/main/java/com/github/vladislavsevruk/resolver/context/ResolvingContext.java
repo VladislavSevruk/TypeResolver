@@ -29,21 +29,23 @@ import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyS
 
 /**
  * Resolving context with replaceable modules.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface ResolvingContext {
+public interface ResolvingContext<T> {
 
     /**
      * Returns current instance of <code>MappedVariableHierarchyStorage</code> stored at context.
      */
-    MappedVariableHierarchyStorage getMappedVariableHierarchyStorage();
+    MappedVariableHierarchyStorage<T> getMappedVariableHierarchyStorage();
 
     /**
      * Returns current instance of <code>TypeResolverPicker</code> stored at context.
      */
-    TypeResolverPicker getTypeResolverPicker();
+    TypeResolverPicker<T> getTypeResolverPicker();
 
     /**
      * Returns current instance of <code>TypeVariableMapper</code> stored at context.
      */
-    TypeVariableMapper getTypeVariableMapper();
+    TypeVariableMapper<T> getTypeVariableMapper();
 }

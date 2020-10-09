@@ -23,7 +23,7 @@
  */
 package com.github.vladislavsevruk.resolver.util;
 
-import com.github.vladislavsevruk.resolver.context.ResolvingContextManager;
+import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 
@@ -82,9 +82,9 @@ public final class TypeMetaUtil {
         if (donorReturnTypeMeta.getType().equals(acceptorClass)) {
             return donorReturnTypeMeta.getGenericTypes();
         }
-        TypeVariableMap typeVariableMap = ResolvingContextManager.getContext().getMappedVariableHierarchyStorage()
-                .get(donorReturnTypeMeta).getTypeVariableMap(acceptorClass);
-        return ResolvingContextManager.getContext().getTypeResolverPicker().pickTypeResolver(acceptorClass)
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = TypeMetaResolvingContextManager.getContext()
+                .getMappedVariableHierarchyStorage().get(donorReturnTypeMeta).getTypeVariableMap(acceptorClass);
+        return TypeMetaResolvingContextManager.getContext().getTypeResolverPicker().pickTypeResolver(acceptorClass)
                 .resolve(typeVariableMap, acceptorClass).getGenericTypes();
     }
 

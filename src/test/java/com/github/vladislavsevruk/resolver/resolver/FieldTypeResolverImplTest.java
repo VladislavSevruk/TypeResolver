@@ -23,6 +23,7 @@
  */
 package com.github.vladislavsevruk.resolver.resolver;
 
+import com.github.vladislavsevruk.resolver.resolver.field.FieldTypeMetaResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
@@ -36,7 +37,7 @@ import java.util.Set;
 
 class FieldTypeResolverImplTest {
 
-    private FieldTypeResolverImpl fieldTypeResolver = new FieldTypeResolverImpl();
+    private FieldTypeMetaResolver fieldTypeResolver = new FieldTypeMetaResolver();
 
     @Test
     void getGenericFieldTypeClassTest() throws NoSuchFieldException {

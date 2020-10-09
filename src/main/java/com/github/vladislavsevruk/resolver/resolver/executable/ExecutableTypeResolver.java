@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.executable;
 
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Resolves actual types for generic parameters of executables parameter and return types.
  */
-public interface ExecutableTypeResolver {
+public interface ExecutableTypeResolver<T> {
 
     /**
      * Resolves actual types for generic parameters of executables parameter types.
@@ -41,8 +41,7 @@ public interface ExecutableTypeResolver {
      * @param executable <code>Executable</code> to resolve actual parameter types for.
      * @return list of <code>TypeMeta</code> with actual parameter types for received executable.
      */
-    @SuppressWarnings("java:S1452")
-    List<TypeMeta<?>> getParameterTypes(Class<?> clazz, Executable executable);
+    List<T> getParameterTypes(Class<?> clazz, Executable executable);
 
     /**
      * Resolves actual types for generic parameters of executables parameter types.
@@ -51,8 +50,7 @@ public interface ExecutableTypeResolver {
      * @param executable <code>Executable</code> to resolve actual parameter types for.
      * @return list of <code>TypeMeta</code> with actual parameter types for received executable.
      */
-    @SuppressWarnings("java:S1452")
-    List<TypeMeta<?>> getParameterTypes(TypeMeta<?> typeMeta, Executable executable);
+    List<T> getParameterTypes(TypeMeta<?> typeMeta, Executable executable);
 
     /**
      * Resolves actual types for generic parameters of executables parameter types.
@@ -61,8 +59,7 @@ public interface ExecutableTypeResolver {
      * @param executable   <code>Executable</code> to resolve actual parameter types for.
      * @return list of <code>TypeMeta</code> with actual parameter types for received executable.
      */
-    @SuppressWarnings("java:S1452")
-    List<TypeMeta<?>> getParameterTypes(TypeProvider<?> typeProvider, Executable executable);
+    List<T> getParameterTypes(TypeProvider<?> typeProvider, Executable executable);
 
     /**
      * Resolves actual types for generic parameters of executable return type.
@@ -71,8 +68,7 @@ public interface ExecutableTypeResolver {
      * @param executable <code>Executable</code> to resolve actual return type for.
      * @return <code>TypeMeta</code> with actual return type for received executable.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> getReturnType(Class<?> clazz, Executable executable);
+    T getReturnType(Class<?> clazz, Executable executable);
 
     /**
      * Resolves actual types for generic parameters of executables return type.
@@ -81,8 +77,7 @@ public interface ExecutableTypeResolver {
      * @param executable <code>Executable</code> to resolve actual return type for.
      * @return <code>TypeMeta</code> with actual return type for received executable.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> getReturnType(TypeMeta<?> typeMeta, Executable executable);
+    T getReturnType(TypeMeta<?> typeMeta, Executable executable);
 
     /**
      * Resolves actual types for generic parameters of executables return type.
@@ -91,6 +86,5 @@ public interface ExecutableTypeResolver {
      * @param executable   <code>Executable</code> to resolve actual return type for.
      * @return <code>TypeMeta</code> with actual return type for received executable.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> getReturnType(TypeProvider<?> typeProvider, Executable executable);
+    T getReturnType(TypeProvider<?> typeProvider, Executable executable);
 }

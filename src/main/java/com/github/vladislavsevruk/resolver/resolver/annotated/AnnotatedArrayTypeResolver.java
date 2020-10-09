@@ -28,8 +28,7 @@ import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedType;
@@ -39,14 +38,13 @@ import java.lang.reflect.Type;
 /**
  * Resolves actual types for annotated array types.
  */
+@Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class AnnotatedArrayTypeResolver implements AnnotatedTypeResolver {
+public final class AnnotatedArrayTypeResolver implements AnnotatedTypeResolver<TypeMeta<?>> {
 
-    private static final Logger logger = LogManager.getLogger(AnnotatedArrayTypeResolver.class);
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
 
-    private TypeResolverPicker typeResolverPicker;
-
-    public AnnotatedArrayTypeResolver(TypeResolverPicker typeResolverPicker) {
+    public AnnotatedArrayTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -62,8 +60,8 @@ public final class AnnotatedArrayTypeResolver implements AnnotatedTypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, AnnotatedType type) {
-        logger.debug(() -> "Resolving AnnotatedArrayType.");
+    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, AnnotatedType type) {
+        log.debug(() -> "Resolving AnnotatedArrayType.");
         AnnotatedArrayType annotatedType = (AnnotatedArrayType) type;
         AnnotatedType componentType = annotatedType.getAnnotatedGenericComponentType();
         TypeMeta<?> actualParameters = resolveParameterizedComponentType(typeVariableMap, componentType);
@@ -80,7 +78,7 @@ public final class AnnotatedArrayTypeResolver implements AnnotatedTypeResolver {
                 : getArrayTypeByComponent(actualParameters);
     }
 
-    private TypeMeta<?> resolveParameterizedComponentType(TypeVariableMap typeVariableMap,
+    private TypeMeta<?> resolveParameterizedComponentType(TypeVariableMap<TypeMeta<?>> typeVariableMap,
             AnnotatedType componentType) {
         Type actualType = componentType.getType();
         return typeResolverPicker.pickTypeResolver(actualType).resolve(typeVariableMap, actualType);

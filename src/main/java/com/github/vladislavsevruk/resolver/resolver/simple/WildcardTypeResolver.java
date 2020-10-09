@@ -28,8 +28,7 @@ import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
@@ -37,14 +36,13 @@ import java.lang.reflect.WildcardType;
 /**
  * Resolves actual types for wildcard types.
  */
+@Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class WildcardTypeResolver implements TypeResolver {
+public final class WildcardTypeResolver implements TypeResolver<TypeMeta<?>> {
 
-    private static final Logger logger = LogManager.getLogger(WildcardTypeResolver.class);
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
 
-    private TypeResolverPicker typeResolverPicker;
-
-    public WildcardTypeResolver(TypeResolverPicker typeResolverPicker) {
+    public WildcardTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -60,8 +58,8 @@ public final class WildcardTypeResolver implements TypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, Type type) {
-        logger.debug(() -> String.format("'%s' is wildcard type.", type.getTypeName()));
+    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type type) {
+        log.debug(() -> String.format("'%s' is wildcard type.", type.getTypeName()));
         Type upperBound = ((WildcardType) type).getUpperBounds()[0];
         TypeMeta<?> resolvedMeta = typeResolverPicker.pickTypeResolver(upperBound).resolve(typeVariableMap, upperBound);
         return new TypeMeta<>(resolvedMeta.getType(), resolvedMeta.getGenericTypes(), true);

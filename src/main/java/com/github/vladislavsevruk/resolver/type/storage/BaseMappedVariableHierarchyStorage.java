@@ -23,7 +23,6 @@
  */
 package com.github.vladislavsevruk.resolver.type.storage;
 
-import com.github.vladislavsevruk.resolver.context.ResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
@@ -33,21 +32,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Implementation of <code>MappedVariableHierarchyStorage</code>.
+ * Base implementation of <code>MappedVariableHierarchyStorage</code> with common logic.
  *
- * @see MappedVariableHierarchyStorage
+ * @param <T> type of mapped value for type variable.
  */
 @EqualsAndHashCode
-public final class MappedVariableHierarchyStorageImpl implements MappedVariableHierarchyStorage {
+public class BaseMappedVariableHierarchyStorage<T> implements MappedVariableHierarchyStorage<T> {
 
-    private Map<TypeMeta<?>, MappedVariableHierarchy> hierarchyMap = new ConcurrentHashMap<>();
-    private TypeVariableMapper typeVariableMapper;
+    private Map<TypeMeta<?>, MappedVariableHierarchy<T>> hierarchyMap = new ConcurrentHashMap<>();
+    private TypeVariableMapper<T> typeVariableMapper;
 
-    public MappedVariableHierarchyStorageImpl() {
-        this(ResolvingContextManager.getContext().getTypeVariableMapper());
-    }
-
-    public MappedVariableHierarchyStorageImpl(TypeVariableMapper typeVariableMapper) {
+    public BaseMappedVariableHierarchyStorage(TypeVariableMapper<T> typeVariableMapper) {
         this.typeVariableMapper = typeVariableMapper;
     }
 
@@ -55,7 +50,7 @@ public final class MappedVariableHierarchyStorageImpl implements MappedVariableH
      * {@inheritDoc}
      */
     @Override
-    public MappedVariableHierarchy get(TypeMeta<?> typeMeta) {
+    public MappedVariableHierarchy<T> get(TypeMeta<?> typeMeta) {
         if (!hierarchyMap.containsKey(typeMeta)) {
             buildHierarchy(typeMeta);
         }

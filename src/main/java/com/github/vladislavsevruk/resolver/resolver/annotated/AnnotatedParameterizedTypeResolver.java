@@ -28,8 +28,7 @@ import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
@@ -39,14 +38,13 @@ import java.lang.reflect.Type;
 /**
  * Resolves actual types for annotated parameterized types.
  */
+@Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class AnnotatedParameterizedTypeResolver implements AnnotatedTypeResolver {
+public final class AnnotatedParameterizedTypeResolver implements AnnotatedTypeResolver<TypeMeta<?>> {
 
-    private static final Logger logger = LogManager.getLogger(AnnotatedParameterizedTypeResolver.class);
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
 
-    private TypeResolverPicker typeResolverPicker;
-
-    public AnnotatedParameterizedTypeResolver(TypeResolverPicker typeResolverPicker) {
+    public AnnotatedParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -62,8 +60,8 @@ public final class AnnotatedParameterizedTypeResolver implements AnnotatedTypeRe
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, AnnotatedType type) {
-        logger.debug(() -> "Resolving AnnotatedParameterizedType.");
+    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, AnnotatedType type) {
+        log.debug(() -> "Resolving AnnotatedParameterizedType.");
         AnnotatedParameterizedType annotatedType = (AnnotatedParameterizedType) type;
         AnnotatedType[] actualArguments = annotatedType.getAnnotatedActualTypeArguments();
         Type rawReturnType = ((ParameterizedType) annotatedType.getType()).getRawType();
@@ -71,7 +69,8 @@ public final class AnnotatedParameterizedTypeResolver implements AnnotatedTypeRe
         return new TypeMeta<>((Class<?>) rawReturnType, actualParameters);
     }
 
-    private TypeMeta<?>[] resolveParameterizedTypes(TypeVariableMap typeVariableMap, AnnotatedType[] actualArguments) {
+    private TypeMeta<?>[] resolveParameterizedTypes(TypeVariableMap<TypeMeta<?>> typeVariableMap,
+            AnnotatedType[] actualArguments) {
         TypeMeta<?>[] argumentTypes = new TypeMeta<?>[actualArguments.length];
         for (int i = 0; i < actualArguments.length; ++i) {
             Type actualType = actualArguments[i].getType();

@@ -24,10 +24,11 @@
 package com.github.vladislavsevruk.resolver.context;
 
 import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.type.mapper.TypeMetaVariableMapper;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
-import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapperImpl;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
-import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorageImpl;
+import com.github.vladislavsevruk.resolver.type.storage.TypeMetaMappedVariableHierarchyStorage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,49 +41,52 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ResolvingContextManagerTest {
 
     private static boolean initialAutoRefreshContext;
-    private static ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage>
+    private static ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>>
             initialMappedVariableHierarchyStorageFactoryMethod;
-    private static ResolvingModuleFactoryMethod<TypeResolverPicker> initialTypeResolverPickerFactoryMethod;
-    private static ResolvingModuleFactoryMethod<TypeVariableMapper> initialTypeVariableMapperFactoryMethod;
+    private static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>>
+            initialTypeResolverPickerFactoryMethod;
+    private static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>>
+            initialTypeVariableMapperFactoryMethod;
 
     @Mock
-    private MappedVariableHierarchyStorage mappedVariableHierarchyStorage;
+    private MappedVariableHierarchyStorage<TypeMeta<?>> mappedVariableHierarchyStorage;
     @Mock
-    private TypeResolverPicker typeResolverPicker;
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
     @Mock
-    private TypeVariableMapper typeVariableMapper;
+    private TypeVariableMapper<TypeMeta<?>> typeVariableMapper;
 
     @BeforeAll
     static void disableContextRefresh() {
-        initialAutoRefreshContext = ResolvingContextManager.isAutoRefreshContext();
-        initialMappedVariableHierarchyStorageFactoryMethod = ResolvingModuleFactory.mappedVariableHierarchyStorage();
-        initialTypeResolverPickerFactoryMethod = ResolvingModuleFactory.typeResolverPicker();
-        initialTypeVariableMapperFactoryMethod = ResolvingModuleFactory.typeVariableMapper();
-        ResolvingContextManager.enableContextAutoRefresh();
+        initialAutoRefreshContext = TypeMetaResolvingContextManager.isAutoRefreshContext();
+        initialMappedVariableHierarchyStorageFactoryMethod = TypeMetaResolvingModuleFactory
+                .mappedVariableHierarchyStorage();
+        initialTypeResolverPickerFactoryMethod = TypeMetaResolvingModuleFactory.typeResolverPicker();
+        initialTypeVariableMapperFactoryMethod = TypeMetaResolvingModuleFactory.typeVariableMapper();
+        TypeMetaResolvingContextManager.enableContextAutoRefresh();
     }
 
     @AfterAll
     static void setInitialAutoContextRefresh() {
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingModuleFactory
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        TypeMetaResolvingModuleFactory
                 .replaceMappedVariableHierarchyStorage(initialMappedVariableHierarchyStorageFactoryMethod);
-        ResolvingModuleFactory.replaceTypeResolverPicker(initialTypeResolverPickerFactoryMethod);
-        ResolvingModuleFactory.replaceTypeVariableMapper(initialTypeVariableMapperFactoryMethod);
-        ResolvingContextManager.refreshContext();
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(initialTypeResolverPickerFactoryMethod);
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(initialTypeVariableMapperFactoryMethod);
+        TypeMetaResolvingContextManager.refreshContext();
         if (initialAutoRefreshContext) {
-            ResolvingContextManager.enableContextAutoRefresh();
+            TypeMetaResolvingContextManager.enableContextAutoRefresh();
         }
     }
 
     @Test
     void autoRefreshContextAfterAllModulesUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.enableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
-        ResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
-        ResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.enableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext2.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
@@ -92,10 +96,10 @@ class ResolvingContextManagerTest {
     @Test
     void autoRefreshContextAfterMappedVariableHierarchyStorageUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.enableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.enableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext2.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
@@ -105,33 +109,33 @@ class ResolvingContextManagerTest {
     @Test
     void autoRefreshContextAfterTypeResolverPickerUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.enableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.enableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
         Assertions
                 .assertNotEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
-        TypeVariableMapper expectedTypeVariableMapper = new TypeVariableMapperImpl(typeResolverPicker);
+        TypeVariableMapper<TypeMeta<?>> expectedTypeVariableMapper = new TypeMetaVariableMapper(typeResolverPicker);
         Assertions.assertEquals(expectedTypeVariableMapper, resolvingContext2.getTypeVariableMapper());
         Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new MappedVariableHierarchyStorageImpl(expectedTypeVariableMapper),
+        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(expectedTypeVariableMapper),
                 resolvingContext2.getMappedVariableHierarchyStorage());
     }
 
     @Test
     void autoRefreshContextAfterTypeVariableMapperUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.enableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.enableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new MappedVariableHierarchyStorageImpl(typeVariableMapper),
+        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(typeVariableMapper),
                 resolvingContext2.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
         Assertions.assertEquals(typeVariableMapper, resolvingContext2.getTypeVariableMapper());
@@ -139,9 +143,9 @@ class ResolvingContextManagerTest {
 
     @Test
     void equalContextAfterRefreshWithoutUpdatesTest() {
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingContextManager.refreshContext();
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.refreshContext();
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotSame(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(resolvingContext1, resolvingContext2);
     }
@@ -149,13 +153,13 @@ class ResolvingContextManagerTest {
     @Test
     void newContextAfterRefreshAfterAllModulesUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
-        ResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
-        ResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
-        ResolvingContextManager.refreshContext();
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
+        TypeMetaResolvingContextManager.refreshContext();
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext2.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
@@ -165,11 +169,11 @@ class ResolvingContextManagerTest {
     @Test
     void newContextAfterRefreshAfterMappedVariableHierarchyStorageUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
-        ResolvingContextManager.refreshContext();
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
+        TypeMetaResolvingContextManager.refreshContext();
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
@@ -181,94 +185,94 @@ class ResolvingContextManagerTest {
     @Test
     void newContextAfterRefreshAfterTypeResolverPickerUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
-        ResolvingContextManager.refreshContext();
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
+        TypeMetaResolvingContextManager.refreshContext();
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
         Assertions
                 .assertNotEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
-        TypeVariableMapper expectedTypeVariableMapper = new TypeVariableMapperImpl(typeResolverPicker);
+        TypeVariableMapper<TypeMeta<?>> expectedTypeVariableMapper = new TypeMetaVariableMapper(typeResolverPicker);
         Assertions.assertEquals(expectedTypeVariableMapper, resolvingContext2.getTypeVariableMapper());
         Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new MappedVariableHierarchyStorageImpl(expectedTypeVariableMapper),
+        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(expectedTypeVariableMapper),
                 resolvingContext2.getMappedVariableHierarchyStorage());
     }
 
     @Test
     void newContextAfterRefreshAfterTypeVariableMapperUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
-        ResolvingContextManager.refreshContext();
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
+        TypeMetaResolvingContextManager.refreshContext();
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
         Assertions.assertEquals(typeVariableMapper, resolvingContext2.getTypeVariableMapper());
         Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new MappedVariableHierarchyStorageImpl(typeVariableMapper),
+        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(typeVariableMapper),
                 resolvingContext2.getMappedVariableHierarchyStorage());
     }
 
     @Test
     void sameContextIsReturnedIfAutoRefreshDisabledAfterMappedVariableHierarchyStorageUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertSame(resolvingContext1, resolvingContext2);
     }
 
     @Test
     void sameContextIsReturnedIfAutoRefreshDisabledAfterRefreshAfterAllModulesUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
-        ResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
-        ResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertEquals(resolvingContext1, resolvingContext2);
     }
 
     @Test
     void sameContextIsReturnedIfAutoRefreshDisabledAfterTypeResolverPickerUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertSame(resolvingContext1, resolvingContext2);
     }
 
     @Test
     void sameContextIsReturnedIfAutoRefreshDisabledAfterTypeVariableMapperUpdatesTest() {
         resetModulesAndContext();
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertSame(resolvingContext1, resolvingContext2);
     }
 
     @Test
     void sameContextIsReturnedTest() {
-        ResolvingContext resolvingContext1 = ResolvingContextManager.getContext();
-        ResolvingContext resolvingContext2 = ResolvingContextManager.getContext();
+        ResolvingContext resolvingContext1 = TypeMetaResolvingContextManager.getContext();
+        ResolvingContext resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertSame(resolvingContext1, resolvingContext2);
     }
 
     private void resetModulesAndContext() {
-        ResolvingContextManager.disableContextAutoRefresh();
-        ResolvingModuleFactory.replaceMappedVariableHierarchyStorage(null);
-        ResolvingModuleFactory.replaceTypeResolverPicker(null);
-        ResolvingModuleFactory.replaceTypeVariableMapper(null);
-        ResolvingContextManager.refreshContext();
+        TypeMetaResolvingContextManager.disableContextAutoRefresh();
+        TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(null);
+        TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(null);
+        TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(null);
+        TypeMetaResolvingContextManager.refreshContext();
     }
 }

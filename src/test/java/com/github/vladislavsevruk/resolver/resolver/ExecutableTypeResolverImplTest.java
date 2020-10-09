@@ -24,6 +24,7 @@
 package com.github.vladislavsevruk.resolver.resolver;
 
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
+import com.github.vladislavsevruk.resolver.resolver.executable.ExecutableTypeMetaResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
@@ -40,7 +41,7 @@ import java.util.Set;
 
 class ExecutableTypeResolverImplTest {
 
-    private ExecutableTypeResolverImpl executableTypeResolver = new ExecutableTypeResolverImpl();
+    private ExecutableTypeMetaResolver executableTypeResolver = new ExecutableTypeMetaResolver();
 
     @Test
     void getGenericReturnTypeClassTest() throws NoSuchMethodException {
@@ -717,7 +718,6 @@ class ExecutableTypeResolverImplTest {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(typeProvider,
                 TestModel.class.getMethod("getSingleParameterizedParameterTypeInnerParameterType", Set.class));
         TypeMeta<?> innerTypeMeta1 = new TypeMeta<>(Float.class);
-        TypeMeta<?> innerTypeMeta2 = new TypeMeta<>(Character.class);
         TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ innerTypeMeta1 });
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ listTypeMeta });
         Assertions.assertEquals(Collections.singletonList(expectedTypeMeta), result);

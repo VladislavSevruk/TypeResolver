@@ -23,15 +23,16 @@
  */
 package com.github.vladislavsevruk.resolver.resolver;
 
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 
 import java.lang.reflect.Type;
 
 /**
  * Resolves actual types for generic parameters.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface TypeResolver {
+public interface TypeResolver<T> {
 
     /**
      * Checks if type resolver can deal with specific type.
@@ -47,8 +48,7 @@ public interface TypeResolver {
      *
      * @param typeVariableMap <code>TypeVariableMap</code> with declared class type variables.
      * @param type            <code>Type</code> to resolve.
-     * @return <code>TypeMeta</code> with actual types for received type.
+     * @return actual type for received type.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> resolve(TypeVariableMap typeVariableMap, Type type);
+    T resolve(TypeVariableMap<T> typeVariableMap, Type type);
 }

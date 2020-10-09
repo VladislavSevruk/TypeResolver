@@ -32,7 +32,7 @@ import java.util.List;
 
 class MappedVariableHierarchyStorageImplTest {
 
-    private MappedVariableHierarchyStorageImpl realStorage = new MappedVariableHierarchyStorageImpl();
+    private TypeMetaMappedVariableHierarchyStorage realStorage = new TypeMetaMappedVariableHierarchyStorage();
 
     @Test
     void getAlreadyPresentHierarchyTest() {

@@ -28,8 +28,10 @@ import java.lang.reflect.Type;
 
 /**
  * Picks type resolver that can deal with specific type.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface TypeResolverPicker {
+public interface TypeResolverPicker<T> {
 
     /**
      * Picks resolver that can deal with received annotated type.
@@ -37,7 +39,7 @@ public interface TypeResolverPicker {
      * @param annotatedType <code>AnnotatedType</code> to pick resolver for.
      * @return <code>AnnotatedTypeResolver</code> that can deal with received <code>AnnotatedType</code>.
      */
-    AnnotatedTypeResolver pickAnnotatedTypeResolver(AnnotatedType annotatedType);
+    AnnotatedTypeResolver<T> pickAnnotatedTypeResolver(AnnotatedType annotatedType);
 
     /**
      * Returns resolver that can deal with received type.
@@ -45,5 +47,5 @@ public interface TypeResolverPicker {
      * @param type <code>Type</code> to pick resolver for.
      * @return <code>TypeResolver</code> that can deal with received <code>Type</code>.
      */
-    TypeResolver pickTypeResolver(Type type);
+    TypeResolver<T> pickTypeResolver(Type type);
 }

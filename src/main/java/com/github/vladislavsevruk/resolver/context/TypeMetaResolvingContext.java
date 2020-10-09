@@ -23,36 +23,36 @@
  */
 package com.github.vladislavsevruk.resolver.context;
 
+import com.github.vladislavsevruk.resolver.resolver.TypeMetaResolverPicker;
 import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPickerImpl;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.type.mapper.TypeMetaVariableMapper;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
-import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapperImpl;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
-import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorageImpl;
+import com.github.vladislavsevruk.resolver.type.storage.TypeMetaMappedVariableHierarchyStorage;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 /**
- * Implementation of <code>ResolvingContext</code>.
+ * Implementation of <code>ResolvingContext</code> for TypeMeta.
  *
  * @see ResolvingContext
+ * @see TypeMeta
  */
+@Log4j2
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
 @ToString
 @EqualsAndHashCode
-final class ResolvingContextImpl implements ResolvingContext {
+final class TypeMetaResolvingContext implements ResolvingContext<TypeMeta<?>> {
 
-    private static final Logger logger = LogManager.getLogger(ResolvingContextImpl.class);
-
-    MappedVariableHierarchyStorage mappedVariableHierarchyStorage;
-    TypeResolverPicker typeResolverPicker;
-    TypeVariableMapper typeVariableMapper;
+    MappedVariableHierarchyStorage<TypeMeta<?>> mappedVariableHierarchyStorage;
+    TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
+    TypeVariableMapper<TypeMeta<?>> typeVariableMapper;
 
     /**
      * Creates new instance using received modules or default implementations for nulls.
@@ -64,25 +64,23 @@ final class ResolvingContextImpl implements ResolvingContext {
      * @param typeVariableMapperFactoryMethod             factory method for <code>TypeVariableMapper</code> module
      *                                                    implementation.
      */
-    ResolvingContextImpl(
-            ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage> mappedVariableHierarchyStorageFactoryMethod,
-            ResolvingModuleFactoryMethod<TypeResolverPicker> typeResolverPickerFactoryMethod,
-            ResolvingModuleFactoryMethod<TypeVariableMapper> typeVariableMapperFactoryMethod) {
-        this.typeResolverPicker = orDefault(typeResolverPickerFactoryMethod, context -> new TypeResolverPickerImpl());
-        logger.debug(
-                () -> String.format("Using '%s' as type resolver picker.", typeResolverPicker.getClass().getName()));
+    TypeMetaResolvingContext(
+            ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>> mappedVariableHierarchyStorageFactoryMethod,
+            ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> typeResolverPickerFactoryMethod,
+            ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> typeVariableMapperFactoryMethod) {
+        this.typeResolverPicker = orDefault(typeResolverPickerFactoryMethod, context -> new TypeMetaResolverPicker());
+        log.debug(() -> String.format("Using '%s' as type resolver picker.", typeResolverPicker.getClass().getName()));
         this.typeVariableMapper = orDefault(typeVariableMapperFactoryMethod,
-                context -> new TypeVariableMapperImpl(typeResolverPicker));
-        logger.debug(
-                () -> String.format("Using '%s' as type variable mapper.", typeVariableMapper.getClass().getName()));
+                context -> new TypeMetaVariableMapper(typeResolverPicker));
+        log.debug(() -> String.format("Using '%s' as type variable mapper.", typeVariableMapper.getClass().getName()));
         this.mappedVariableHierarchyStorage = orDefault(mappedVariableHierarchyStorageFactoryMethod,
-                context -> new MappedVariableHierarchyStorageImpl(typeVariableMapper));
-        logger.debug(() -> String.format("Using '%s' as mapped variable hierarchy storage.",
+                context -> new TypeMetaMappedVariableHierarchyStorage(typeVariableMapper));
+        log.debug(() -> String.format("Using '%s' as mapped variable hierarchy storage.",
                 mappedVariableHierarchyStorage.getClass().getName()));
     }
 
-    private <T> T orDefault(ResolvingModuleFactoryMethod<T> factoryMethod,
-            ResolvingModuleFactoryMethod<T> defaultFactoryMethod) {
+    private <T> T orDefault(ResolvingModuleFactoryMethod<TypeMeta<?>, T> factoryMethod,
+            ResolvingModuleFactoryMethod<TypeMeta<?>, T> defaultFactoryMethod) {
         if (factoryMethod != null) {
             T module = factoryMethod.get(this);
             if (module != null) {

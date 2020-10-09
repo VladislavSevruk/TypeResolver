@@ -28,8 +28,7 @@ import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
@@ -38,14 +37,13 @@ import java.lang.reflect.Type;
 /**
  * Resolves actual types for generic array types.
  */
+@Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class GenericArrayTypeResolver implements TypeResolver {
+public final class GenericArrayTypeResolver implements TypeResolver<TypeMeta<?>> {
 
-    private static final Logger logger = LogManager.getLogger(GenericArrayTypeResolver.class);
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
 
-    private TypeResolverPicker typeResolverPicker;
-
-    public GenericArrayTypeResolver(TypeResolverPicker typeResolverPicker) {
+    public GenericArrayTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -61,10 +59,10 @@ public final class GenericArrayTypeResolver implements TypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, Type type) {
+    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type type) {
         GenericArrayType genericArrayType = (GenericArrayType) type;
         Type componentType = genericArrayType.getGenericComponentType();
-        logger.debug(
+        log.debug(
                 () -> String.format("'%s' represents array of '%s'.", type.getTypeName(), componentType.getTypeName()));
         TypeMeta<?> resolvedMeta = typeResolverPicker.pickTypeResolver(componentType)
                 .resolve(typeVariableMap, componentType);

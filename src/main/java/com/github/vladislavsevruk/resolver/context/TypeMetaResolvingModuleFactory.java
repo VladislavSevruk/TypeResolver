@@ -24,10 +24,10 @@
 package com.github.vladislavsevruk.resolver.context;
 
 import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -35,26 +35,28 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Provides replaceable modules schemas required for resolving mechanism.
  */
-public final class ResolvingModuleFactory {
+@Log4j2
+public final class TypeMetaResolvingModuleFactory {
 
     private static final ReadWriteLock MAPPED_VARIABLE_HIERARCHY_STORAGE_LOCK = new ReentrantReadWriteLock();
     private static final ReadWriteLock TYPE_RESOLVER_PICKER_LOCK = new ReentrantReadWriteLock();
     private static final ReadWriteLock TYPE_VARIABLE_MAPPER_LOCK = new ReentrantReadWriteLock();
-    private static final Logger logger = LogManager.getLogger(ResolvingModuleFactory.class);
-    private static ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage> mappedVariableHierarchyStorage;
-    private static ResolvingModuleFactoryMethod<TypeResolverPicker> typeResolverPicker;
-    private static ResolvingModuleFactoryMethod<TypeVariableMapper> typeVariableMapper;
+    private static ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>>
+            mappedVariableHierarchyStorage;
+    private static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> typeResolverPicker;
+    private static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> typeVariableMapper;
 
-    private ResolvingModuleFactory() {
+    private TypeMetaResolvingModuleFactory() {
     }
 
     /**
      * Returns current instance of <code>ResolvingModuleFactoryMethod</code> for <code>MappedVariableHierarchyStorage</code>.
      */
-    public static ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage> mappedVariableHierarchyStorage() {
+    @SuppressWarnings("java:S1452")
+    public static ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>> mappedVariableHierarchyStorage() {
         MAPPED_VARIABLE_HIERARCHY_STORAGE_LOCK.readLock().lock();
-        ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage> storageToReturn
-                = ResolvingModuleFactory.mappedVariableHierarchyStorage;
+        ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>> storageToReturn
+                = TypeMetaResolvingModuleFactory.mappedVariableHierarchyStorage;
         MAPPED_VARIABLE_HIERARCHY_STORAGE_LOCK.readLock().unlock();
         return storageToReturn;
     }
@@ -66,14 +68,14 @@ public final class ResolvingModuleFactory {
      * @param storage new instance of <code>ResolvingModuleFactoryMethod</code> for <code>MappedVariableHierarchyStorage</code>.
      */
     public static void replaceMappedVariableHierarchyStorage(
-            ResolvingModuleFactoryMethod<MappedVariableHierarchyStorage> storage) {
+            ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>> storage) {
         MAPPED_VARIABLE_HIERARCHY_STORAGE_LOCK.writeLock().lock();
-        logger.info(() -> String.format("Replacing MappedVariableHierarchyStorage by '%s'.",
+        log.info(() -> String.format("Replacing MappedVariableHierarchyStorage by '%s'.",
                 storage == null ? null : storage.getClass().getName()));
-        ResolvingModuleFactory.mappedVariableHierarchyStorage = storage;
+        TypeMetaResolvingModuleFactory.mappedVariableHierarchyStorage = storage;
         MAPPED_VARIABLE_HIERARCHY_STORAGE_LOCK.writeLock().unlock();
-        if (ResolvingContextManager.isAutoRefreshContext()) {
-            ResolvingContextManager.refreshContext();
+        if (TypeMetaResolvingContextManager.isAutoRefreshContext()) {
+            TypeMetaResolvingContextManager.refreshContext();
         }
     }
 
@@ -83,14 +85,15 @@ public final class ResolvingModuleFactory {
      *
      * @param picker new instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeResolverPicker</code>.
      */
-    public static void replaceTypeResolverPicker(ResolvingModuleFactoryMethod<TypeResolverPicker> picker) {
+    public static void replaceTypeResolverPicker(
+            ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> picker) {
         TYPE_RESOLVER_PICKER_LOCK.writeLock().lock();
-        logger.info(() -> String
+        log.info(() -> String
                 .format("Replacing TypeResolverPicker by '%s'.", picker == null ? null : picker.getClass().getName()));
-        ResolvingModuleFactory.typeResolverPicker = picker;
+        TypeMetaResolvingModuleFactory.typeResolverPicker = picker;
         TYPE_RESOLVER_PICKER_LOCK.writeLock().unlock();
-        if (ResolvingContextManager.isAutoRefreshContext()) {
-            ResolvingContextManager.refreshContext();
+        if (TypeMetaResolvingContextManager.isAutoRefreshContext()) {
+            TypeMetaResolvingContextManager.refreshContext();
         }
     }
 
@@ -100,23 +103,26 @@ public final class ResolvingModuleFactory {
      *
      * @param mapper new instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeVariableMapper</code>.
      */
-    public static void replaceTypeVariableMapper(ResolvingModuleFactoryMethod<TypeVariableMapper> mapper) {
+    public static void replaceTypeVariableMapper(
+            ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> mapper) {
         TYPE_VARIABLE_MAPPER_LOCK.writeLock().lock();
-        logger.info(() -> String
+        log.info(() -> String
                 .format("Replacing TypeVariableMapper by '%s'.", mapper == null ? null : mapper.getClass().getName()));
-        ResolvingModuleFactory.typeVariableMapper = mapper;
+        TypeMetaResolvingModuleFactory.typeVariableMapper = mapper;
         TYPE_VARIABLE_MAPPER_LOCK.writeLock().unlock();
-        if (ResolvingContextManager.isAutoRefreshContext()) {
-            ResolvingContextManager.refreshContext();
+        if (TypeMetaResolvingContextManager.isAutoRefreshContext()) {
+            TypeMetaResolvingContextManager.refreshContext();
         }
     }
 
     /**
      * Returns current instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeResolverPicker</code>.
      */
-    public static ResolvingModuleFactoryMethod<TypeResolverPicker> typeResolverPicker() {
+    @SuppressWarnings("java:S1452")
+    public static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> typeResolverPicker() {
         TYPE_RESOLVER_PICKER_LOCK.readLock().lock();
-        ResolvingModuleFactoryMethod<TypeResolverPicker> pickerToReturn = ResolvingModuleFactory.typeResolverPicker;
+        ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> pickerToReturn
+                = TypeMetaResolvingModuleFactory.typeResolverPicker;
         TYPE_RESOLVER_PICKER_LOCK.readLock().unlock();
         return pickerToReturn;
     }
@@ -124,9 +130,11 @@ public final class ResolvingModuleFactory {
     /**
      * Returns current instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeVariableMapper</code>.
      */
-    public static ResolvingModuleFactoryMethod<TypeVariableMapper> typeVariableMapper() {
+    @SuppressWarnings("java:S1452")
+    public static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> typeVariableMapper() {
         TYPE_VARIABLE_MAPPER_LOCK.readLock().lock();
-        ResolvingModuleFactoryMethod<TypeVariableMapper> mapperToReturn = ResolvingModuleFactory.typeVariableMapper;
+        ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> mapperToReturn
+                = TypeMetaResolvingModuleFactory.typeVariableMapper;
         TYPE_VARIABLE_MAPPER_LOCK.readLock().unlock();
         return mapperToReturn;
     }

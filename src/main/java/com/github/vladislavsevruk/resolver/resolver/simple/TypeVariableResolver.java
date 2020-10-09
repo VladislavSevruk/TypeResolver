@@ -27,8 +27,7 @@ import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -36,10 +35,9 @@ import java.lang.reflect.TypeVariable;
 /**
  * Resolves actual types for type variables.
  */
+@Log4j2
 @EqualsAndHashCode
-public final class TypeVariableResolver implements TypeResolver {
-
-    private static final Logger logger = LogManager.getLogger(TypeVariableResolver.class);
+public final class TypeVariableResolver implements TypeResolver<TypeMeta<?>> {
 
     /**
      * {@inheritDoc}
@@ -54,15 +52,15 @@ public final class TypeVariableResolver implements TypeResolver {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, Type type) {
-        logger.debug(() -> String.format("'%s' is type variable.", type.getTypeName()));
+    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type type) {
+        log.debug(() -> String.format("'%s' is type variable.", type.getTypeName()));
         TypeMeta<?> typeMeta = typeVariableMap.getActualType((TypeVariable<? extends Class<?>>) type);
         if (typeMeta != null) {
-            logger.debug(() -> String
+            log.debug(() -> String
                     .format("Actual type for '%s' is '%s'.", type.getTypeName(), typeMeta.getType().getName()));
             return typeMeta;
         }
-        logger.info(() -> String
+        log.info(() -> String
                 .format("Failed to find type variable '%s' in class declaration. Probably generic type used in "
                                 + "method declaration directly. Using 'java.lang.Object' for '%<s' type variable.",
                         type.getTypeName()));

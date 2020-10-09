@@ -45,7 +45,7 @@ import java.util.Set;
 
 class TypeVariableMapperImplTest {
 
-    private TypeVariableMapperImpl realMapper = new TypeVariableMapperImpl();
+    private TypeMetaVariableMapper realMapper = new TypeMetaVariableMapper();
 
     @Test
     void mapArraySeveralComponentTypesTypeMetaTest() {

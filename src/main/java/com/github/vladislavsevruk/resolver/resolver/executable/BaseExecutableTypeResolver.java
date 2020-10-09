@@ -21,17 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.executable;
 
 import com.github.vladislavsevruk.resolver.context.ResolvingContext;
-import com.github.vladislavsevruk.resolver.context.ResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Executable;
@@ -43,18 +41,13 @@ import java.util.List;
  *
  * @see ExecutableTypeResolver
  */
+@Log4j2
 @EqualsAndHashCode
-public final class ExecutableTypeResolverImpl implements ExecutableTypeResolver {
+public class BaseExecutableTypeResolver<T> implements ExecutableTypeResolver<T> {
 
-    private static final Logger logger = LogManager.getLogger(ExecutableTypeResolverImpl.class);
+    protected final ResolvingContext<T> context;
 
-    private final ResolvingContext context;
-
-    public ExecutableTypeResolverImpl() {
-        this(ResolvingContextManager.getContext());
-    }
-
-    public ExecutableTypeResolverImpl(ResolvingContext context) {
+    public BaseExecutableTypeResolver(ResolvingContext<T> context) {
         this.context = context;
     }
 
@@ -62,7 +55,7 @@ public final class ExecutableTypeResolverImpl implements ExecutableTypeResolver 
      * {@inheritDoc}
      */
     @Override
-    public List<TypeMeta<?>> getParameterTypes(Class<?> clazz, Executable executable) {
+    public List<T> getParameterTypes(Class<?> clazz, Executable executable) {
         return getParameterTypes(new TypeMeta<>(clazz), executable);
     }
 
@@ -70,13 +63,12 @@ public final class ExecutableTypeResolverImpl implements ExecutableTypeResolver 
      * {@inheritDoc}
      */
     @Override
-    public List<TypeMeta<?>> getParameterTypes(TypeMeta<?> typeMeta, Executable executable) {
-        logger.debug(
-                () -> String.format("Getting parameterized argument types for method '%s'.", executable.getName()));
-        MappedVariableHierarchy hierarchy = context.getMappedVariableHierarchyStorage().get(typeMeta);
-        TypeVariableMap typeVariableMap = hierarchy.getTypeVariableMap(executable.getDeclaringClass());
+    public List<T> getParameterTypes(TypeMeta<?> typeMeta, Executable executable) {
+        log.debug(() -> String.format("Getting parameterized argument types for method '%s'.", executable.getName()));
+        MappedVariableHierarchy<T> hierarchy = context.getMappedVariableHierarchyStorage().get(typeMeta);
+        TypeVariableMap<T> typeVariableMap = hierarchy.getTypeVariableMap(executable.getDeclaringClass());
         AnnotatedType[] parameterTypes = executable.getAnnotatedParameterTypes();
-        List<TypeMeta<?>> resolvedTypes = new ArrayList<>(parameterTypes.length);
+        List<T> resolvedTypes = new ArrayList<>(parameterTypes.length);
         for (AnnotatedType parameterType : parameterTypes) {
             resolvedTypes.add(context.getTypeResolverPicker().pickAnnotatedTypeResolver(parameterType)
                     .resolve(typeVariableMap, parameterType));
@@ -88,15 +80,15 @@ public final class ExecutableTypeResolverImpl implements ExecutableTypeResolver 
      * {@inheritDoc}
      */
     @Override
-    public List<TypeMeta<?>> getParameterTypes(TypeProvider<?> typeProvider, Executable executable) {
-        return getParameterTypes(typeProvider.getTypeMeta(context.getTypeVariableMapper()), executable);
+    public List<T> getParameterTypes(TypeProvider<?> typeProvider, Executable executable) {
+        return getParameterTypes(typeProvider.getTypeMeta(), executable);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> getReturnType(Class<?> clazz, Executable executable) {
+    public T getReturnType(Class<?> clazz, Executable executable) {
         return getReturnType(new TypeMeta<>(clazz), executable);
     }
 
@@ -104,10 +96,10 @@ public final class ExecutableTypeResolverImpl implements ExecutableTypeResolver 
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> getReturnType(TypeMeta<?> typeMeta, Executable executable) {
-        logger.debug(() -> String.format("Getting parameterized return type for method '%s'.", executable.getName()));
-        MappedVariableHierarchy hierarchy = context.getMappedVariableHierarchyStorage().get(typeMeta);
-        TypeVariableMap typeVariableMap = hierarchy.getTypeVariableMap(executable.getDeclaringClass());
+    public T getReturnType(TypeMeta<?> typeMeta, Executable executable) {
+        log.debug(() -> String.format("Getting parameterized return type for method '%s'.", executable.getName()));
+        MappedVariableHierarchy<T> hierarchy = context.getMappedVariableHierarchyStorage().get(typeMeta);
+        TypeVariableMap<T> typeVariableMap = hierarchy.getTypeVariableMap(executable.getDeclaringClass());
         AnnotatedType annotatedReturnType = executable.getAnnotatedReturnType();
         return context.getTypeResolverPicker().pickAnnotatedTypeResolver(annotatedReturnType)
                 .resolve(typeVariableMap, annotatedReturnType);
@@ -117,7 +109,7 @@ public final class ExecutableTypeResolverImpl implements ExecutableTypeResolver 
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> getReturnType(TypeProvider<?> typeProvider, Executable executable) {
-        return getReturnType(typeProvider.getTypeMeta(context.getTypeVariableMapper()), executable);
+    public T getReturnType(TypeProvider<?> typeProvider, Executable executable) {
+        return getReturnType(typeProvider.getTypeMeta(), executable);
     }
 }

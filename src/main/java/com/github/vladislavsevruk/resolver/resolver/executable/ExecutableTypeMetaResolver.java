@@ -21,46 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.annotated;
+package com.github.vladislavsevruk.resolver.resolver.executable;
 
-import com.github.vladislavsevruk.resolver.resolver.AnnotatedTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.context.ResolvingContext;
+import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
+import com.github.vladislavsevruk.resolver.type.TypeProvider;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
-import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.Executable;
+import java.util.List;
 
 /**
- * Resolves actual types for annotated types.
+ * Implementation of <code>ExecutableTypeResolver</code> for TypeMeta.
+ *
+ * @see ExecutableTypeResolver
+ * @see TypeMeta
  */
 @Log4j2
-@EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class AnnotatedTypeBaseResolver implements AnnotatedTypeResolver<TypeMeta<?>> {
+@EqualsAndHashCode(callSuper = true)
+public final class ExecutableTypeMetaResolver extends BaseExecutableTypeResolver<TypeMeta<?>> {
 
-    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
+    public ExecutableTypeMetaResolver() {
+        this(TypeMetaResolvingContextManager.getContext());
+    }
 
-    public AnnotatedTypeBaseResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
-        this.typeResolverPicker = typeResolverPicker;
+    public ExecutableTypeMetaResolver(ResolvingContext<TypeMeta<?>> context) {
+        super(context);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean canResolve(AnnotatedType annotatedType) {
-        return true;
+    public List<TypeMeta<?>> getParameterTypes(TypeProvider<?> typeProvider, Executable executable) {
+        return getParameterTypes(typeProvider.getTypeMeta(context.getTypeVariableMapper()), executable);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, AnnotatedType annotatedType) {
-        log.debug(() -> "Resolving AnnotatedType.");
-        Type typeToResolve = annotatedType.getType();
-        return typeResolverPicker.pickTypeResolver(typeToResolve).resolve(typeVariableMap, typeToResolve);
+    public TypeMeta<?> getReturnType(TypeProvider<?> typeProvider, Executable executable) {
+        return getReturnType(typeProvider.getTypeMeta(context.getTypeVariableMapper()), executable);
     }
 }

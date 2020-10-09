@@ -23,9 +23,9 @@
  */
 package com.github.vladislavsevruk.resolver.resolver.simple;
 
+import com.github.vladislavsevruk.resolver.resolver.TypeMetaResolverPicker;
 import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
 import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPickerImpl;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
@@ -48,7 +48,7 @@ import java.util.stream.Stream;
 class GenericArrayTypeResolverTest {
 
     private GenericArrayTypeResolver realGenericArrayTypeResolver = new GenericArrayTypeResolver(
-            new TypeResolverPickerImpl());
+            new TypeMetaResolverPicker());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")

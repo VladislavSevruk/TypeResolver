@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.field;
 
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
@@ -30,36 +30,35 @@ import java.lang.reflect.Field;
 
 /**
  * Resolves actual types for generic fields.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface FieldTypeResolver {
+public interface FieldTypeResolver<T> {
 
     /**
      * Resolves actual types for generic fields.
      *
      * @param clazz <code>Class</code> where field was declared.
      * @param field <code>Field</code> to resolve actual return type for.
-     * @return <code>TypeMeta</code> with actual field type.
+     * @return actual field type.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> resolveField(Class<?> clazz, Field field);
+    T resolveField(Class<?> clazz, Field field);
 
     /**
      * Resolves actual types for generic fields.
      *
      * @param typeMeta <code>TypeMeta</code> with actual types for class where field was declared.
      * @param field    <code>Field</code> to resolve actual return type for.
-     * @return <code>TypeMeta</code> with actual field type.
+     * @return actual field type.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> resolveField(TypeMeta<?> typeMeta, Field field);
+    T resolveField(TypeMeta<?> typeMeta, Field field);
 
     /**
      * Resolves actual types for generic fields.
      *
      * @param typeProvider <code>TypeProvider</code> with class where field was declared as type parameter.
      * @param field        <code>Field</code> to resolve actual return type for.
-     * @return <code>TypeMeta</code> with actual field type.
+     * @return actual field type.
      */
-    @SuppressWarnings("java:S1452")
-    TypeMeta<?> resolveField(TypeProvider<?> typeProvider, Field field);
+    T resolveField(TypeProvider<?> typeProvider, Field field);
 }

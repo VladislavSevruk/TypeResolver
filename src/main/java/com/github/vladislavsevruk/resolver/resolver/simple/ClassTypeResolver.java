@@ -28,8 +28,7 @@ import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -37,14 +36,13 @@ import java.lang.reflect.TypeVariable;
 /**
  * Resolves actual types for class types.
  */
+@Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class ClassTypeResolver implements TypeResolver {
+public final class ClassTypeResolver implements TypeResolver<TypeMeta<?>> {
 
-    private static final Logger logger = LogManager.getLogger(ClassTypeResolver.class);
+    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
 
-    private TypeResolverPicker typeResolverPicker;
-
-    public ClassTypeResolver(TypeResolverPicker typeResolverPicker) {
+    public ClassTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -60,7 +58,7 @@ public final class ClassTypeResolver implements TypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, Type type) {
+    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type type) {
         Class<?> actualClass = (Class<?>) type;
         if (actualClass.isArray()) {
             return resolveArray(typeVariableMap, actualClass);
@@ -68,17 +66,17 @@ public final class ClassTypeResolver implements TypeResolver {
         return resolveClassTypeParameters(typeVariableMap, actualClass);
     }
 
-    private TypeMeta<?> resolveArray(TypeVariableMap typeVariableMap, Class<?> actualClass) {
+    private TypeMeta<?> resolveArray(TypeVariableMap<TypeMeta<?>> typeVariableMap, Class<?> actualClass) {
         Class<?> componentType = actualClass.getComponentType();
-        logger.debug(() -> String
+        log.debug(() -> String
                 .format("'%s' represents array of '%s'.", actualClass.getTypeName(), componentType.getName()));
         TypeMeta<?> componentTypeMeta = typeResolverPicker.pickTypeResolver(componentType)
                 .resolve(typeVariableMap, componentType);
         return new TypeMeta<>(actualClass, new TypeMeta<?>[]{ componentTypeMeta });
     }
 
-    private TypeMeta<?> resolveClassTypeParameters(TypeVariableMap typeVariableMap, Class<?> actualClass) {
-        logger.debug(() -> String.format("'%s' already represents real class.", actualClass.getTypeName()));
+    private TypeMeta<?> resolveClassTypeParameters(TypeVariableMap<TypeMeta<?>> typeVariableMap, Class<?> actualClass) {
+        log.debug(() -> String.format("'%s' already represents real class.", actualClass.getTypeName()));
         TypeVariable<? extends Class<?>>[] classTypeParameters = actualClass.getTypeParameters();
         if (classTypeParameters.length == 0) {
             return new TypeMeta<>(actualClass);

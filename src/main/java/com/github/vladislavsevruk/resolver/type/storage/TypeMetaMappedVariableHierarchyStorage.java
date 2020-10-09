@@ -23,21 +23,25 @@
  */
 package com.github.vladislavsevruk.resolver.type.storage;
 
-import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
+import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
+import lombok.EqualsAndHashCode;
 
 /**
- * Storage with mapped variable hierarchy.
+ * Implementation of <code>MappedVariableHierarchyStorage</code> for TypeMeta.
  *
- * @param <T> type of mapped value for type variable.
+ * @see MappedVariableHierarchyStorage
+ * @see TypeMeta
  */
-public interface MappedVariableHierarchyStorage<T> {
+@EqualsAndHashCode(callSuper = true)
+public final class TypeMetaMappedVariableHierarchyStorage extends BaseMappedVariableHierarchyStorage<TypeMeta<?>> {
 
-    /**
-     * Returns stored mapped variable hierarchy for received type meta.
-     *
-     * @param typeMeta <code>TypeMeta</code> to get <code>MappedVariableHierarchy</code> for.
-     * @return <code>MappedVariableHierarchy</code> for received <code>TypeMeta</code>.
-     */
-    MappedVariableHierarchy<T> get(TypeMeta<?> typeMeta);
+    public TypeMetaMappedVariableHierarchyStorage() {
+        this(TypeMetaResolvingContextManager.getContext().getTypeVariableMapper());
+    }
+
+    public TypeMetaMappedVariableHierarchyStorage(TypeVariableMapper<TypeMeta<?>> typeVariableMapper) {
+        super(typeVariableMapper);
+    }
 }
