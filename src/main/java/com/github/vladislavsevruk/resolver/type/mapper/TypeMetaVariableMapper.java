@@ -39,7 +39,7 @@ import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 
 /**
- * Implementation of <code>TypeVariableMapper</code> for TypeMeta.
+ * Implementation of <code>TypeVariableMapper</code> for matching TypeMeta of superclasses.
  *
  * @see TypeVariableMapper
  * @see TypeMeta
@@ -122,8 +122,9 @@ public final class TypeMetaVariableMapper implements TypeVariableMapper<TypeMeta
         }
     }
 
-    private TypeMeta<?>[] mapTypes(TypeVariableMap<TypeMeta<?>> actualTypes, Type[] types) {
-        return Arrays.stream(types).map(type -> typeResolverPicker.pickTypeResolver(type).resolve(actualTypes, type))
+    private TypeMeta<?>[] mapTypes(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type[] types) {
+        return Arrays.stream(types)
+                .map(type -> typeResolverPicker.pickTypeResolver(type).resolve(typeVariableMap, type))
                 .toArray(TypeMeta<?>[]::new);
     }
 

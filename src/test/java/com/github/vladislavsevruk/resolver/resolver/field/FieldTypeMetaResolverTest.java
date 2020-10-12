@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.field;
 
 import com.github.vladislavsevruk.resolver.resolver.field.FieldTypeMetaResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class FieldTypeResolverImplTest {
+class FieldTypeMetaResolverTest {
 
     private FieldTypeMetaResolver fieldTypeResolver = new FieldTypeMetaResolver();
 

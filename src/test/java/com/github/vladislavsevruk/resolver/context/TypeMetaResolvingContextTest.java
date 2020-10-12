@@ -37,7 +37,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ResolvingContextImplTest {
+class TypeMetaResolvingContextTest {
 
     @Mock
     private MappedVariableHierarchyStorage<TypeMeta<?>> mappedVariableHierarchyStorage;

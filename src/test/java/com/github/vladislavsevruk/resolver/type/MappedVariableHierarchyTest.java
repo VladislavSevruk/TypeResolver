@@ -53,10 +53,10 @@ class MappedVariableHierarchyTest {
 
     @Test
     void addSeveralTypeVariablesTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(HashSet.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(HashSet.class);
         hierarchy.addTypeVariable(HashSet.class, typeVariable1, typeMeta1);
         hierarchy.addTypeVariable(HashSet.class, typeVariable2, typeMeta2);
-        TypeVariableMap typeVariableMap = hierarchy.getTypeVariableMap(HashSet.class);
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = hierarchy.getTypeVariableMap(HashSet.class);
         Assertions.assertEquals(typeMeta1, typeVariableMap.getActualType(typeVariable1));
         Assertions.assertEquals(typeMeta2, typeVariableMap.getActualType(typeVariable2));
         TypeVariableMap emptyMap = new TypeVariableMap();
@@ -66,12 +66,12 @@ class MappedVariableHierarchyTest {
 
     @Test
     void addSeveralTypeVariablesToSuperclassTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(HashSet.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(HashSet.class);
         hierarchy.addTypeVariable(AbstractSet.class, typeVariable1, typeMeta1);
         hierarchy.addTypeVariable(AbstractSet.class, typeVariable2, typeMeta2);
         TypeVariableMap emptyMap = new TypeVariableMap();
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(HashSet.class));
-        TypeVariableMap typeVariableMap = hierarchy.getTypeVariableMap(AbstractSet.class);
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = hierarchy.getTypeVariableMap(AbstractSet.class);
         Assertions.assertEquals(typeMeta1, typeVariableMap.getActualType(typeVariable1));
         Assertions.assertEquals(typeMeta2, typeVariableMap.getActualType(typeVariable2));
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(AbstractCollection.class));
@@ -79,9 +79,9 @@ class MappedVariableHierarchyTest {
 
     @Test
     void addTypeVariableTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(HashSet.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(HashSet.class);
         hierarchy.addTypeVariable(HashSet.class, typeVariable1, typeMeta1);
-        TypeVariableMap typeVariableMap = hierarchy.getTypeVariableMap(HashSet.class);
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = hierarchy.getTypeVariableMap(HashSet.class);
         Assertions.assertEquals(typeMeta1, typeVariableMap.getActualType(typeVariable1));
         TypeVariableMap emptyMap = new TypeVariableMap();
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(AbstractSet.class));
@@ -90,26 +90,26 @@ class MappedVariableHierarchyTest {
 
     @Test
     void addTypeVariableToSuperclassTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(HashSet.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(HashSet.class);
         hierarchy.addTypeVariable(AbstractSet.class, typeVariable1, typeMeta1);
-        TypeVariableMap emptyMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> emptyMap = new TypeVariableMap<>();
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(HashSet.class));
-        TypeVariableMap typeVariableMap = hierarchy.getTypeVariableMap(AbstractSet.class);
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = hierarchy.getTypeVariableMap(AbstractSet.class);
         Assertions.assertEquals(typeMeta1, typeVariableMap.getActualType(typeVariable1));
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(AbstractCollection.class));
     }
 
     @Test
     void addTypeVariablesToSeveralClassesAtHierarchyTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(LinkedHashSet.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(LinkedHashSet.class);
         hierarchy.addTypeVariable(HashSet.class, typeVariable1, typeMeta1);
         hierarchy.addTypeVariable(AbstractSet.class, typeVariable2, typeMeta2);
-        TypeVariableMap emptyMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> emptyMap = new TypeVariableMap<>();
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(LinkedHashSet.class));
-        TypeVariableMap hashSetTypeVariableMap = hierarchy.getTypeVariableMap(HashSet.class);
+        TypeVariableMap<TypeMeta<?>> hashSetTypeVariableMap = hierarchy.getTypeVariableMap(HashSet.class);
         Assertions.assertEquals(typeMeta1, hashSetTypeVariableMap.getActualType(typeVariable1));
         Assertions.assertNull(hashSetTypeVariableMap.getActualType(typeVariable2));
-        TypeVariableMap abstractSetTypeVariableMap = hierarchy.getTypeVariableMap(AbstractSet.class);
+        TypeVariableMap<TypeMeta<?>> abstractSetTypeVariableMap = hierarchy.getTypeVariableMap(AbstractSet.class);
         Assertions.assertNull(abstractSetTypeVariableMap.getActualType(typeVariable1));
         Assertions.assertEquals(typeMeta2, abstractSetTypeVariableMap.getActualType(typeVariable2));
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(AbstractCollection.class));
@@ -117,26 +117,26 @@ class MappedVariableHierarchyTest {
 
     @Test
     void exceptionForAddingTypeVariableForClassNotInHierarchyTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(Long.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(Long.class);
         Assertions.assertThrows(TypeResolvingException.class,
                 () -> hierarchy.addTypeVariable(HashSet.class, typeVariable1, typeMeta1));
     }
 
     @Test
     void exceptionForClassNotInHierarchyTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(HashSet.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(HashSet.class);
         Assertions.assertThrows(TypeResolvingException.class, () -> hierarchy.getTypeVariableMap(AbstractList.class));
     }
 
     @Test
     void exceptionForGettingObjectClassTypeVariableMapTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(Long.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(Long.class);
         Assertions.assertThrows(TypeResolvingException.class, () -> hierarchy.getTypeVariableMap(Object.class));
     }
 
     @Test
     void newInstanceBuildHierarchyClassWithSeveralSuperclassesTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(Properties.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(Properties.class);
         TypeVariableMap emptyMap = new TypeVariableMap();
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(Properties.class));
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(Hashtable.class));
@@ -145,25 +145,25 @@ class MappedVariableHierarchyTest {
 
     @Test
     void newInstanceBuildHierarchyObjectClassTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(Object.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(Object.class);
         Assertions.assertEquals(new TypeVariableMap(), hierarchy.getTypeVariableMap(Object.class));
     }
 
     @Test
     void newInstanceBuildHierarchyObjectHeirClassTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(Date.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(Date.class);
         Assertions.assertEquals(new TypeVariableMap(), hierarchy.getTypeVariableMap(Date.class));
     }
 
     @Test
     void newInstanceBuildHierarchyObjectHeirParameterizedClassTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(AbstractCollection.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(AbstractCollection.class);
         Assertions.assertEquals(new TypeVariableMap(), hierarchy.getTypeVariableMap(AbstractCollection.class));
     }
 
     @Test
     void newInstanceBuildHierarchyParameterizedClassWithSeveralSuperclassesTest() {
-        MappedVariableHierarchy hierarchy = new MappedVariableHierarchy(HashSet.class);
+        MappedVariableHierarchy<TypeMeta<?>> hierarchy = new MappedVariableHierarchy<>(HashSet.class);
         TypeVariableMap emptyMap = new TypeVariableMap();
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(HashSet.class));
         Assertions.assertEquals(emptyMap, hierarchy.getTypeVariableMap(AbstractSet.class));

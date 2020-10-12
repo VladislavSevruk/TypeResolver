@@ -41,7 +41,7 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 class TypeProviderTest {
 
-    private TypeVariableMapper realTypeVariableMapper = new TypeMetaVariableMapper();
+    private TypeVariableMapper<TypeMeta<?>> realTypeVariableMapper = new TypeMetaVariableMapper();
 
     @Test
     void compareTest() {
@@ -86,7 +86,7 @@ class TypeProviderTest {
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> expectedMeta = new TypeMeta<>(HashMap.class,
                 new TypeMeta<?>[]{ new TypeMeta<>(String.class), listMeta });
-        TypeVariableMapper mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
+        TypeVariableMapper<TypeMeta<?>> mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
         TypeMeta<?> actualMeta = new TypeProvider<HashMap<String, List<Integer>>>() {}
                 .getTypeMeta(mockTypeVariableMapper);
         Assertions.assertEquals(expectedMeta, actualMeta);
@@ -95,7 +95,7 @@ class TypeProviderTest {
     @Test
     void mockMapperParameterizedClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ new TypeMeta<>(Date.class) });
-        TypeVariableMapper mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
+        TypeVariableMapper<TypeMeta<?>> mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
         TypeMeta<?> actualMeta = new TypeProvider<Set<Date>>() {}.getTypeMeta(mockTypeVariableMapper);
         Assertions.assertEquals(expectedMeta, actualMeta);
     }
@@ -103,7 +103,7 @@ class TypeProviderTest {
     @Test
     void mockMapperSimpleClassTest() {
         TypeMeta<?> expectedMeta = new TypeMeta<>(Long.class);
-        TypeVariableMapper mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
+        TypeVariableMapper<TypeMeta<?>> mockTypeVariableMapper = mockTypeVariableMapper(expectedMeta);
         TypeMeta<?> actualMeta = new TypeProvider<Long>() {}.getTypeMeta(mockTypeVariableMapper);
         Assertions.assertEquals(expectedMeta, actualMeta);
     }
@@ -163,8 +163,8 @@ class TypeProviderTest {
     }
 
     @SuppressWarnings("unchecked")
-    private TypeVariableMapper mockTypeVariableMapper(TypeMeta metaToReturn) {
-        TypeVariableMap mockTypeVariableMap = Mockito.mock(TypeVariableMap.class);
+    private TypeVariableMapper<TypeMeta<?>> mockTypeVariableMapper(TypeMeta metaToReturn) {
+        TypeVariableMap<TypeMeta<?>> mockTypeVariableMap = Mockito.mock(TypeVariableMap.class);
         Mockito.when(mockTypeVariableMap.getActualType(ArgumentMatchers.any())).thenReturn(metaToReturn);
         MappedVariableHierarchy mockMappedVariableHierarchy = Mockito.mock(MappedVariableHierarchy.class);
         Mockito.when(mockMappedVariableHierarchy.getTypeVariableMap(ArgumentMatchers.any()))

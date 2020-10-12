@@ -36,7 +36,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ResolvingModuleFactoryTest {
+class TypeMetaResolvingModuleFactoryTest {
 
     private static boolean initialAutoRefreshContext;
 

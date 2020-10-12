@@ -30,13 +30,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class MappedVariableHierarchyStorageImplTest {
+class TypeMetaMappedVariableHierarchyStorageTest {
 
     private TypeMetaMappedVariableHierarchyStorage realStorage = new TypeMetaMappedVariableHierarchyStorage();
 
     @Test
     void getAlreadyPresentHierarchyTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Long.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Long.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(Long.class);
         expectedHierarchy.addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], typeMeta);
         MappedVariableHierarchy firstHierarchy = realStorage.get(typeMeta);
@@ -47,7 +47,7 @@ class MappedVariableHierarchyStorageImplTest {
 
     @Test
     void getHierarchyForTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Short.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Short.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(Short.class);
         expectedHierarchy.addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], typeMeta);
         Assertions.assertEquals(expectedHierarchy, realStorage.get(typeMeta));

@@ -38,7 +38,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ResolvingContextManagerTest {
+class TypeMetaResolvingContextManagerTest {
 
     private static boolean initialAutoRefreshContext;
     private static ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>>

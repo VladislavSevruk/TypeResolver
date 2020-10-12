@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.executable;
 
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
 import com.github.vladislavsevruk.resolver.resolver.executable.ExecutableTypeMetaResolver;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class ExecutableTypeResolverImplTest {
+class ExecutableTypeMetaResolverTest {
 
     private ExecutableTypeMetaResolver executableTypeResolver = new ExecutableTypeMetaResolver();
 

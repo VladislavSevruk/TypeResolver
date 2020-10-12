@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-class TypeVariableMapperImplTest {
+class TypeMetaVariableMapperTest {
 
     private TypeMetaVariableMapper realMapper = new TypeMetaVariableMapper();
 
@@ -56,13 +56,13 @@ class TypeVariableMapperImplTest {
 
     @Test
     void mapArrayTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Double[].class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Double[].class);
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(Double[].class));
     }
 
     @Test
     void mapArrayTypeMetaTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(double[].class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(double[].class);
         TypeMeta<?> arrayTypeMeta = new TypeMeta<>(double[].class, new TypeMeta[]{ new TypeMeta<>(double.class) });
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(arrayTypeMeta));
     }
@@ -70,7 +70,7 @@ class TypeVariableMapperImplTest {
     @Test
     void mapClassWithParameterizedSuperclassTest() {
         Class<?> clazz = new HashSet<List<Short>>() {}.getClass();
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(clazz);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(clazz);
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Short.class) });
         expectedHierarchy.addTypeVariable(HashSet.class, HashSet.class.getTypeParameters()[0], listMeta);
         expectedHierarchy.addTypeVariable(AbstractSet.class, AbstractSet.class.getTypeParameters()[0], listMeta);
@@ -85,7 +85,7 @@ class TypeVariableMapperImplTest {
     @Test
     void mapClassWithParameterizedSuperclassTypeMetaTest() {
         Class<?> clazz = new HashSet<List<Short>>() {}.getClass();
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(clazz);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(clazz);
         TypeMeta<?> listMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Short.class) });
         expectedHierarchy.addTypeVariable(HashSet.class, HashSet.class.getTypeParameters()[0], listMeta);
         expectedHierarchy.addTypeVariable(AbstractSet.class, AbstractSet.class.getTypeParameters()[0], listMeta);
@@ -100,13 +100,13 @@ class TypeVariableMapperImplTest {
 
     @Test
     void mapObjectTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Object.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Object.class);
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(Object.class));
     }
 
     @Test
     void mapObjectTypeMetaTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Object.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Object.class);
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(TypeMeta.OBJECT_META));
     }
 
@@ -115,7 +115,7 @@ class TypeVariableMapperImplTest {
         TypeMeta<?> shortMeta = new TypeMeta<>(Short.class);
         TypeMeta<?> setMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ shortMeta });
         TypeMeta<?> listMeta = new TypeMeta<>(LinkedList.class, new TypeMeta<?>[]{ setMeta });
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(LinkedList.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(LinkedList.class);
         expectedHierarchy.addTypeVariable(LinkedList.class, LinkedList.class.getTypeParameters()[0], setMeta);
         expectedHierarchy
                 .addTypeVariable(AbstractSequentialList.class, AbstractSequentialList.class.getTypeParameters()[0],
@@ -148,7 +148,7 @@ class TypeVariableMapperImplTest {
     void mapParameterizedClassTypeMetaTest() {
         TypeMeta<?> shortMeta = new TypeMeta<>(Short.class);
         TypeMeta<?> listMeta = new TypeMeta<>(LinkedList.class, new TypeMeta<?>[]{ shortMeta });
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(LinkedList.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(LinkedList.class);
         expectedHierarchy.addTypeVariable(LinkedList.class, LinkedList.class.getTypeParameters()[0], shortMeta);
         expectedHierarchy
                 .addTypeVariable(AbstractSequentialList.class, AbstractSequentialList.class.getTypeParameters()[0],
@@ -166,7 +166,7 @@ class TypeVariableMapperImplTest {
 
     @Test
     void mapParameterizedClassVariableReplacedByObjectMetaTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(LinkedList.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(LinkedList.class);
         expectedHierarchy
                 .addTypeVariable(LinkedList.class, LinkedList.class.getTypeParameters()[0], TypeMeta.OBJECT_META);
         expectedHierarchy
@@ -200,7 +200,7 @@ class TypeVariableMapperImplTest {
 
     @Test
     void mapSimpleClassWithSeveralSuperclassesTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Long.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Long.class);
         expectedHierarchy
                 .addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], new TypeMeta<>(Long.class));
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(Long.class));
@@ -208,7 +208,7 @@ class TypeVariableMapperImplTest {
 
     @Test
     void mapSimpleClassWithSeveralSuperclassesTypeMetaTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Long.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Long.class);
         TypeMeta<?> longTypeMeta = new TypeMeta<>(Long.class);
         expectedHierarchy.addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], longTypeMeta);
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(longTypeMeta));
@@ -216,13 +216,13 @@ class TypeVariableMapperImplTest {
 
     @Test
     void mapSimpleObjectHeirTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Currency.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Currency.class);
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(Currency.class));
     }
 
     @Test
     void mapSimpleObjectHeirTypeMetaTest() {
-        MappedVariableHierarchy expectedHierarchy = new MappedVariableHierarchy(Currency.class);
+        MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Currency.class);
         TypeMeta<?> currencyTypeMeta = new TypeMeta<>(Currency.class);
         Assertions.assertEquals(expectedHierarchy, realMapper.mapTypeVariables(currencyTypeMeta));
     }
