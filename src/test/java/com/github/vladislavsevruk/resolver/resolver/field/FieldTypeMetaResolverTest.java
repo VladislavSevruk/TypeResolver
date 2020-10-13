@@ -26,6 +26,7 @@ package com.github.vladislavsevruk.resolver.resolver.field;
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -62,6 +63,42 @@ class FieldTypeMetaResolverTest {
         Field field = TestModel.class.getDeclaredField("genericField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Double.class);
+        Assertions.assertEquals(expectedTypeMeta, result);
+    }
+
+    @Test
+    void getLowerWildcardFieldTypeClassTest() throws NoSuchFieldException {
+        Field field = TestModel.class.getDeclaredField("lowerWildcardField");
+        TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
+        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META },
+                WildcardBound.LOWER);
+        TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ arrayTypeMeta });
+        Assertions.assertEquals(expectedTypeMeta, result);
+    }
+
+    @Test
+    void getLowerWildcardFieldTypeTypeMetaTest() throws NoSuchFieldException {
+        TypeMeta<?> firstClassParameterTypeMeta = new TypeMeta<>(Character.class);
+        TypeMeta<?> innerTypeMeta = new TypeMeta<>(Double.class);
+        TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
+                new TypeMeta<?>[]{ firstClassParameterTypeMeta, innerTypeMeta });
+        Field field = TestModel.class.getDeclaredField("lowerWildcardField");
+        TypeMeta<?> result = fieldTypeResolver.resolveField(typeMeta, field);
+        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Double[].class, new TypeMeta<?>[]{ innerTypeMeta },
+                WildcardBound.LOWER);
+        TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ arrayTypeMeta });
+        Assertions.assertEquals(expectedTypeMeta, result);
+    }
+
+    @Test
+    void getLowerWildcardFieldTypeTypeProviderTest() throws NoSuchFieldException {
+        TypeProvider<?> typeProvider = new TypeProvider<TestModel<Character, Double>>() {};
+        Field field = TestModel.class.getDeclaredField("lowerWildcardField");
+        TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
+        TypeMeta<?> innerTypeMeta = new TypeMeta<>(Double.class);
+        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Double[].class, new TypeMeta<?>[]{ innerTypeMeta },
+                WildcardBound.LOWER);
+        TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ arrayTypeMeta });
         Assertions.assertEquals(expectedTypeMeta, result);
     }
 
@@ -367,34 +404,37 @@ class FieldTypeMetaResolverTest {
     }
 
     @Test
-    void getWildcardFieldTypeClassTest() throws NoSuchFieldException {
-        Field field = TestModel.class.getDeclaredField("wildcardField");
+    void getUpperWildcardFieldTypeClassTest() throws NoSuchFieldException {
+        Field field = TestModel.class.getDeclaredField("upperWildcardField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(TestModel.class, field);
-        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META }, true);
+        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Object[].class, new TypeMeta<?>[]{ TypeMeta.OBJECT_META },
+                WildcardBound.UPPER);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ arrayTypeMeta });
         Assertions.assertEquals(expectedTypeMeta, result);
     }
 
     @Test
-    void getWildcardFieldTypeTypeMetaTest() throws NoSuchFieldException {
+    void getUpperWildcardFieldTypeTypeMetaTest() throws NoSuchFieldException {
         TypeMeta<?> firstClassParameterTypeMeta = new TypeMeta<>(Character.class);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Double.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
                 new TypeMeta<?>[]{ firstClassParameterTypeMeta, innerTypeMeta });
-        Field field = TestModel.class.getDeclaredField("wildcardField");
+        Field field = TestModel.class.getDeclaredField("upperWildcardField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeMeta, field);
-        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Double[].class, new TypeMeta<?>[]{ innerTypeMeta }, true);
+        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Double[].class, new TypeMeta<?>[]{ innerTypeMeta },
+                WildcardBound.UPPER);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ arrayTypeMeta });
         Assertions.assertEquals(expectedTypeMeta, result);
     }
 
     @Test
-    void getWildcardFieldTypeTypeProviderTest() throws NoSuchFieldException {
+    void getUpperWildcardFieldTypeTypeProviderTest() throws NoSuchFieldException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel<Character, Double>>() {};
-        Field field = TestModel.class.getDeclaredField("wildcardField");
+        Field field = TestModel.class.getDeclaredField("upperWildcardField");
         TypeMeta<?> result = fieldTypeResolver.resolveField(typeProvider, field);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Double.class);
-        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Double[].class, new TypeMeta<?>[]{ innerTypeMeta }, true);
+        TypeMeta<?> arrayTypeMeta = new TypeMeta<>(Double[].class, new TypeMeta<?>[]{ innerTypeMeta },
+                WildcardBound.UPPER);
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(Set.class, new TypeMeta<?>[]{ arrayTypeMeta });
         Assertions.assertEquals(expectedTypeMeta, result);
     }

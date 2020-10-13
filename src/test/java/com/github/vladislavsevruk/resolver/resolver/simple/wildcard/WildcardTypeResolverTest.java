@@ -29,6 +29,7 @@ import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,7 +61,7 @@ class WildcardTypeResolverTest {
         Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
         TypeVariableMap<TypeMeta<?>> typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> result = realWildcardTypeResolver.resolve(typeVariableMap, wildcardType);
-        Assertions.assertEquals(new TypeMeta<>(boundType, true), result);
+        Assertions.assertEquals(new TypeMeta<>(boundType, WildcardBound.UPPER), result);
     }
 
     @Test
@@ -71,7 +72,7 @@ class WildcardTypeResolverTest {
         Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeResolver typeResolver = Mockito.mock(TypeResolver.class);
-        TypeMeta typeMeta = new TypeMeta<>(Double.class, true);
+        TypeMeta typeMeta = new TypeMeta<>(Double.class, WildcardBound.UPPER);
         Mockito.when(typeResolver.resolve(typeVariableMap, boundType)).thenReturn(typeMeta);
         TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
         Mockito.when(typeResolverPicker.pickTypeResolver(boundType)).thenReturn(typeResolver);

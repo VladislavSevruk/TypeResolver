@@ -25,6 +25,7 @@ package com.github.vladislavsevruk.resolver.resolver.simple.wildcard;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 
 /**
  * Resolves actual types for wildcard types.
@@ -37,11 +38,11 @@ public final class WildcardTypeResolver extends AbstractWildcardTypeResolver<Typ
 
     @Override
     protected TypeMeta<?> createResolvedItemLowerBound(TypeMeta<?> resolvedType) {
-        return new TypeMeta<>(resolvedType.getType(), resolvedType.getGenericTypes(), true);
+        return new TypeMeta<>(resolvedType.getType(), resolvedType.getGenericTypes(), WildcardBound.LOWER);
     }
 
     @Override
     protected TypeMeta<?> createResolvedItemUpperBound(TypeMeta<?> resolvedType) {
-        return new TypeMeta<>(resolvedType.getType(), resolvedType.getGenericTypes(), true);
+        return new TypeMeta<>(resolvedType.getType(), resolvedType.getGenericTypes(), WildcardBound.UPPER);
     }
 }

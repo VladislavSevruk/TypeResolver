@@ -27,6 +27,7 @@ import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -660,6 +661,37 @@ class ExecutableTypeMetaResolverTest {
     }
 
     @Test
+    void getSingleLowerWildcardArrayParameterTypeClassTest() throws NoSuchMethodException {
+        List<?> result = executableTypeResolver.getParameterTypes(TestModel.class,
+                TestModel.class.getMethod("getSingleLowerWildcardArrayParameterType", List[].class));
+        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, WildcardBound.LOWER);
+        TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ numberTypeMeta });
+        TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List[].class, new TypeMeta<?>[]{ listTypeMeta });
+        Assertions.assertEquals(Collections.singletonList(expectedTypeMeta), result);
+    }
+
+    @Test
+    void getSingleLowerWildcardArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
+        List<?> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
+                TestModel.class.getMethod("getSingleLowerWildcardArrayParameterType", List[].class));
+        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, WildcardBound.LOWER);
+        TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ numberTypeMeta });
+        TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List[].class, new TypeMeta<?>[]{ listTypeMeta });
+        Assertions.assertEquals(Collections.singletonList(expectedTypeMeta), result);
+    }
+
+    @Test
+    void getSingleLowerWildcardArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
+        TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
+        List<?> result = executableTypeResolver.getParameterTypes(typeProvider,
+                TestModel.class.getMethod("getSingleLowerWildcardArrayParameterType", List[].class));
+        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, WildcardBound.LOWER);
+        TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ numberTypeMeta });
+        TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List[].class, new TypeMeta<?>[]{ listTypeMeta });
+        Assertions.assertEquals(Collections.singletonList(expectedTypeMeta), result);
+    }
+
+    @Test
     void getSingleParameterizedArrayParameterTypeClassTest() throws NoSuchMethodException {
         List<TypeMeta<?>> result = executableTypeResolver.getParameterTypes(TestModel.class,
                 TestModel.class.getMethod("getSingleParameterizedArrayParameterType", Object[].class));
@@ -927,31 +959,31 @@ class ExecutableTypeMetaResolverTest {
     }
 
     @Test
-    void getSingleWildcardArrayParameterTypeClassTest() throws NoSuchMethodException {
+    void getSingleUpperWildcardArrayParameterTypeClassTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(TestModel.class,
-                TestModel.class.getMethod("getSingleWildcardArrayParameterType", List[].class));
-        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, true);
+                TestModel.class.getMethod("getSingleUpperWildcardArrayParameterType", List[].class));
+        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, WildcardBound.UPPER);
         TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ numberTypeMeta });
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List[].class, new TypeMeta<?>[]{ listTypeMeta });
         Assertions.assertEquals(Collections.singletonList(expectedTypeMeta), result);
     }
 
     @Test
-    void getSingleWildcardArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
+    void getSingleUpperWildcardArrayParameterTypeTypeMetaTest() throws NoSuchMethodException {
         List<?> result = executableTypeResolver.getParameterTypes(new TypeMeta<>(TestModel.class),
-                TestModel.class.getMethod("getSingleWildcardArrayParameterType", List[].class));
-        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, true);
+                TestModel.class.getMethod("getSingleUpperWildcardArrayParameterType", List[].class));
+        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, WildcardBound.UPPER);
         TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ numberTypeMeta });
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List[].class, new TypeMeta<?>[]{ listTypeMeta });
         Assertions.assertEquals(Collections.singletonList(expectedTypeMeta), result);
     }
 
     @Test
-    void getSingleWildcardArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
+    void getSingleUpperWildcardArrayParameterTypeTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         List<?> result = executableTypeResolver.getParameterTypes(typeProvider,
-                TestModel.class.getMethod("getSingleWildcardArrayParameterType", List[].class));
-        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, true);
+                TestModel.class.getMethod("getSingleUpperWildcardArrayParameterType", List[].class));
+        TypeMeta<?> numberTypeMeta = new TypeMeta<>(Number.class, WildcardBound.UPPER);
         TypeMeta<?> listTypeMeta = new TypeMeta<>(List.class, new TypeMeta<?>[]{ numberTypeMeta });
         TypeMeta<?> expectedTypeMeta = new TypeMeta<>(List[].class, new TypeMeta<?>[]{ listTypeMeta });
         Assertions.assertEquals(Collections.singletonList(expectedTypeMeta), result);

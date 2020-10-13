@@ -26,6 +26,7 @@ package com.github.vladislavsevruk.resolver.util;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 
 /**
  * Utility methods for TypeMeta.
@@ -90,7 +91,9 @@ public final class TypeMetaUtil {
 
     private static boolean isGenericTypesMatch(TypeMeta<?> acceptorGenericTypeMeta, TypeMeta<?> donorGenericTypeMeta) {
         if (acceptorGenericTypeMeta.isWildcard()) {
-            return isTypesMatch(acceptorGenericTypeMeta, donorGenericTypeMeta);
+            return WildcardBound.UPPER.equals(acceptorGenericTypeMeta.getWildcardBound()) ? isTypesMatch(
+                    acceptorGenericTypeMeta, donorGenericTypeMeta)
+                    : isTypesMatch(donorGenericTypeMeta, acceptorGenericTypeMeta);
         } else {
             if (!PrimitiveWrapperUtil.wrap(acceptorGenericTypeMeta.getType())
                     .equals(PrimitiveWrapperUtil.wrap(donorGenericTypeMeta.getType()))) {

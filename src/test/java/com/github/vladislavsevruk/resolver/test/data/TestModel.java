@@ -36,6 +36,7 @@ import java.util.Set;
 public class TestModel<T, U> extends LinkedList<T> /* extend class with single type parameter */ {
 
     private T genericField;
+    private Set<? super U[]> lowerWildcardField;
     private U[] parameterizedArrayField;
     private List<Long[]> parameterizedFieldInnerArray;
     private Set<List<U>> parameterizedFieldInnerParameter;
@@ -46,7 +47,7 @@ public class TestModel<T, U> extends LinkedList<T> /* extend class with single t
     private int[] primitiveArrayField;
     private long primitiveField;
     private String simpleField;
-    private Set<? extends U[]> wildcardField;
+    private Set<? extends U[]> upperWildcardField;
     private Integer[] wrapperArrayField;
     private Short wrapperField;
 
@@ -140,6 +141,10 @@ public class TestModel<T, U> extends LinkedList<T> /* extend class with single t
         // dummy
     }
 
+    public void getSingleLowerWildcardArrayParameterType(List<? super Number>[] parameter1) {
+        // dummy
+    }
+
     public void getSingleParameterizedArrayParameterType(U[] parameter1) {
         // dummy
     }
@@ -176,7 +181,7 @@ public class TestModel<T, U> extends LinkedList<T> /* extend class with single t
         // dummy
     }
 
-    public void getSingleWildcardArrayParameterType(List<? extends Number>[] parameter1) {
+    public void getSingleUpperWildcardArrayParameterType(List<? extends Number>[] parameter1) {
         // dummy
     }
 
