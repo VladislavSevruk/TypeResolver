@@ -91,7 +91,8 @@ public final class TypeMetaUtil {
 
     private static boolean isGenericTypesMatch(TypeMeta<?> acceptorGenericTypeMeta, TypeMeta<?> donorGenericTypeMeta) {
         if (acceptorGenericTypeMeta.isWildcard()) {
-            return isWildcardTypeMatch(acceptorGenericTypeMeta, donorGenericTypeMeta);
+            return TypeMeta.WILDCARD_META.equals(acceptorGenericTypeMeta) || isWildcardTypeMatch(
+                    acceptorGenericTypeMeta, donorGenericTypeMeta);
         } else {
             if (!PrimitiveWrapperUtil.wrap(acceptorGenericTypeMeta.getType())
                     .equals(PrimitiveWrapperUtil.wrap(donorGenericTypeMeta.getType()))) {
