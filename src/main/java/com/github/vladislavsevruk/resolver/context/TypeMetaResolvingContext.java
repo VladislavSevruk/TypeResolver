@@ -33,9 +33,7 @@ import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
 import com.github.vladislavsevruk.resolver.type.storage.TypeMetaMappedVariableHierarchyStorage;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
 
@@ -48,8 +46,6 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
-@ToString
-@EqualsAndHashCode
 final class TypeMetaResolvingContext implements ResolvingContext<TypeMeta<?>> {
 
     MappedVariableHierarchyStorage<TypeMeta<?>> mappedVariableHierarchyStorage;

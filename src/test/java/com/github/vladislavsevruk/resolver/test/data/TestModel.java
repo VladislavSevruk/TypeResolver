@@ -23,6 +23,7 @@
  */
 package com.github.vladislavsevruk.resolver.test.data;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +49,11 @@ public class TestModel<T, U> extends LinkedList<T> /* extend class with single t
     private Set<? extends U[]> wildcardField;
     private Integer[] wrapperArrayField;
     private Short wrapperField;
+
+    public Double getExceptionType() throws ParseException {
+        // dummy
+        throw new ParseException("Test", 0);
+    }
 
     public T getGenericReturnType() {
         // dummy

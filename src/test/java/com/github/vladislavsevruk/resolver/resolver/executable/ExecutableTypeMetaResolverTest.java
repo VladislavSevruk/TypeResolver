@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,6 +42,35 @@ import java.util.Set;
 class ExecutableTypeMetaResolverTest {
 
     private ExecutableTypeMetaResolver executableTypeResolver = new ExecutableTypeMetaResolver();
+
+    @Test
+    void getExceptionTypeClassTest() throws NoSuchMethodException {
+        List<TypeMeta<?>> result = executableTypeResolver
+                .getExceptionTypes(TestModel.class, TestModel.class.getMethod("getExceptionType"));
+        List<TypeMeta<?>> expectedTypeMetas = Collections.singletonList(new TypeMeta<>(ParseException.class));
+        Assertions.assertEquals(expectedTypeMetas, result);
+    }
+
+    @Test
+    void getExceptionTypeTypeMetaTest() throws NoSuchMethodException {
+        TypeMeta<?> firstClassParameterTypeMeta = new TypeMeta<>(Float.class);
+        TypeMeta<?> secondClassParameterTypeMeta = new TypeMeta<>(Long.class);
+        TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class,
+                new TypeMeta<?>[]{ firstClassParameterTypeMeta, secondClassParameterTypeMeta });
+        List<TypeMeta<?>> result = executableTypeResolver
+                .getExceptionTypes(typeMeta, TestModel.class.getMethod("getExceptionType"));
+        List<TypeMeta<?>> expectedTypeMetas = Collections.singletonList(new TypeMeta<>(ParseException.class));
+        Assertions.assertEquals(expectedTypeMetas, result);
+    }
+
+    @Test
+    void getExceptionTypeTypeProviderTest() throws NoSuchMethodException {
+        TypeProvider<?> typeProvider = new TypeProvider<TestModel<Float, Long>>() {};
+        List<TypeMeta<?>> result = executableTypeResolver
+                .getExceptionTypes(typeProvider, TestModel.class.getMethod("getExceptionType"));
+        List<TypeMeta<?>> expectedTypeMetas = Collections.singletonList(new TypeMeta<>(ParseException.class));
+        Assertions.assertEquals(expectedTypeMetas, result);
+    }
 
     @Test
     void getGenericReturnTypeClassTest() throws NoSuchMethodException {
