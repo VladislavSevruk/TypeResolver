@@ -91,9 +91,7 @@ public final class TypeMetaUtil {
 
     private static boolean isGenericTypesMatch(TypeMeta<?> acceptorGenericTypeMeta, TypeMeta<?> donorGenericTypeMeta) {
         if (acceptorGenericTypeMeta.isWildcard()) {
-            return WildcardBound.UPPER.equals(acceptorGenericTypeMeta.getWildcardBound()) ? isTypesMatch(
-                    acceptorGenericTypeMeta, donorGenericTypeMeta)
-                    : isTypesMatch(donorGenericTypeMeta, acceptorGenericTypeMeta);
+            return isWildcardTypeMatch(acceptorGenericTypeMeta, donorGenericTypeMeta);
         } else {
             if (!PrimitiveWrapperUtil.wrap(acceptorGenericTypeMeta.getType())
                     .equals(PrimitiveWrapperUtil.wrap(donorGenericTypeMeta.getType()))) {
@@ -126,5 +124,15 @@ public final class TypeMetaUtil {
             }
         }
         return true;
+    }
+
+    private static boolean isWildcardTypeMatch(TypeMeta<?> acceptorGenericTypeMeta, TypeMeta<?> donorGenericTypeMeta) {
+        if (donorGenericTypeMeta.isWildcard() && !acceptorGenericTypeMeta.getWildcardBound()
+                .equals(donorGenericTypeMeta.getWildcardBound())) {
+            return false;
+        }
+        return WildcardBound.UPPER.equals(acceptorGenericTypeMeta.getWildcardBound()) ? isTypesMatch(
+                acceptorGenericTypeMeta, donorGenericTypeMeta)
+                : isTypesMatch(donorGenericTypeMeta, acceptorGenericTypeMeta);
     }
 }
