@@ -24,7 +24,6 @@
 package com.github.vladislavsevruk.resolver.type;
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
@@ -35,7 +34,6 @@ import java.util.Map;
  *
  * @param <T> type of mapped value for type variable.
  */
-@ToString
 @EqualsAndHashCode
 public class TypeVariableMap<T> {
 

@@ -25,7 +25,6 @@ package com.github.vladislavsevruk.resolver.type;
 
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.TypeVariable;
@@ -39,7 +38,6 @@ import java.util.Map;
  * @param <T> type of mapped value for type variable.
  */
 @Log4j2
-@ToString
 @EqualsAndHashCode
 public class MappedVariableHierarchy<T> {
 
