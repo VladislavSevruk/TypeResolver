@@ -26,6 +26,7 @@ package com.github.vladislavsevruk.resolver.resolver.picker;
 import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import lombok.EqualsAndHashCode;
 
 /**
  * Implementation of <code>TypeResolverPicker</code> for TypeMeta.
@@ -33,6 +34,7 @@ import com.github.vladislavsevruk.resolver.type.TypeMeta;
  * @see TypeResolverPicker
  * @see TypeMeta
  */
+@EqualsAndHashCode(callSuper = true)
 public class TypeMetaResolverPicker extends BaseTypeResolverPicker<TypeMeta<?>> {
 
     public TypeMetaResolverPicker() {
