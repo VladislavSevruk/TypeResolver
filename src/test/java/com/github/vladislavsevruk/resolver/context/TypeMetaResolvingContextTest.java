@@ -52,7 +52,8 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customMappedVariableHierarchyStorageFactoryMethodReturnsNullTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(context -> null, null, null, null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(context -> null, null, null,
+                null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
         Assertions.assertEquals(TypeMetaResolverPicker.class, resolvingContext.getTypeResolverPicker().getClass());
@@ -62,8 +63,8 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customMappedVariableHierarchyStorageTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(context -> mappedVariableHierarchyStorage,
-                null, null, null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(
+                context -> mappedVariableHierarchyStorage, null, null, null);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(TypeMetaResolverPicker.class, resolvingContext.getTypeResolverPicker().getClass());
         Assertions.assertEquals(TypeMetaResolverStorage.class, resolvingContext.getTypeResolverStorage().getClass());
@@ -72,7 +73,7 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customModulesFactoryMethodReturnNullTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(context -> null, context -> null,
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(context -> null, context -> null,
                 context -> null, context -> null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -83,8 +84,9 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customModulesTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(context -> mappedVariableHierarchyStorage,
-                context -> typeResolverPicker, context -> typeResolverStorage, context -> typeVariableMapper);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(
+                context -> mappedVariableHierarchyStorage, context -> typeResolverPicker,
+                context -> typeResolverStorage, context -> typeVariableMapper);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(typeResolverPicker, resolvingContext.getTypeResolverPicker());
         Assertions.assertEquals(typeResolverStorage, resolvingContext.getTypeResolverStorage());
@@ -93,7 +95,8 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customTypeResolverPickerFactoryMethodReturnsNullTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(null, context -> null, null, null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(null, context -> null, null,
+                null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
         Assertions.assertEquals(TypeMetaResolverPicker.class, resolvingContext.getTypeResolverPicker().getClass());
@@ -103,8 +106,8 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customTypeResolverPickerTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(null, context -> typeResolverPicker, null,
-                null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(null,
+                context -> typeResolverPicker, null, null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
         Assertions.assertEquals(typeResolverPicker, resolvingContext.getTypeResolverPicker());
@@ -114,7 +117,8 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customTypeResolverStorageFactoryMethodReturnsNullTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(null, null, context -> null, null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(null, null, context -> null,
+                null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
         Assertions.assertEquals(TypeMetaResolverPicker.class, resolvingContext.getTypeResolverPicker().getClass());
@@ -124,8 +128,8 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customTypeResolverStorageTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(null, null, context -> typeResolverStorage,
-                null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(null, null,
+                context -> typeResolverStorage, null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
         Assertions.assertEquals(TypeMetaResolverPicker.class, resolvingContext.getTypeResolverPicker().getClass());
@@ -135,7 +139,8 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customTypeVariableMapperFactoryMethodReturnsNullTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(null, null, null, context -> null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(null, null, null,
+                context -> null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
         Assertions.assertEquals(TypeMetaResolverPicker.class, resolvingContext.getTypeResolverPicker().getClass());
@@ -145,7 +150,7 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void customTypeVariableMapperTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(null, null, null,
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(null, null, null,
                 context -> typeVariableMapper);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
@@ -156,7 +161,7 @@ class TypeMetaResolvingContextTest {
 
     @Test
     void defaultModulesTest() {
-        ResolvingContext resolvingContext = new TypeMetaResolvingContext(null, null, null, null);
+        ResolvingContext<TypeMeta<?>> resolvingContext = new TypeMetaResolvingContext(null, null, null, null);
         Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
                 resolvingContext.getMappedVariableHierarchyStorage().getClass());
         Assertions.assertEquals(TypeMetaResolverPicker.class, resolvingContext.getTypeResolverPicker().getClass());
