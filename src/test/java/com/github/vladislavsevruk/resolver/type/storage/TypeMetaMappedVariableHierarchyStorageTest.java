@@ -39,8 +39,8 @@ class TypeMetaMappedVariableHierarchyStorageTest {
         MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Long.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(Long.class);
         expectedHierarchy.addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], typeMeta);
-        MappedVariableHierarchy firstHierarchy = realStorage.get(typeMeta);
-        MappedVariableHierarchy secondHierarchy = realStorage.get(typeMeta);
+        MappedVariableHierarchy<TypeMeta<?>> firstHierarchy = realStorage.get(typeMeta);
+        MappedVariableHierarchy<TypeMeta<?>> secondHierarchy = realStorage.get(typeMeta);
         Assertions.assertEquals(expectedHierarchy, secondHierarchy);
         Assertions.assertSame(firstHierarchy, secondHierarchy);
     }
@@ -57,8 +57,8 @@ class TypeMetaMappedVariableHierarchyStorageTest {
     void hierarchyWithSameGenericClassTest() {
         TypeMeta<?> typeMeta1 = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) });
         TypeMeta<?> typeMeta2 = new TypeMeta<>(List.class, new TypeMeta<?>[]{ new TypeMeta<>(Number.class) });
-        MappedVariableHierarchy firstHierarchy = realStorage.get(typeMeta1);
-        MappedVariableHierarchy secondHierarchy = realStorage.get(typeMeta2);
+        MappedVariableHierarchy<TypeMeta<?>> firstHierarchy = realStorage.get(typeMeta1);
+        MappedVariableHierarchy<TypeMeta<?>> secondHierarchy = realStorage.get(typeMeta2);
         Assertions.assertNotSame(firstHierarchy, secondHierarchy);
     }
 }
