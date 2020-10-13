@@ -27,7 +27,6 @@ import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Executable;
@@ -40,7 +39,6 @@ import java.util.List;
  * @see TypeMeta
  */
 @Log4j2
-@EqualsAndHashCode(callSuper = true)
 public final class ExecutableTypeMetaResolver extends BaseExecutableTypeResolver<TypeMeta<?>> {
 
     public ExecutableTypeMetaResolver() {

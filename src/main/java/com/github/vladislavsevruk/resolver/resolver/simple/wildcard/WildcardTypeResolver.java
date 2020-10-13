@@ -25,12 +25,10 @@ package com.github.vladislavsevruk.resolver.resolver.simple.wildcard;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import lombok.EqualsAndHashCode;
 
 /**
  * Resolves actual types for wildcard types.
  */
-@EqualsAndHashCode(callSuper = true)
 public final class WildcardTypeResolver extends AbstractWildcardTypeResolver<TypeMeta<?>> {
 
     public WildcardTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {

@@ -65,7 +65,7 @@ class TypeMetaResolvingContextManagerTest {
         TypeMetaResolvingModuleFactory.replaceTypeResolverStorage(context -> typeResolverStorage);
         TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext2.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
         Assertions.assertEquals(typeResolverStorage, resolvingContext2.getTypeResolverStorage());
@@ -79,11 +79,18 @@ class TypeMetaResolvingContextManagerTest {
         ResolvingContext<TypeMeta<?>> resolvingContext1 = TypeMetaResolvingContextManager.getContext();
         TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
-        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertNotSame(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker().getClass(),
+                resolvingContext2.getTypeResolverPicker().getClass());
+        Assertions
+                .assertNotSame(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage().getClass(),
+                resolvingContext2.getTypeResolverStorage().getClass());
+        Assertions.assertNotSame(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper().getClass(),
+                resolvingContext2.getTypeVariableMapper().getClass());
     }
 
     @Test
@@ -93,20 +100,17 @@ class TypeMetaResolvingContextManagerTest {
         ResolvingContext<TypeMeta<?>> resolvingContext1 = TypeMetaResolvingContextManager.getContext();
         TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
-        Assertions
-                .assertNotEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
-        TypeVariableMapper<TypeMeta<?>> expectedTypeVariableMapper = new TypeMetaVariableMapper(typeResolverPicker);
-        Assertions.assertEquals(expectedTypeVariableMapper, resolvingContext2.getTypeVariableMapper());
+        Assertions.assertNotSame(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertEquals(TypeMetaVariableMapper.class, resolvingContext2.getTypeVariableMapper().getClass());
         Assertions
                 .assertNotSame(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
-        TypeResolverStorage<TypeMeta<?>> expectedTypeResolverStorage = new TypeMetaResolverStorage(typeResolverPicker);
-        Assertions.assertEquals(expectedTypeResolverStorage, resolvingContext2.getTypeResolverStorage());
-        Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
+        Assertions.assertEquals(TypeMetaResolverStorage.class, resolvingContext2.getTypeResolverStorage().getClass());
+        Assertions.assertNotSame(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(expectedTypeVariableMapper),
-                resolvingContext2.getMappedVariableHierarchyStorage());
+        Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
+                resolvingContext2.getMappedVariableHierarchyStorage().getClass());
     }
 
     @Test
@@ -116,12 +120,18 @@ class TypeMetaResolvingContextManagerTest {
         ResolvingContext<TypeMeta<?>> resolvingContext1 = TypeMetaResolvingContextManager.getContext();
         TypeMetaResolvingModuleFactory.replaceTypeResolverStorage(context -> typeResolverStorage);
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(typeResolverStorage, resolvingContext2.getTypeResolverStorage());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
-        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
-        Assertions.assertEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
+        Assertions.assertNotSame(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker().getClass(),
+                resolvingContext2.getTypeResolverPicker().getClass());
+        Assertions.assertNotSame(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper().getClass(),
+                resolvingContext2.getTypeVariableMapper().getClass());
+        Assertions.assertNotSame(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
+        Assertions.assertEquals(resolvingContext1.getMappedVariableHierarchyStorage().getClass(),
+                resolvingContext2.getMappedVariableHierarchyStorage().getClass());
     }
 
     @Test
@@ -131,13 +141,18 @@ class TypeMetaResolvingContextManagerTest {
         ResolvingContext<TypeMeta<?>> resolvingContext1 = TypeMetaResolvingContextManager.getContext();
         TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
-        Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(typeVariableMapper),
-                resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
+        Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
+                resolvingContext2.getMappedVariableHierarchyStorage().getClass());
+        Assertions.assertNotSame(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker().getClass(),
+                resolvingContext2.getTypeResolverPicker().getClass());
+        Assertions
+                .assertNotSame(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage().getClass(),
+                resolvingContext2.getTypeResolverStorage().getClass());
         Assertions.assertEquals(typeVariableMapper, resolvingContext2.getTypeVariableMapper());
     }
 
@@ -147,7 +162,7 @@ class TypeMetaResolvingContextManagerTest {
         TypeMetaResolvingContextManager.refreshContext();
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
         Assertions.assertNotSame(resolvingContext1, resolvingContext2);
-        Assertions.assertEquals(resolvingContext1, resolvingContext2);
+        Assertions.assertEquals(resolvingContext1.getClass(), resolvingContext2.getClass());
     }
 
     @Test
@@ -161,7 +176,7 @@ class TypeMetaResolvingContextManagerTest {
         TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
         TypeMetaResolvingContextManager.refreshContext();
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext2.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
         Assertions.assertEquals(typeResolverStorage, resolvingContext2.getTypeResolverStorage());
@@ -176,13 +191,20 @@ class TypeMetaResolvingContextManagerTest {
         TypeMetaResolvingModuleFactory.replaceMappedVariableHierarchyStorage(context -> mappedVariableHierarchyStorage);
         TypeMetaResolvingContextManager.refreshContext();
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
-        Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
         Assertions.assertEquals(mappedVariableHierarchyStorage, resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
-        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertNotSame(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker().getClass(),
+                resolvingContext2.getTypeResolverPicker().getClass());
+        Assertions
+                .assertNotSame(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage().getClass(),
+                resolvingContext2.getTypeResolverStorage().getClass());
+        Assertions.assertNotSame(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper().getClass(),
+                resolvingContext2.getTypeVariableMapper().getClass());
     }
 
     @Test
@@ -193,20 +215,17 @@ class TypeMetaResolvingContextManagerTest {
         TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(context -> typeResolverPicker);
         TypeMetaResolvingContextManager.refreshContext();
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
         Assertions.assertEquals(typeResolverPicker, resolvingContext2.getTypeResolverPicker());
-        Assertions
-                .assertNotEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
-        TypeVariableMapper<TypeMeta<?>> expectedTypeVariableMapper = new TypeMetaVariableMapper(typeResolverPicker);
-        Assertions.assertEquals(expectedTypeVariableMapper, resolvingContext2.getTypeVariableMapper());
+        Assertions.assertNotSame(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertEquals(TypeMetaVariableMapper.class, resolvingContext2.getTypeVariableMapper().getClass());
         Assertions
                 .assertNotSame(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
-        TypeResolverStorage<TypeMeta<?>> expectedTypeResolverStorage = new TypeMetaResolverStorage(typeResolverPicker);
-        Assertions.assertEquals(expectedTypeResolverStorage, resolvingContext2.getTypeResolverStorage());
-        Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
+        Assertions.assertEquals(TypeMetaResolverStorage.class, resolvingContext2.getTypeResolverStorage().getClass());
+        Assertions.assertNotSame(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(expectedTypeVariableMapper),
-                resolvingContext2.getMappedVariableHierarchyStorage());
+        Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
+                resolvingContext2.getMappedVariableHierarchyStorage().getClass());
     }
 
     @Test
@@ -217,14 +236,20 @@ class TypeMetaResolvingContextManagerTest {
         TypeMetaResolvingModuleFactory.replaceTypeResolverStorage(context -> typeResolverStorage);
         TypeMetaResolvingContextManager.refreshContext();
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
-        Assertions.assertNotEquals(resolvingContext1.getTypeResolverStorage(),
-                resolvingContext2.getTypeResolverStorage());
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
+        Assertions
+                .assertNotSame(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
         Assertions.assertEquals(typeResolverStorage, resolvingContext2.getTypeResolverStorage());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
-        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
-        Assertions.assertEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
+        Assertions.assertNotSame(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker().getClass(),
+                resolvingContext2.getTypeResolverPicker().getClass());
+        Assertions.assertNotSame(resolvingContext1.getTypeVariableMapper(), resolvingContext2.getTypeVariableMapper());
+        Assertions.assertEquals(resolvingContext1.getTypeVariableMapper().getClass(),
+                resolvingContext2.getTypeVariableMapper().getClass());
+        Assertions.assertNotSame(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
+        Assertions.assertEquals(resolvingContext1.getMappedVariableHierarchyStorage().getClass(),
+                resolvingContext2.getMappedVariableHierarchyStorage().getClass());
     }
 
     @Test
@@ -235,14 +260,19 @@ class TypeMetaResolvingContextManagerTest {
         TypeMetaResolvingModuleFactory.replaceTypeVariableMapper(context -> typeVariableMapper);
         TypeMetaResolvingContextManager.refreshContext();
         ResolvingContext<TypeMeta<?>> resolvingContext2 = TypeMetaResolvingContextManager.getContext();
-        Assertions.assertNotEquals(resolvingContext1, resolvingContext2);
-        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
-        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
+        Assertions.assertNotSame(resolvingContext1, resolvingContext2);
+        Assertions.assertNotSame(resolvingContext1.getTypeResolverPicker(), resolvingContext2.getTypeResolverPicker());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverPicker().getClass(),
+                resolvingContext2.getTypeResolverPicker().getClass());
+        Assertions
+                .assertNotSame(resolvingContext1.getTypeResolverStorage(), resolvingContext2.getTypeResolverStorage());
+        Assertions.assertEquals(resolvingContext1.getTypeResolverStorage().getClass(),
+                resolvingContext2.getTypeResolverStorage().getClass());
         Assertions.assertEquals(typeVariableMapper, resolvingContext2.getTypeVariableMapper());
-        Assertions.assertNotEquals(resolvingContext1.getMappedVariableHierarchyStorage(),
+        Assertions.assertNotSame(resolvingContext1.getMappedVariableHierarchyStorage(),
                 resolvingContext2.getMappedVariableHierarchyStorage());
-        Assertions.assertEquals(new TypeMetaMappedVariableHierarchyStorage(typeVariableMapper),
-                resolvingContext2.getMappedVariableHierarchyStorage());
+        Assertions.assertEquals(TypeMetaMappedVariableHierarchyStorage.class,
+                resolvingContext2.getMappedVariableHierarchyStorage().getClass());
     }
 
     @Test

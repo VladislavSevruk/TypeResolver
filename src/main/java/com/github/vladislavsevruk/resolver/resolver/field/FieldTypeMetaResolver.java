@@ -27,7 +27,6 @@ import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
-import lombok.EqualsAndHashCode;
 
 import java.lang.reflect.Field;
 
@@ -37,7 +36,6 @@ import java.lang.reflect.Field;
  * @see FieldTypeResolver
  * @see TypeMeta
  */
-@EqualsAndHashCode(callSuper = true)
 public final class FieldTypeMetaResolver extends BaseFieldTypeResolver<TypeMeta<?>> {
 
     public FieldTypeMetaResolver() {

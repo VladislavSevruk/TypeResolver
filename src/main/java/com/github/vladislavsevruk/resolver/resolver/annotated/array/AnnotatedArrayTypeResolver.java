@@ -25,7 +25,6 @@ package com.github.vladislavsevruk.resolver.resolver.annotated.array;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import lombok.EqualsAndHashCode;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Array;
@@ -34,7 +33,6 @@ import java.lang.reflect.Type;
 /**
  * Resolves actual types for annotated array types.
  */
-@EqualsAndHashCode(callSuper = true)
 public final class AnnotatedArrayTypeResolver extends AbstractAnnotatedArrayTypeResolver<TypeMeta<?>> {
 
     public AnnotatedArrayTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {

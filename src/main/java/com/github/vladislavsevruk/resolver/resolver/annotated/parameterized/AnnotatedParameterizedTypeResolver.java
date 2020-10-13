@@ -25,14 +25,12 @@ package com.github.vladislavsevruk.resolver.resolver.annotated.parameterized;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 /**
  * Resolves actual types for annotated parameterized types.
  */
 @Log4j2
-@EqualsAndHashCode(callSuper = true)
 public final class AnnotatedParameterizedTypeResolver extends AbstractAnnotatedParameterizedTypeResolver<TypeMeta<?>> {
 
     public AnnotatedParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {

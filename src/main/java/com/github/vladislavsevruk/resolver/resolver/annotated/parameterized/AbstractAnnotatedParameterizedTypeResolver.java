@@ -26,7 +26,6 @@ package com.github.vladislavsevruk.resolver.resolver.annotated.parameterized;
 import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeResolver;
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -40,7 +39,6 @@ import java.lang.reflect.Type;
  * @param <T> type of mapped value for type variable.
  */
 @Log4j2
-@EqualsAndHashCode(exclude = "typeResolverPicker")
 public abstract class AbstractAnnotatedParameterizedTypeResolver<T> implements AnnotatedTypeResolver<T> {
 
     private TypeResolverPicker<T> typeResolverPicker;

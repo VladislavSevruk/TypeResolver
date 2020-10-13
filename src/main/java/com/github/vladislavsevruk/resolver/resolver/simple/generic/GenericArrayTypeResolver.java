@@ -25,14 +25,12 @@ package com.github.vladislavsevruk.resolver.resolver.simple.generic;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import lombok.EqualsAndHashCode;
 
 import java.lang.reflect.Array;
 
 /**
  * Resolves actual types for generic array types.
  */
-@EqualsAndHashCode(callSuper = true)
 public final class GenericArrayTypeResolver extends AbstractGenericArrayTypeResolver<TypeMeta<?>> {
 
     public GenericArrayTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {

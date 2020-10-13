@@ -26,7 +26,6 @@ package com.github.vladislavsevruk.resolver.resolver.simple.generic;
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.GenericArrayType;
@@ -38,7 +37,6 @@ import java.lang.reflect.Type;
  * @param <T> type of mapped value for type variable.
  */
 @Log4j2
-@EqualsAndHashCode(exclude = "typeResolverPicker")
 public abstract class AbstractGenericArrayTypeResolver<T> implements TypeResolver<T> {
 
     private TypeResolverPicker<T> typeResolverPicker;

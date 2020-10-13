@@ -35,7 +35,6 @@ import com.github.vladislavsevruk.resolver.resolver.simple.parameterized.Paramet
 import com.github.vladislavsevruk.resolver.resolver.simple.variable.TypeVariableResolver;
 import com.github.vladislavsevruk.resolver.resolver.simple.wildcard.WildcardTypeResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,16 +57,15 @@ class TypeMetaResolverPickerTest {
     void pickAnnotatedTypeResolverForUnknownAnnotatedTypeReturnsDefaultTypeResolvedTest() {
         AnnotatedType annotatedType = Mockito.mock(AnnotatedType.class);
         AnnotatedTypeResolver pickedAnnotatedTypeResolver = typeResolverPicker.pickAnnotatedTypeResolver(annotatedType);
-        AnnotatedTypeResolver<TypeMeta<?>> expectedAnnotatedTypeResolver = new AnnotatedTypeBaseResolver<>(
-                typeResolverPicker);
-        Assertions.assertEquals(expectedAnnotatedTypeResolver, pickedAnnotatedTypeResolver);
+        Assertions.assertEquals(AnnotatedTypeBaseResolver.class, pickedAnnotatedTypeResolver.getClass());
     }
 
     @ParameterizedTest
     @MethodSource("pickAnnotatedTypeResolverProvider")
-    void pickAnnotatedTypeResolverTest(AnnotatedType type, AnnotatedTypeResolver expectedAnnotatedTypeResolver) {
+    void pickAnnotatedTypeResolverTest(AnnotatedType type,
+            Class<? extends AnnotatedTypeResolver> expectedAnnotatedTypeResolver) {
         AnnotatedTypeResolver pickedAnnotatedTypeResolver = typeResolverPicker.pickAnnotatedTypeResolver(type);
-        Assertions.assertEquals(expectedAnnotatedTypeResolver, pickedAnnotatedTypeResolver);
+        Assertions.assertEquals(expectedAnnotatedTypeResolver, pickedAnnotatedTypeResolver.getClass());
     }
 
     @Test
@@ -78,31 +76,24 @@ class TypeMetaResolverPickerTest {
 
     @ParameterizedTest
     @MethodSource("pickTypeResolverProvider")
-    void pickTypeResolverTest(Type type, TypeResolver expectedTypeResolver) {
+    void pickTypeResolverTest(Type type, Class<? extends TypeResolver> expectedTypeResolver) {
         TypeResolver pickedTypeResolver = typeResolverPicker.pickTypeResolver(type);
-        Assertions.assertEquals(expectedTypeResolver, pickedTypeResolver);
+        Assertions.assertEquals(expectedTypeResolver, pickedTypeResolver.getClass());
     }
 
     private static Stream<Arguments> pickAnnotatedTypeResolverProvider() {
-        TypeResolverPicker<TypeMeta<?>> typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
-        return Stream.of(Arguments
-                        .of(TestTypeProvider.annotatedArrayType(), new AnnotatedArrayTypeResolver(typeResolverPicker)),
-                Arguments.of(TestTypeProvider.annotatedParameterizedType(),
-                        new AnnotatedParameterizedTypeResolver(typeResolverPicker)), Arguments
-                        .of(TestTypeProvider.annotatedTypeVariable(),
-                                new AnnotatedTypeBaseResolver<>(typeResolverPicker)), Arguments
-                        .of(TestTypeProvider.annotatedWildcardType(),
-                                new AnnotatedTypeBaseResolver<>(typeResolverPicker)));
+        return Stream.of(Arguments.of(TestTypeProvider.annotatedArrayType(), AnnotatedArrayTypeResolver.class),
+                Arguments.of(TestTypeProvider.annotatedParameterizedType(), AnnotatedParameterizedTypeResolver.class),
+                Arguments.of(TestTypeProvider.annotatedTypeVariable(), AnnotatedTypeBaseResolver.class),
+                Arguments.of(TestTypeProvider.annotatedWildcardType(), AnnotatedTypeBaseResolver.class));
     }
 
     private static Stream<Arguments> pickTypeResolverProvider() {
-        TypeResolverPicker<TypeMeta<?>> typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
-        return Stream.of(Arguments
-                        .of(TestTypeProvider.parameterizedType(), new ParameterizedTypeResolver(typeResolverPicker)),
-                Arguments.of(TestTypeProvider.arrayType(), new ClassTypeResolver(typeResolverPicker)),
-                Arguments.of(TestTypeProvider.classType(), new ClassTypeResolver(typeResolverPicker)),
-                Arguments.of(TestTypeProvider.genericArrayType(), new GenericArrayTypeResolver(typeResolverPicker)),
-                Arguments.of(TestTypeProvider.typeVariable(), new TypeVariableResolver()),
-                Arguments.of(TestTypeProvider.wildcardType(), new WildcardTypeResolver(typeResolverPicker)));
+        return Stream.of(Arguments.of(TestTypeProvider.parameterizedType(), ParameterizedTypeResolver.class),
+                Arguments.of(TestTypeProvider.arrayType(), ClassTypeResolver.class),
+                Arguments.of(TestTypeProvider.classType(), ClassTypeResolver.class),
+                Arguments.of(TestTypeProvider.genericArrayType(), GenericArrayTypeResolver.class),
+                Arguments.of(TestTypeProvider.typeVariable(), TypeVariableResolver.class),
+                Arguments.of(TestTypeProvider.wildcardType(), WildcardTypeResolver.class));
     }
 }

@@ -37,7 +37,6 @@ import com.github.vladislavsevruk.resolver.resolver.simple.variable.TypeVariable
 import com.github.vladislavsevruk.resolver.resolver.simple.wildcard.WildcardTypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
@@ -52,7 +51,6 @@ import java.util.List;
  */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
-@EqualsAndHashCode
 public final class TypeMetaResolverStorage implements TypeResolverStorage<TypeMeta<?>> {
 
     List<AnnotatedTypeResolver<TypeMeta<?>>> annotatedTypeResolvers;

@@ -25,12 +25,10 @@ package com.github.vladislavsevruk.resolver.resolver.simple.clazz;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import lombok.EqualsAndHashCode;
 
 /**
  * Resolves actual types for class types.
  */
-@EqualsAndHashCode(callSuper = true)
 public final class ClassTypeResolver extends AbstractClassTypeResolver<TypeMeta<?>> {
 
     public ClassTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {

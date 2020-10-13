@@ -26,7 +26,6 @@ package com.github.vladislavsevruk.resolver.type.storage;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
-import lombok.EqualsAndHashCode;
 
 /**
  * Implementation of <code>MappedVariableHierarchyStorage</code> for TypeMeta.
@@ -34,7 +33,6 @@ import lombok.EqualsAndHashCode;
  * @see MappedVariableHierarchyStorage
  * @see TypeMeta
  */
-@EqualsAndHashCode(callSuper = true)
 public final class TypeMetaMappedVariableHierarchyStorage extends BaseMappedVariableHierarchyStorage<TypeMeta<?>> {
 
     public TypeMetaMappedVariableHierarchyStorage() {

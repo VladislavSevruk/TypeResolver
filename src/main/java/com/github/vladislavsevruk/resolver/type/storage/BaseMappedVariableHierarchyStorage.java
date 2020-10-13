@@ -26,7 +26,6 @@ package com.github.vladislavsevruk.resolver.type.storage;
 import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
-import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +35,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @param <T> type of mapped value for type variable.
  */
-@EqualsAndHashCode
 public class BaseMappedVariableHierarchyStorage<T> implements MappedVariableHierarchyStorage<T> {
 
     private Map<TypeMeta<?>, MappedVariableHierarchy<T>> hierarchyMap = new ConcurrentHashMap<>();

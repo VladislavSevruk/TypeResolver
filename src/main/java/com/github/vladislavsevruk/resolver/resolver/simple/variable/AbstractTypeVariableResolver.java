@@ -25,7 +25,6 @@ package com.github.vladislavsevruk.resolver.resolver.simple.variable;
 
 import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Type;
@@ -37,7 +36,6 @@ import java.lang.reflect.TypeVariable;
  * @param <T> type of mapped value for type variable.
  */
 @Log4j2
-@EqualsAndHashCode
 public abstract class AbstractTypeVariableResolver<T> implements TypeResolver<T> {
 
     /**

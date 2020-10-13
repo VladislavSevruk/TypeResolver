@@ -25,12 +25,10 @@ package com.github.vladislavsevruk.resolver.resolver.simple.parameterized;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import lombok.EqualsAndHashCode;
 
 /**
  * Resolves actual types for parameterized types.
  */
-@EqualsAndHashCode(callSuper = true)
 public final class ParameterizedTypeResolver extends AbstractParameterizedTypeResolver<TypeMeta<?>> {
 
     public ParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {

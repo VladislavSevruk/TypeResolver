@@ -28,7 +28,6 @@ import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedType;
@@ -44,7 +43,6 @@ import java.util.List;
  * @see ExecutableTypeResolver
  */
 @Log4j2
-@EqualsAndHashCode
 public class BaseExecutableTypeResolver<T> implements ExecutableTypeResolver<T> {
 
     protected final ResolvingContext<T> context;

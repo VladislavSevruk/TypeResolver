@@ -24,14 +24,12 @@
 package com.github.vladislavsevruk.resolver.resolver.simple.variable;
 
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import lombok.EqualsAndHashCode;
 
 import java.lang.reflect.Type;
 
 /**
  * Resolves actual types for type variables.
  */
-@EqualsAndHashCode(callSuper = true)
 public final class TypeVariableResolver extends AbstractTypeVariableResolver<TypeMeta<?>> {
 
     @Override

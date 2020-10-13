@@ -29,7 +29,6 @@ import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedType;
@@ -45,7 +44,6 @@ import java.util.Arrays;
  * @see TypeMeta
  */
 @Log4j2
-@EqualsAndHashCode
 public final class TypeMetaVariableMapper implements TypeVariableMapper<TypeMeta<?>> {
 
     private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;

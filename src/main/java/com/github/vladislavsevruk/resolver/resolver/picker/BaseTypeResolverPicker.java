@@ -27,7 +27,6 @@ import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
 import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeResolver;
 import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
-import lombok.EqualsAndHashCode;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
@@ -38,7 +37,6 @@ import java.lang.reflect.Type;
  * @param <T> type of mapped value for type variable.
  * @see TypeResolverPicker
  */
-@EqualsAndHashCode(exclude = "resolvingContext")
 public class BaseTypeResolverPicker<T> implements TypeResolverPicker<T> {
 
     private final ResolvingContext<T> resolvingContext;

@@ -28,7 +28,6 @@ import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedType;
@@ -41,7 +40,6 @@ import java.lang.reflect.Field;
  * @see FieldTypeResolver
  */
 @Log4j2
-@EqualsAndHashCode
 public class BaseFieldTypeResolver<T> implements FieldTypeResolver<T> {
 
     protected final ResolvingContext<T> context;
