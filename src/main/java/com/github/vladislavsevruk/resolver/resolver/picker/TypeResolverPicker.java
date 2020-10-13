@@ -21,37 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.context;
+package com.github.vladislavsevruk.resolver.resolver.picker;
 
-import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.storage.TypeResolverStorage;
-import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
-import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
+import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
+
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Type;
 
 /**
- * Resolving context with replaceable modules.
+ * Picks type resolver that can deal with specific type.
  *
  * @param <T> type of mapped value for type variable.
  */
-public interface ResolvingContext<T> {
+public interface TypeResolverPicker<T> {
 
     /**
-     * Returns current instance of <code>MappedVariableHierarchyStorage</code> stored at context.
+     * Picks resolver that can deal with received annotated type.
+     *
+     * @param annotatedType <code>AnnotatedType</code> to pick resolver for.
+     * @return <code>AnnotatedTypeResolver</code> that can deal with received <code>AnnotatedType</code>.
      */
-    MappedVariableHierarchyStorage<T> getMappedVariableHierarchyStorage();
+    AnnotatedTypeResolver<T> pickAnnotatedTypeResolver(AnnotatedType annotatedType);
 
     /**
-     * Returns current instance of <code>TypeResolverPicker</code> stored at context.
+     * Returns resolver that can deal with received type.
+     *
+     * @param type <code>Type</code> to pick resolver for.
+     * @return <code>TypeResolver</code> that can deal with received <code>Type</code>.
      */
-    TypeResolverPicker<T> getTypeResolverPicker();
-
-    /**
-     * Returns current instance of <code>TypeResolverStorage</code> stored at context.
-     */
-    TypeResolverStorage<T> getTypeResolverStorage();
-
-    /**
-     * Returns current instance of <code>TypeVariableMapper</code> stored at context.
-     */
-    TypeVariableMapper<T> getTypeVariableMapper();
+    TypeResolver<T> pickTypeResolver(Type type);
 }

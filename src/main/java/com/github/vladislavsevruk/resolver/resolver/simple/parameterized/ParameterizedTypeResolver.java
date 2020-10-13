@@ -21,31 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.simple.parameterized;
 
-import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Type;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import lombok.EqualsAndHashCode;
 
 /**
- * Picks type resolver that can deal with specific type.
- *
- * @param <T> type of mapped value for type variable.
+ * Resolves actual types for parameterized types.
  */
-public interface TypeResolverPicker<T> {
+@EqualsAndHashCode(callSuper = true)
+public final class ParameterizedTypeResolver extends AbstractParameterizedTypeResolver<TypeMeta<?>> {
 
-    /**
-     * Picks resolver that can deal with received annotated type.
-     *
-     * @param annotatedType <code>AnnotatedType</code> to pick resolver for.
-     * @return <code>AnnotatedTypeResolver</code> that can deal with received <code>AnnotatedType</code>.
-     */
-    AnnotatedTypeResolver<T> pickAnnotatedTypeResolver(AnnotatedType annotatedType);
+    public ParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
+        super(typeResolverPicker);
+    }
 
-    /**
-     * Returns resolver that can deal with received type.
-     *
-     * @param type <code>Type</code> to pick resolver for.
-     * @return <code>TypeResolver</code> that can deal with received <code>Type</code>.
-     */
-    TypeResolver<T> pickTypeResolver(Type type);
+    @Override
+    protected TypeMeta<?>[] createArgumentsArray(int length) {
+        return new TypeMeta[length];
+    }
+
+    @Override
+    protected TypeMeta<?> createResolvedParameterizedType(Class<?> rawReturnType, TypeMeta<?>[] resolvedArgumentTypes) {
+        return new TypeMeta<>(rawReturnType, resolvedArgumentTypes);
+    }
 }

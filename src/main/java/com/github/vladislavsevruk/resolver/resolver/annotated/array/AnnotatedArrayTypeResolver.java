@@ -21,16 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.annotated;
+package com.github.vladislavsevruk.resolver.resolver.annotated.array;
 
-import com.github.vladislavsevruk.resolver.resolver.AnnotatedTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import lombok.extern.log4j.Log4j2;
 
-import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
@@ -38,34 +34,17 @@ import java.lang.reflect.Type;
 /**
  * Resolves actual types for annotated array types.
  */
-@Log4j2
-@EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class AnnotatedArrayTypeResolver implements AnnotatedTypeResolver<TypeMeta<?>> {
-
-    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
+@EqualsAndHashCode(callSuper = true)
+public final class AnnotatedArrayTypeResolver extends AbstractAnnotatedArrayTypeResolver<TypeMeta<?>> {
 
     public AnnotatedArrayTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
-        this.typeResolverPicker = typeResolverPicker;
+        super(typeResolverPicker);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean canResolve(AnnotatedType annotatedType) {
-        return AnnotatedArrayType.class.isAssignableFrom(annotatedType.getClass());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, AnnotatedType type) {
-        log.debug(() -> "Resolving AnnotatedArrayType.");
-        AnnotatedArrayType annotatedType = (AnnotatedArrayType) type;
-        AnnotatedType componentType = annotatedType.getAnnotatedGenericComponentType();
-        TypeMeta<?> actualParameters = resolveParameterizedComponentType(typeVariableMap, componentType);
-        return new TypeMeta<>(resolveArrayType(annotatedType, actualParameters), new TypeMeta<?>[]{ actualParameters });
+    protected TypeMeta<?> createResolvedArray(AnnotatedType annotatedType, TypeMeta<?> resolvedComponentType) {
+        return new TypeMeta<>(resolveArrayType(annotatedType, resolvedComponentType),
+                new TypeMeta<?>[]{ resolvedComponentType });
     }
 
     private Class<?> getArrayTypeByComponent(TypeMeta<?> actualParameters) {
@@ -76,11 +55,5 @@ public final class AnnotatedArrayTypeResolver implements AnnotatedTypeResolver<T
         Type arrayType = annotatedType.getType();
         return Class.class.isAssignableFrom(arrayType.getClass()) ? (Class<?>) arrayType
                 : getArrayTypeByComponent(actualParameters);
-    }
-
-    private TypeMeta<?> resolveParameterizedComponentType(TypeVariableMap<TypeMeta<?>> typeVariableMap,
-            AnnotatedType componentType) {
-        Type actualType = componentType.getType();
-        return typeResolverPicker.pickTypeResolver(actualType).resolve(typeVariableMap, actualType);
     }
 }

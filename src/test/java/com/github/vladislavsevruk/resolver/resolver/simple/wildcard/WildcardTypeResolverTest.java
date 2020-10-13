@@ -21,8 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.simple;
+package com.github.vladislavsevruk.resolver.resolver.simple.wildcard;
 
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeMetaResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
@@ -36,47 +39,53 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-class TypeVariableResolverTest {
+class WildcardTypeResolverTest {
 
-    private TypeVariableResolver resolver = new TypeVariableResolver();
+    private WildcardTypeResolver realWildcardTypeResolver = new WildcardTypeResolver(new TypeMetaResolverPicker());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
     void canResolveTest(Type type, Boolean expectedValue) {
-        Assertions.assertEquals(expectedValue, resolver.canResolve(type));
+        Assertions.assertEquals(expectedValue, realWildcardTypeResolver.canResolve(type));
+    }
+
+    @Test
+    void resolveWildcardRealContextType() {
+        Class<?> boundType = Boolean.class;
+        WildcardType wildcardType = Mockito.mock(WildcardType.class);
+        Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = Mockito.mock(TypeVariableMap.class);
+        TypeMeta<?> result = realWildcardTypeResolver.resolve(typeVariableMap, wildcardType);
+        Assertions.assertEquals(new TypeMeta<>(boundType, true), result);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    void resolveTypeVariableTest() {
-        TypeVariable<? extends Class<?>> typeVariable = Mockito.mock(TypeVariable.class);
+    void resolveWildcardTypeTest() {
+        Type boundType = Mockito.mock(Type.class);
+        WildcardType wildcardType = Mockito.mock(WildcardType.class);
+        Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
         TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
-        TypeMeta typeMeta = new TypeMeta<>(Boolean.class);
-        Mockito.when(typeVariableMap.getActualType(typeVariable)).thenReturn(typeMeta);
-        TypeMeta<?> result = resolver.resolve(typeVariableMap, typeVariable);
+        TypeResolver typeResolver = Mockito.mock(TypeResolver.class);
+        TypeMeta typeMeta = new TypeMeta<>(Double.class, true);
+        Mockito.when(typeResolver.resolve(typeVariableMap, boundType)).thenReturn(typeMeta);
+        TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
+        Mockito.when(typeResolverPicker.pickTypeResolver(boundType)).thenReturn(typeResolver);
+        WildcardTypeResolver wildcardTypeResolver = new WildcardTypeResolver(typeResolverPicker);
+        TypeMeta<?> result = wildcardTypeResolver.resolve(typeVariableMap, wildcardType);
         Assertions.assertEquals(typeMeta, result);
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    void resolveUnknownTypeVariableTest() {
-        TypeVariable<? extends Class<?>> typeVariable = Mockito.mock(TypeVariable.class);
-        TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
-        Mockito.when(typeVariableMap.getActualType(typeVariable)).thenReturn(null);
-        TypeMeta<?> result = resolver.resolve(typeVariableMap, typeVariable);
-        Assertions.assertEquals(TypeMeta.WILDCARD_META, result);
-    }
-
     private static Stream<Arguments> canResolveProvider() {
-        return Stream.of(Arguments.of(TestTypeProvider.typeVariable(), Boolean.TRUE),
+        return Stream.of(Arguments.of(TestTypeProvider.wildcardType(), Boolean.TRUE),
                 Arguments.of(TestTypeProvider.arrayType(), Boolean.FALSE),
                 Arguments.of(TestTypeProvider.classType(), Boolean.FALSE),
                 Arguments.of(TestTypeProvider.genericArrayType(), Boolean.FALSE),
                 Arguments.of(TestTypeProvider.parameterizedType(), Boolean.FALSE),
-                Arguments.of(TestTypeProvider.wildcardType(), Boolean.FALSE));
+                Arguments.of(TestTypeProvider.typeVariable(), Boolean.FALSE));
     }
 }

@@ -21,57 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.executable;
+package com.github.vladislavsevruk.resolver.resolver.picker;
 
 import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import com.github.vladislavsevruk.resolver.type.TypeProvider;
-import lombok.EqualsAndHashCode;
-import lombok.extern.log4j.Log4j2;
-
-import java.lang.reflect.Executable;
-import java.util.List;
 
 /**
- * Implementation of <code>ExecutableTypeResolver</code> for TypeMeta.
+ * Implementation of <code>TypeResolverPicker</code> for TypeMeta.
  *
- * @see ExecutableTypeResolver
+ * @see TypeResolverPicker
  * @see TypeMeta
  */
-@Log4j2
-@EqualsAndHashCode(callSuper = true)
-public final class ExecutableTypeMetaResolver extends BaseExecutableTypeResolver<TypeMeta<?>> {
+public class TypeMetaResolverPicker extends BaseTypeResolverPicker<TypeMeta<?>> {
 
-    public ExecutableTypeMetaResolver() {
+    public TypeMetaResolverPicker() {
         this(TypeMetaResolvingContextManager.getContext());
     }
 
-    public ExecutableTypeMetaResolver(ResolvingContext<TypeMeta<?>> context) {
-        super(context);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<TypeMeta<?>> getExceptionTypes(TypeProvider<?> typeProvider, Executable executable) {
-        return getExceptionTypes(typeProvider.getTypeMeta(context.getTypeVariableMapper()), executable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<TypeMeta<?>> getParameterTypes(TypeProvider<?> typeProvider, Executable executable) {
-        return getParameterTypes(typeProvider.getTypeMeta(context.getTypeVariableMapper()), executable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TypeMeta<?> getReturnType(TypeProvider<?> typeProvider, Executable executable) {
-        return getReturnType(typeProvider.getTypeMeta(context.getTypeVariableMapper()), executable);
+    public TypeMetaResolverPicker(ResolvingContext<TypeMeta<?>> resolvingContext) {
+        super(resolvingContext);
     }
 }

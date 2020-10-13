@@ -23,7 +23,6 @@
  */
 package com.github.vladislavsevruk.resolver.resolver.field;
 
-import com.github.vladislavsevruk.resolver.resolver.field.FieldTypeMetaResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;

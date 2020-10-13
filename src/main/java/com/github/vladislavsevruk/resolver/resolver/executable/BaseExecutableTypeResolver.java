@@ -37,8 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of <code>ExecutableTypeResolver</code>.
+ * Contains common logic for resolving actual types for generic parameters of executables parameter, return and
+ * exception types.
  *
+ * @param <T> type of mapped value for type variable.
  * @see ExecutableTypeResolver
  */
 @Log4j2
@@ -49,6 +51,39 @@ public class BaseExecutableTypeResolver<T> implements ExecutableTypeResolver<T> 
 
     public BaseExecutableTypeResolver(ResolvingContext<T> context) {
         this.context = context;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<T> getExceptionTypes(Class<?> clazz, Executable executable) {
+        return getExceptionTypes(new TypeMeta<>(clazz), executable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<T> getExceptionTypes(TypeMeta<?> typeMeta, Executable executable) {
+        log.debug(() -> String.format("Getting parameterized exception types for method '%s'.", executable.getName()));
+        MappedVariableHierarchy<T> hierarchy = context.getMappedVariableHierarchyStorage().get(typeMeta);
+        TypeVariableMap<T> typeVariableMap = hierarchy.getTypeVariableMap(executable.getDeclaringClass());
+        AnnotatedType[] exceptionTypes = executable.getAnnotatedExceptionTypes();
+        List<T> resolvedTypes = new ArrayList<>(exceptionTypes.length);
+        for (AnnotatedType exceptionType : exceptionTypes) {
+            resolvedTypes.add(context.getTypeResolverPicker().pickAnnotatedTypeResolver(exceptionType)
+                    .resolve(typeVariableMap, exceptionType));
+        }
+        return resolvedTypes;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<T> getExceptionTypes(TypeProvider<?> typeProvider, Executable executable) {
+        return getExceptionTypes(typeProvider.getTypeMeta(), executable);
     }
 
     /**

@@ -99,6 +99,7 @@ public final class TypeMetaResolvingContextManager {
     private static ResolvingContext<TypeMeta<?>> newContext() {
         return new TypeMetaResolvingContext(TypeMetaResolvingModuleFactory.mappedVariableHierarchyStorage(),
                 TypeMetaResolvingModuleFactory.typeResolverPicker(),
+                TypeMetaResolvingModuleFactory.typeResolverStorage(),
                 TypeMetaResolvingModuleFactory.typeVariableMapper());
     }
 }

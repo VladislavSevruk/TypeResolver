@@ -21,17 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.picker;
 
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
-import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedArrayTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedParameterizedTypeResolver;
 import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeBaseResolver;
-import com.github.vladislavsevruk.resolver.resolver.simple.ClassTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.simple.GenericArrayTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.simple.ParameterizedTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.simple.TypeVariableResolver;
-import com.github.vladislavsevruk.resolver.resolver.simple.WildcardTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.annotated.array.AnnotatedArrayTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.annotated.parameterized.AnnotatedParameterizedTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.simple.clazz.ClassTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.simple.generic.GenericArrayTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.simple.parameterized.ParameterizedTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.simple.variable.TypeVariableResolver;
+import com.github.vladislavsevruk.resolver.resolver.simple.wildcard.WildcardTypeResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import org.junit.jupiter.api.Assertions;
@@ -56,7 +58,8 @@ class TypeMetaResolverPickerTest {
     void pickAnnotatedTypeResolverForUnknownAnnotatedTypeReturnsDefaultTypeResolvedTest() {
         AnnotatedType annotatedType = Mockito.mock(AnnotatedType.class);
         AnnotatedTypeResolver pickedAnnotatedTypeResolver = typeResolverPicker.pickAnnotatedTypeResolver(annotatedType);
-        AnnotatedTypeResolver expectedAnnotatedTypeResolver = new AnnotatedTypeBaseResolver(typeResolverPicker);
+        AnnotatedTypeResolver<TypeMeta<?>> expectedAnnotatedTypeResolver = new AnnotatedTypeBaseResolver<>(
+                typeResolverPicker);
         Assertions.assertEquals(expectedAnnotatedTypeResolver, pickedAnnotatedTypeResolver);
     }
 
@@ -87,9 +90,9 @@ class TypeMetaResolverPickerTest {
                 Arguments.of(TestTypeProvider.annotatedParameterizedType(),
                         new AnnotatedParameterizedTypeResolver(typeResolverPicker)), Arguments
                         .of(TestTypeProvider.annotatedTypeVariable(),
-                                new AnnotatedTypeBaseResolver(typeResolverPicker)), Arguments
+                                new AnnotatedTypeBaseResolver<>(typeResolverPicker)), Arguments
                         .of(TestTypeProvider.annotatedWildcardType(),
-                                new AnnotatedTypeBaseResolver(typeResolverPicker)));
+                                new AnnotatedTypeBaseResolver<>(typeResolverPicker)));
     }
 
     private static Stream<Arguments> pickTypeResolverProvider() {

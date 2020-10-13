@@ -30,16 +30,45 @@ import java.lang.reflect.Executable;
 import java.util.List;
 
 /**
- * Resolves actual types for generic parameters of executables parameter and return types.
+ * Resolves actual types for generic parameters of executables parameter, return and exception types.
+ *
+ * @param <T> type of mapped value for type variable.
  */
 public interface ExecutableTypeResolver<T> {
+
+    /**
+     * Resolves actual types for generic exceptions of executables exception types.
+     *
+     * @param clazz      <code>Class</code> where executable was declared.
+     * @param executable <code>Executable</code> to resolve actual parameter types for.
+     * @return <code>List</code> with actual exception types for received executable.
+     */
+    List<T> getExceptionTypes(Class<?> clazz, Executable executable);
+
+    /**
+     * Resolves actual types for generic exceptions of executables exception types.
+     *
+     * @param typeMeta   <code>TypeMeta</code> with actual types for class where executable was declared.
+     * @param executable <code>Executable</code> to resolve actual parameter types for.
+     * @return <code>List</code> with actual exception types for received executable.
+     */
+    List<T> getExceptionTypes(TypeMeta<?> typeMeta, Executable executable);
+
+    /**
+     * Resolves actual types for generic exceptions of executables exception types.
+     *
+     * @param typeProvider <code>TypeProvider</code> with class where executable was declared as type parameter.
+     * @param executable   <code>Executable</code> to resolve actual parameter types for.
+     * @return <code>List</code> with actual exception types for received executable.
+     */
+    List<T> getExceptionTypes(TypeProvider<?> typeProvider, Executable executable);
 
     /**
      * Resolves actual types for generic parameters of executables parameter types.
      *
      * @param clazz      <code>Class</code> where executable was declared.
      * @param executable <code>Executable</code> to resolve actual parameter types for.
-     * @return list of <code>TypeMeta</code> with actual parameter types for received executable.
+     * @return <code>List</code> with actual parameter types for received executable.
      */
     List<T> getParameterTypes(Class<?> clazz, Executable executable);
 
@@ -48,7 +77,7 @@ public interface ExecutableTypeResolver<T> {
      *
      * @param typeMeta   <code>TypeMeta</code> with actual types for class where executable was declared.
      * @param executable <code>Executable</code> to resolve actual parameter types for.
-     * @return list of <code>TypeMeta</code> with actual parameter types for received executable.
+     * @return <code>List</code> with actual parameter types for received executable.
      */
     List<T> getParameterTypes(TypeMeta<?> typeMeta, Executable executable);
 
@@ -57,7 +86,7 @@ public interface ExecutableTypeResolver<T> {
      *
      * @param typeProvider <code>TypeProvider</code> with class where executable was declared as type parameter.
      * @param executable   <code>Executable</code> to resolve actual parameter types for.
-     * @return list of <code>TypeMeta</code> with actual parameter types for received executable.
+     * @return <code>List</code> with actual parameter types for received executable.
      */
     List<T> getParameterTypes(TypeProvider<?> typeProvider, Executable executable);
 
@@ -66,7 +95,7 @@ public interface ExecutableTypeResolver<T> {
      *
      * @param clazz      <code>Class</code> where executable was declared.
      * @param executable <code>Executable</code> to resolve actual return type for.
-     * @return <code>TypeMeta</code> with actual return type for received executable.
+     * @return actual return type for received executable.
      */
     T getReturnType(Class<?> clazz, Executable executable);
 
@@ -75,7 +104,7 @@ public interface ExecutableTypeResolver<T> {
      *
      * @param typeMeta   <code>TypeMeta</code> with actual types for class where executable was declared.
      * @param executable <code>Executable</code> to resolve actual return type for.
-     * @return <code>TypeMeta</code> with actual return type for received executable.
+     * @return actual return type for received executable.
      */
     T getReturnType(TypeMeta<?> typeMeta, Executable executable);
 
@@ -84,7 +113,7 @@ public interface ExecutableTypeResolver<T> {
      *
      * @param typeProvider <code>TypeProvider</code> with class where executable was declared as type parameter.
      * @param executable   <code>Executable</code> to resolve actual return type for.
-     * @return <code>TypeMeta</code> with actual return type for received executable.
+     * @return actual return type for received executable.
      */
     T getReturnType(TypeProvider<?> typeProvider, Executable executable);
 }

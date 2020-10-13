@@ -23,7 +23,8 @@
  */
 package com.github.vladislavsevruk.resolver.context;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.storage.TypeResolverStorage;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
@@ -45,6 +46,8 @@ class TypeMetaResolvingModuleFactoryTest {
     @Mock
     private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
     @Mock
+    private TypeResolverStorage<TypeMeta<?>> typeResolverStorage;
+    @Mock
     private TypeVariableMapper<TypeMeta<?>> typeVariableMapper;
 
     @BeforeAll
@@ -64,6 +67,7 @@ class TypeMetaResolvingModuleFactoryTest {
     void defaultModulesTest() {
         Assertions.assertNull(TypeMetaResolvingModuleFactory.mappedVariableHierarchyStorage());
         Assertions.assertNull(TypeMetaResolvingModuleFactory.typeResolverPicker());
+        Assertions.assertNull(TypeMetaResolvingModuleFactory.typeResolverStorage());
         Assertions.assertNull(TypeMetaResolvingModuleFactory.typeVariableMapper());
     }
 
@@ -81,6 +85,14 @@ class TypeMetaResolvingModuleFactoryTest {
                 = context -> typeResolverPicker;
         TypeMetaResolvingModuleFactory.replaceTypeResolverPicker(factoryMethod);
         Assertions.assertEquals(factoryMethod, TypeMetaResolvingModuleFactory.typeResolverPicker());
+    }
+
+    @Test
+    void replaceTypeResolverStorageTest() {
+        ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverStorage<TypeMeta<?>>> factoryMethod
+                = context -> typeResolverStorage;
+        TypeMetaResolvingModuleFactory.replaceTypeResolverStorage(factoryMethod);
+        Assertions.assertEquals(factoryMethod, TypeMetaResolvingModuleFactory.typeResolverStorage());
     }
 
     @Test

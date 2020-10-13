@@ -23,8 +23,10 @@
  */
 package com.github.vladislavsevruk.resolver.context;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeMetaResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeMetaResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.storage.TypeMetaResolverStorage;
+import com.github.vladislavsevruk.resolver.resolver.storage.TypeResolverStorage;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeMetaVariableMapper;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
@@ -52,6 +54,7 @@ final class TypeMetaResolvingContext implements ResolvingContext<TypeMeta<?>> {
 
     MappedVariableHierarchyStorage<TypeMeta<?>> mappedVariableHierarchyStorage;
     TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
+    TypeResolverStorage<TypeMeta<?>> typeResolverStorage;
     TypeVariableMapper<TypeMeta<?>> typeVariableMapper;
 
     /**
@@ -61,15 +64,22 @@ final class TypeMetaResolvingContext implements ResolvingContext<TypeMeta<?>> {
      *                                                    module implementation.
      * @param typeResolverPickerFactoryMethod             factory method for <code>TypeResolverPicker</code> module
      *                                                    implementation.
+     * @param typeResolverStorageFactoryMethod            factory method for <code>TypeResolverStorage</code> module
+     *                                                    implementation.
      * @param typeVariableMapperFactoryMethod             factory method for <code>TypeVariableMapper</code> module
      *                                                    implementation.
      */
     TypeMetaResolvingContext(
             ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>> mappedVariableHierarchyStorageFactoryMethod,
             ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> typeResolverPickerFactoryMethod,
+            ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverStorage<TypeMeta<?>>> typeResolverStorageFactoryMethod,
             ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> typeVariableMapperFactoryMethod) {
-        this.typeResolverPicker = orDefault(typeResolverPickerFactoryMethod, context -> new TypeMetaResolverPicker());
+        this.typeResolverPicker = orDefault(typeResolverPickerFactoryMethod, TypeMetaResolverPicker::new);
         log.debug(() -> String.format("Using '%s' as type resolver picker.", typeResolverPicker.getClass().getName()));
+        this.typeResolverStorage = orDefault(typeResolverStorageFactoryMethod,
+                context -> new TypeMetaResolverStorage(typeResolverPicker));
+        log.debug(
+                () -> String.format("Using '%s' as type resolver storage.", typeResolverStorage.getClass().getName()));
         this.typeVariableMapper = orDefault(typeVariableMapperFactoryMethod,
                 context -> new TypeMetaVariableMapper(typeResolverPicker));
         log.debug(() -> String.format("Using '%s' as type variable mapper.", typeVariableMapper.getClass().getName()));

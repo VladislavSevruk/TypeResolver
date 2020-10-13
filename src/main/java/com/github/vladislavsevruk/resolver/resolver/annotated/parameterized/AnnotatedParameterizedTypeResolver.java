@@ -21,34 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.annotated.parameterized;
 
-import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-
-import java.lang.reflect.AnnotatedType;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import lombok.EqualsAndHashCode;
+import lombok.extern.log4j.Log4j2;
 
 /**
- * Resolves actual types for generic parameters of annotated type.
- *
- * @param <T> type of mapped value for type variable.
+ * Resolves actual types for annotated parameterized types.
  */
-public interface AnnotatedTypeResolver<T> {
+@Log4j2
+@EqualsAndHashCode(callSuper = true)
+public final class AnnotatedParameterizedTypeResolver extends AbstractAnnotatedParameterizedTypeResolver<TypeMeta<?>> {
 
-    /**
-     * Checks if type resolver can deal with specific annotated type.
-     *
-     * @param annotatedType <code>AnnotatedType</code> to check.
-     * @return <code>true</code> if type resolver can resolve actual types for received annotated type,
-     * <code>false</code> otherwise.
-     */
-    boolean canResolve(AnnotatedType annotatedType);
+    public AnnotatedParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
+        super(typeResolverPicker);
+    }
 
-    /**
-     * Resolves actual type for received annotated type and its generic parameters.
-     *
-     * @param typeVariableMap <code>TypeVariableMap</code> with declared class type variables.
-     * @param annotatedType   <code>AnnotatedType</code> to resolve.
-     * @return actual type for received type.
-     */
-    T resolve(TypeVariableMap<T> typeVariableMap, AnnotatedType annotatedType);
+    @Override
+    protected TypeMeta<?>[] createArgumentsArray(int length) {
+        return new TypeMeta[length];
+    }
+
+    @Override
+    protected TypeMeta<?> createResolvedParameterizedType(Class<?> rawType, TypeMeta<?>[] resolvedArgumentTypes) {
+        return new TypeMeta<>(rawType, resolvedArgumentTypes);
+    }
 }

@@ -21,49 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.simple;
+package com.github.vladislavsevruk.resolver.resolver.simple.generic;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 /**
- * Resolves actual types for type variables.
+ * Contains common logic for resolving actual types for generic array types.
+ *
+ * @param <T> type of mapped value for type variable.
  */
 @Log4j2
-@EqualsAndHashCode
-public final class TypeVariableResolver implements TypeResolver<TypeMeta<?>> {
+@EqualsAndHashCode(exclude = "typeResolverPicker")
+public abstract class AbstractGenericArrayTypeResolver<T> implements TypeResolver<T> {
+
+    private TypeResolverPicker<T> typeResolverPicker;
+
+    public AbstractGenericArrayTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
+        this.typeResolverPicker = typeResolverPicker;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean canResolve(Type type) {
-        return TypeVariable.class.isAssignableFrom(type.getClass());
+        return GenericArrayType.class.isAssignableFrom(type.getClass());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type type) {
-        log.debug(() -> String.format("'%s' is type variable.", type.getTypeName()));
-        TypeMeta<?> typeMeta = typeVariableMap.getActualType((TypeVariable<? extends Class<?>>) type);
-        if (typeMeta != null) {
-            log.debug(() -> String
-                    .format("Actual type for '%s' is '%s'.", type.getTypeName(), typeMeta.getType().getName()));
-            return typeMeta;
-        }
-        log.info(() -> String
-                .format("Failed to find type variable '%s' in class declaration. Probably generic type used in "
-                                + "method declaration directly. Using 'java.lang.Object' for '%<s' type variable.",
-                        type.getTypeName()));
-        return TypeMeta.WILDCARD_META;
+    public T resolve(TypeVariableMap<T> typeVariableMap, Type type) {
+        GenericArrayType genericArrayType = (GenericArrayType) type;
+        Type componentType = genericArrayType.getGenericComponentType();
+        log.debug(
+                () -> String.format("'%s' represents array of '%s'.", type.getTypeName(), componentType.getTypeName()));
+        T resolvedType = typeResolverPicker.pickTypeResolver(componentType).resolve(typeVariableMap, componentType);
+        return createResolvedArray(resolvedType);
     }
+
+    protected abstract T createResolvedArray(T resolvedType);
 }

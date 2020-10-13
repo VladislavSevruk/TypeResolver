@@ -25,7 +25,7 @@ package com.github.vladislavsevruk.resolver.type.mapper;
 
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;

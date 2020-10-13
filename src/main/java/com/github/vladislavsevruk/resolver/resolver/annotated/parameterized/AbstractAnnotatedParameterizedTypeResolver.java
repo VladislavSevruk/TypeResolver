@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.annotated;
+package com.github.vladislavsevruk.resolver.resolver.annotated.parameterized;
 
-import com.github.vladislavsevruk.resolver.resolver.AnnotatedTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeResolver;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
@@ -36,15 +35,17 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * Resolves actual types for annotated parameterized types.
+ * Contains common logic for resolving actual types for annotated parameterized types.
+ *
+ * @param <T> type of mapped value for type variable.
  */
 @Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class AnnotatedParameterizedTypeResolver implements AnnotatedTypeResolver<TypeMeta<?>> {
+public abstract class AbstractAnnotatedParameterizedTypeResolver<T> implements AnnotatedTypeResolver<T> {
 
-    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
+    private TypeResolverPicker<T> typeResolverPicker;
 
-    public AnnotatedParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
+    public AbstractAnnotatedParameterizedTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -60,18 +61,21 @@ public final class AnnotatedParameterizedTypeResolver implements AnnotatedTypeRe
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, AnnotatedType type) {
+    public T resolve(TypeVariableMap<T> typeVariableMap, AnnotatedType type) {
         log.debug(() -> "Resolving AnnotatedParameterizedType.");
         AnnotatedParameterizedType annotatedType = (AnnotatedParameterizedType) type;
         AnnotatedType[] actualArguments = annotatedType.getAnnotatedActualTypeArguments();
-        Type rawReturnType = ((ParameterizedType) annotatedType.getType()).getRawType();
-        TypeMeta<?>[] actualParameters = resolveParameterizedTypes(typeVariableMap, actualArguments);
-        return new TypeMeta<>((Class<?>) rawReturnType, actualParameters);
+        Type rawType = ((ParameterizedType) annotatedType.getType()).getRawType();
+        T[] actualParameters = resolveParameterizedTypes(typeVariableMap, actualArguments);
+        return createResolvedParameterizedType((Class<?>) rawType, actualParameters);
     }
 
-    private TypeMeta<?>[] resolveParameterizedTypes(TypeVariableMap<TypeMeta<?>> typeVariableMap,
-            AnnotatedType[] actualArguments) {
-        TypeMeta<?>[] argumentTypes = new TypeMeta<?>[actualArguments.length];
+    protected abstract T[] createArgumentsArray(int length);
+
+    protected abstract T createResolvedParameterizedType(Class<?> rawType, T[] resolvedArgumentTypes);
+
+    private T[] resolveParameterizedTypes(TypeVariableMap<T> typeVariableMap, AnnotatedType[] actualArguments) {
+        T[] argumentTypes = createArgumentsArray(actualArguments.length);
         for (int i = 0; i < actualArguments.length; ++i) {
             Type actualType = actualArguments[i].getType();
             argumentTypes[i] = typeResolverPicker.pickTypeResolver(actualType).resolve(typeVariableMap, actualType);

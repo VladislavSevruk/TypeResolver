@@ -23,7 +23,8 @@
  */
 package com.github.vladislavsevruk.resolver.context;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.storage.TypeResolverStorage;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
@@ -40,10 +41,12 @@ public final class TypeMetaResolvingModuleFactory {
 
     private static final ReadWriteLock MAPPED_VARIABLE_HIERARCHY_STORAGE_LOCK = new ReentrantReadWriteLock();
     private static final ReadWriteLock TYPE_RESOLVER_PICKER_LOCK = new ReentrantReadWriteLock();
+    private static final ReadWriteLock TYPE_RESOLVER_STORAGE_LOCK = new ReentrantReadWriteLock();
     private static final ReadWriteLock TYPE_VARIABLE_MAPPER_LOCK = new ReentrantReadWriteLock();
     private static ResolvingModuleFactoryMethod<TypeMeta<?>, MappedVariableHierarchyStorage<TypeMeta<?>>>
             mappedVariableHierarchyStorage;
     private static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> typeResolverPicker;
+    private static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverStorage<TypeMeta<?>>> typeResolverStorage;
     private static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> typeVariableMapper;
 
     private TypeMetaResolvingModuleFactory() {
@@ -98,6 +101,24 @@ public final class TypeMetaResolvingModuleFactory {
     }
 
     /**
+     * Replaces instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeResolverStorage</code>. All further
+     * resolves will use new instance.
+     *
+     * @param storage new instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeResolverStorage</code>.
+     */
+    public static void replaceTypeResolverStorage(
+            ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverStorage<TypeMeta<?>>> storage) {
+        TYPE_RESOLVER_STORAGE_LOCK.writeLock().lock();
+        log.info(() -> String.format("Replacing TypeResolverStorage by '%s'.",
+                storage == null ? null : storage.getClass().getName()));
+        TypeMetaResolvingModuleFactory.typeResolverStorage = storage;
+        TYPE_RESOLVER_STORAGE_LOCK.writeLock().unlock();
+        if (TypeMetaResolvingContextManager.isAutoRefreshContext()) {
+            TypeMetaResolvingContextManager.refreshContext();
+        }
+    }
+
+    /**
      * Replaces instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeVariableMapper</code>. All further
      * resolves will use new instance.
      *
@@ -125,6 +146,18 @@ public final class TypeMetaResolvingModuleFactory {
                 = TypeMetaResolvingModuleFactory.typeResolverPicker;
         TYPE_RESOLVER_PICKER_LOCK.readLock().unlock();
         return pickerToReturn;
+    }
+
+    /**
+     * Returns current instance of <code>ResolvingModuleFactoryMethod</code> for <code>TypeResolverStorage</code>.
+     */
+    @SuppressWarnings("java:S1452")
+    public static ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverStorage<TypeMeta<?>>> typeResolverStorage() {
+        TYPE_RESOLVER_STORAGE_LOCK.readLock().lock();
+        ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverStorage<TypeMeta<?>>> storageToReturn
+                = TypeMetaResolvingModuleFactory.typeResolverStorage;
+        TYPE_RESOLVER_STORAGE_LOCK.readLock().unlock();
+        return storageToReturn;
     }
 
     /**

@@ -21,37 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.context;
+package com.github.vladislavsevruk.resolver.resolver.simple.clazz;
 
 import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.storage.TypeResolverStorage;
-import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
-import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import lombok.EqualsAndHashCode;
 
 /**
- * Resolving context with replaceable modules.
- *
- * @param <T> type of mapped value for type variable.
+ * Resolves actual types for class types.
  */
-public interface ResolvingContext<T> {
+@EqualsAndHashCode(callSuper = true)
+public final class ClassTypeResolver extends AbstractClassTypeResolver<TypeMeta<?>> {
 
-    /**
-     * Returns current instance of <code>MappedVariableHierarchyStorage</code> stored at context.
-     */
-    MappedVariableHierarchyStorage<T> getMappedVariableHierarchyStorage();
+    public ClassTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
+        super(typeResolverPicker);
+    }
 
-    /**
-     * Returns current instance of <code>TypeResolverPicker</code> stored at context.
-     */
-    TypeResolverPicker<T> getTypeResolverPicker();
+    @Override
+    protected TypeMeta<?>[] createComponentsArray(int length) {
+        return new TypeMeta[length];
+    }
 
-    /**
-     * Returns current instance of <code>TypeResolverStorage</code> stored at context.
-     */
-    TypeResolverStorage<T> getTypeResolverStorage();
+    @Override
+    protected TypeMeta<?> createResolvedArray(Class<?> actualClass, TypeMeta<?> resolvedComponentType) {
+        return new TypeMeta<>(actualClass, new TypeMeta<?>[]{ resolvedComponentType });
+    }
 
-    /**
-     * Returns current instance of <code>TypeVariableMapper</code> stored at context.
-     */
-    TypeVariableMapper<T> getTypeVariableMapper();
+    @Override
+    protected TypeMeta<?> createResolvedItem(Class<?> actualClass) {
+        return new TypeMeta<>(actualClass);
+    }
+
+    @Override
+    protected TypeMeta<?> createResolvedParameterizedType(Class<?> rawType, TypeMeta<?>[] resolvedArgumentTypes) {
+        return new TypeMeta<>(rawType, resolvedArgumentTypes);
+    }
 }

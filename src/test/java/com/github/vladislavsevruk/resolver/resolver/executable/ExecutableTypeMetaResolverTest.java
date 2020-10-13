@@ -24,7 +24,6 @@
 package com.github.vladislavsevruk.resolver.resolver.executable;
 
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
-import com.github.vladislavsevruk.resolver.resolver.executable.ExecutableTypeMetaResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeProvider;

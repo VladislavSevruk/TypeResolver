@@ -21,34 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver;
+package com.github.vladislavsevruk.resolver.resolver.simple.wildcard;
 
-import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-
-import java.lang.reflect.Type;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import lombok.EqualsAndHashCode;
 
 /**
- * Resolves actual types for generic parameters.
- *
- * @param <T> type of mapped value for type variable.
+ * Resolves actual types for wildcard types.
  */
-public interface TypeResolver<T> {
+@EqualsAndHashCode(callSuper = true)
+public final class WildcardTypeResolver extends AbstractWildcardTypeResolver<TypeMeta<?>> {
 
-    /**
-     * Checks if type resolver can deal with specific type.
-     *
-     * @param type <code>Type</code> to check.
-     * @return <code>true</code> if type resolver can resolve actual types for received type, <code>false</code>
-     * otherwise.
-     */
-    boolean canResolve(Type type);
+    public WildcardTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
+        super(typeResolverPicker);
+    }
 
-    /**
-     * Resolves actual type for received type and its generic parameters.
-     *
-     * @param typeVariableMap <code>TypeVariableMap</code> with declared class type variables.
-     * @param type            <code>Type</code> to resolve.
-     * @return actual type for received type.
-     */
-    T resolve(TypeVariableMap<T> typeVariableMap, Type type);
+    @Override
+    protected TypeMeta<?> createResolvedItemLowerBound(TypeMeta<?> resolvedType) {
+        return new TypeMeta<>(resolvedType.getType(), resolvedType.getGenericTypes(), true);
+    }
+
+    @Override
+    protected TypeMeta<?> createResolvedItemUpperBound(TypeMeta<?> resolvedType) {
+        return new TypeMeta<>(resolvedType.getType(), resolvedType.getGenericTypes(), true);
+    }
 }

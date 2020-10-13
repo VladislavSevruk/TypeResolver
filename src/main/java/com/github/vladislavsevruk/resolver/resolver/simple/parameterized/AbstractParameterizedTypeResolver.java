@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.simple;
+package com.github.vladislavsevruk.resolver.resolver.simple.parameterized;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
@@ -34,15 +33,17 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * Resolves actual types for parameterized types.
+ * Contains common logic for resolving actual types for parameterized types.
+ *
+ * @param <T> type of mapped value for type variable.
  */
 @Log4j2
 @EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class ParameterizedTypeResolver implements TypeResolver<TypeMeta<?>> {
+public abstract class AbstractParameterizedTypeResolver<T> implements TypeResolver<T> {
 
-    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
+    private TypeResolverPicker<T> typeResolverPicker;
 
-    public ParameterizedTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
+    public AbstractParameterizedTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -58,16 +59,21 @@ public final class ParameterizedTypeResolver implements TypeResolver<TypeMeta<?>
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type argumentType) {
+    public T resolve(TypeVariableMap<T> typeVariableMap, Type argumentType) {
         log.debug(() -> String.format("'%s' is parameterized type.", argumentType.getTypeName()));
         ParameterizedType parameterizedArgumentType = (ParameterizedType) argumentType;
         Type[] actualTypes = parameterizedArgumentType.getActualTypeArguments();
-        TypeMeta<?>[] argumentTypes = new TypeMeta<?>[actualTypes.length];
+        T[] resolvedArgumentTypes = createArgumentsArray(actualTypes.length);
         for (int i = 0; i < actualTypes.length; ++i) {
             Type actualType = actualTypes[i];
-            argumentTypes[i] = typeResolverPicker.pickTypeResolver(actualType).resolve(typeVariableMap, actualType);
+            resolvedArgumentTypes[i] = typeResolverPicker.pickTypeResolver(actualType)
+                    .resolve(typeVariableMap, actualType);
         }
-        Class<?> rawReturnType = (Class<?>) parameterizedArgumentType.getRawType();
-        return new TypeMeta<>(rawReturnType, argumentTypes);
+        Class<?> rawType = (Class<?>) parameterizedArgumentType.getRawType();
+        return createResolvedParameterizedType(rawType, resolvedArgumentTypes);
     }
+
+    protected abstract T[] createArgumentsArray(int length);
+
+    protected abstract T createResolvedParameterizedType(Class<?> rawType, T[] resolvedArgumentTypes);
 }

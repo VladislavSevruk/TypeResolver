@@ -34,6 +34,12 @@ import lombok.extern.log4j.Log4j2;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 
+/**
+ * Contains common logic for resolving actual types for generic generic fields.
+ *
+ * @param <T> type of mapped value for type variable.
+ * @see FieldTypeResolver
+ */
 @Log4j2
 @EqualsAndHashCode
 public class BaseFieldTypeResolver<T> implements FieldTypeResolver<T> {

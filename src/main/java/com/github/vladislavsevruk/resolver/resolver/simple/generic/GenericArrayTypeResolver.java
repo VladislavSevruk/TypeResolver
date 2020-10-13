@@ -21,51 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.simple;
+package com.github.vladislavsevruk.resolver.resolver.simple.generic;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
-import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Type;
 
 /**
  * Resolves actual types for generic array types.
  */
-@Log4j2
-@EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class GenericArrayTypeResolver implements TypeResolver<TypeMeta<?>> {
-
-    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
+@EqualsAndHashCode(callSuper = true)
+public final class GenericArrayTypeResolver extends AbstractGenericArrayTypeResolver<TypeMeta<?>> {
 
     public GenericArrayTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
-        this.typeResolverPicker = typeResolverPicker;
+        super(typeResolverPicker);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean canResolve(Type type) {
-        return GenericArrayType.class.isAssignableFrom(type.getClass());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type type) {
-        GenericArrayType genericArrayType = (GenericArrayType) type;
-        Type componentType = genericArrayType.getGenericComponentType();
-        log.debug(
-                () -> String.format("'%s' represents array of '%s'.", type.getTypeName(), componentType.getTypeName()));
-        TypeMeta<?> resolvedMeta = typeResolverPicker.pickTypeResolver(componentType)
-                .resolve(typeVariableMap, componentType);
+    protected TypeMeta<?> createResolvedArray(TypeMeta<?> resolvedMeta) {
         return new TypeMeta<>(getArrayTypeByComponent(resolvedMeta), new TypeMeta<?>[]{ resolvedMeta });
     }
 

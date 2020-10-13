@@ -21,47 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.simple;
+package com.github.vladislavsevruk.resolver.resolver.simple.variable;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
+import java.lang.reflect.TypeVariable;
 
 /**
- * Resolves actual types for wildcard types.
+ * Contains common logic for resolving actual types for type variables.
+ *
+ * @param <T> type of mapped value for type variable.
  */
 @Log4j2
-@EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class WildcardTypeResolver implements TypeResolver<TypeMeta<?>> {
-
-    private TypeResolverPicker<TypeMeta<?>> typeResolverPicker;
-
-    public WildcardTypeResolver(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
-        this.typeResolverPicker = typeResolverPicker;
-    }
+@EqualsAndHashCode
+public abstract class AbstractTypeVariableResolver<T> implements TypeResolver<T> {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean canResolve(Type type) {
-        return WildcardType.class.isAssignableFrom(type.getClass());
+        return TypeVariable.class.isAssignableFrom(type.getClass());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap<TypeMeta<?>> typeVariableMap, Type type) {
-        log.debug(() -> String.format("'%s' is wildcard type.", type.getTypeName()));
-        Type upperBound = ((WildcardType) type).getUpperBounds()[0];
-        TypeMeta<?> resolvedMeta = typeResolverPicker.pickTypeResolver(upperBound).resolve(typeVariableMap, upperBound);
-        return new TypeMeta<>(resolvedMeta.getType(), resolvedMeta.getGenericTypes(), true);
+    @SuppressWarnings("unchecked")
+    public T resolve(TypeVariableMap<T> typeVariableMap, Type type) {
+        log.debug(() -> String.format("'%s' is type variable.", type.getTypeName()));
+        T resolvedType = typeVariableMap.getActualType((TypeVariable<? extends Class<?>>) type);
+        if (resolvedType != null) {
+            log.debug(() -> String.format("Actual type for '%s' is '%s'.", type.getTypeName(), getName(resolvedType)));
+            return resolvedType;
+        }
+        log.info(() -> String
+                .format("Failed to find type variable '%s' in class declaration. Probably generic type used in "
+                                + "method declaration directly. Using 'java.lang.Object' for '%<s' type variable.",
+                        type.getTypeName()));
+        return getDefaultType(type);
     }
+
+    protected abstract T getDefaultType(Type type);
+
+    protected abstract String getName(T resolvedType);
 }

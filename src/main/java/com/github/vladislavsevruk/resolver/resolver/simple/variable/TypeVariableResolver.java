@@ -21,46 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.vladislavsevruk.resolver.resolver.annotated;
+package com.github.vladislavsevruk.resolver.resolver.simple.variable;
 
-import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
+import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import lombok.EqualsAndHashCode;
-import lombok.extern.log4j.Log4j2;
 
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
 
 /**
- * Resolves actual types for annotated types.
- *
- * @param <T> type of mapped value for type variable.
+ * Resolves actual types for type variables.
  */
-@Log4j2
-@EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class AnnotatedTypeBaseResolver<T> implements AnnotatedTypeResolver<T> {
+@EqualsAndHashCode(callSuper = true)
+public final class TypeVariableResolver extends AbstractTypeVariableResolver<TypeMeta<?>> {
 
-    private TypeResolverPicker<T> typeResolverPicker;
-
-    public AnnotatedTypeBaseResolver(TypeResolverPicker<T> typeResolverPicker) {
-        this.typeResolverPicker = typeResolverPicker;
+    @Override
+    protected TypeMeta<?> getDefaultType(Type type) {
+        return TypeMeta.WILDCARD_META;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean canResolve(AnnotatedType annotatedType) {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public T resolve(TypeVariableMap<T> typeVariableMap, AnnotatedType annotatedType) {
-        log.debug(() -> "Resolving AnnotatedType.");
-        Type typeToResolve = annotatedType.getType();
-        return typeResolverPicker.pickTypeResolver(typeToResolve).resolve(typeVariableMap, typeToResolve);
+    protected String getName(TypeMeta<?> resolvedType) {
+        return resolvedType.getType().getName();
     }
 }
