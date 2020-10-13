@@ -45,7 +45,7 @@ public abstract class AbstractAnnotatedParameterizedTypeResolver<T> implements A
 
     private TypeResolverPicker<T> typeResolverPicker;
 
-    public AbstractAnnotatedParameterizedTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
+    protected AbstractAnnotatedParameterizedTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 

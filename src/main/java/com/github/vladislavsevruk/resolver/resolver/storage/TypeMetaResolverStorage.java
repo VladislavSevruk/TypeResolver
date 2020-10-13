@@ -36,8 +36,10 @@ import com.github.vladislavsevruk.resolver.resolver.simple.parameterized.Paramet
 import com.github.vladislavsevruk.resolver.resolver.simple.variable.TypeVariableResolver;
 import com.github.vladislavsevruk.resolver.resolver.simple.wildcard.WildcardTypeResolver;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,12 +50,13 @@ import java.util.List;
  * @see TypeResolverStorage
  * @see TypeMeta
  */
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode
 public final class TypeMetaResolverStorage implements TypeResolverStorage<TypeMeta<?>> {
 
-    private final List<AnnotatedTypeResolver<TypeMeta<?>>> annotatedTypeResolvers;
-    private final List<TypeResolver<TypeMeta<?>>> typeResolvers;
+    List<AnnotatedTypeResolver<TypeMeta<?>>> annotatedTypeResolvers;
+    List<TypeResolver<TypeMeta<?>>> typeResolvers;
 
     public TypeMetaResolverStorage() {
         this(TypeMetaResolvingContextManager.getContext().getTypeResolverPicker());

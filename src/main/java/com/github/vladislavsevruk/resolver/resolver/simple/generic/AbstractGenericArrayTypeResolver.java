@@ -43,7 +43,7 @@ public abstract class AbstractGenericArrayTypeResolver<T> implements TypeResolve
 
     private TypeResolverPicker<T> typeResolverPicker;
 
-    public AbstractGenericArrayTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
+    protected AbstractGenericArrayTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 

@@ -46,7 +46,7 @@ class TypeMetaMappedVariableHierarchyStorageTest {
     }
 
     @Test
-    void getHierarchyForTest() {
+    void getHierarchyTest() {
         MappedVariableHierarchy<TypeMeta<?>> expectedHierarchy = new MappedVariableHierarchy<>(Short.class);
         TypeMeta<?> typeMeta = new TypeMeta<>(Short.class);
         expectedHierarchy.addTypeVariable(Comparable.class, Comparable.class.getTypeParameters()[0], typeMeta);

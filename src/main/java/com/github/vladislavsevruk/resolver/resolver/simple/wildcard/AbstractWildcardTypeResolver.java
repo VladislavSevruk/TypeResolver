@@ -44,7 +44,7 @@ public abstract class AbstractWildcardTypeResolver<T> implements TypeResolver<T>
 
     private TypeResolverPicker<T> typeResolverPicker;
 
-    public AbstractWildcardTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
+    protected AbstractWildcardTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 

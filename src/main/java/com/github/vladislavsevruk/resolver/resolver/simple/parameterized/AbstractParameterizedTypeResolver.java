@@ -43,7 +43,7 @@ public abstract class AbstractParameterizedTypeResolver<T> implements TypeResolv
 
     private TypeResolverPicker<T> typeResolverPicker;
 
-    public AbstractParameterizedTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
+    protected AbstractParameterizedTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 

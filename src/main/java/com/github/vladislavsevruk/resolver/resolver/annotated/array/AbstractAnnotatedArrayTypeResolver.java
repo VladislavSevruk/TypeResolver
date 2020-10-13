@@ -44,7 +44,7 @@ public abstract class AbstractAnnotatedArrayTypeResolver<T> implements Annotated
 
     private TypeResolverPicker<T> typeResolverPicker;
 
-    public AbstractAnnotatedArrayTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
+    protected AbstractAnnotatedArrayTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 

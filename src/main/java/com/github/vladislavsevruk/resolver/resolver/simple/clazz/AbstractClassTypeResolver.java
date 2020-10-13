@@ -43,7 +43,7 @@ public abstract class AbstractClassTypeResolver<T> implements TypeResolver<T> {
 
     private TypeResolverPicker<T> typeResolverPicker;
 
-    public AbstractClassTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
+    protected AbstractClassTypeResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
