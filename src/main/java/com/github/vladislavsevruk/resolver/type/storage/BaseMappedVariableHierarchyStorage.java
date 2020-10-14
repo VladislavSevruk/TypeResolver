@@ -23,9 +23,9 @@
  */
 package com.github.vladislavsevruk.resolver.type.storage;
 
+import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.type.MappedVariableHierarchy;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,10 +38,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BaseMappedVariableHierarchyStorage<T> implements MappedVariableHierarchyStorage<T> {
 
     private Map<TypeMeta<?>, MappedVariableHierarchy<T>> hierarchyMap = new ConcurrentHashMap<>();
-    private TypeVariableMapper<T> typeVariableMapper;
+    private ResolvingContext<T> resolvingContext;
 
-    public BaseMappedVariableHierarchyStorage(TypeVariableMapper<T> typeVariableMapper) {
-        this.typeVariableMapper = typeVariableMapper;
+    public BaseMappedVariableHierarchyStorage(ResolvingContext<T> resolvingContext) {
+        this.resolvingContext = resolvingContext;
     }
 
     /**
@@ -55,10 +55,14 @@ public class BaseMappedVariableHierarchyStorage<T> implements MappedVariableHier
         return hierarchyMap.get(typeMeta);
     }
 
+    protected ResolvingContext<T> context() {
+        return resolvingContext;
+    }
+
     private synchronized void buildHierarchy(TypeMeta<?> typeMeta) {
         // second check after synchronization
         if (!hierarchyMap.containsKey(typeMeta)) {
-            hierarchyMap.put(typeMeta, typeVariableMapper.mapTypeVariables(typeMeta));
+            hierarchyMap.put(typeMeta, context().getTypeVariableMapper().mapTypeVariables(typeMeta));
         }
     }
 }

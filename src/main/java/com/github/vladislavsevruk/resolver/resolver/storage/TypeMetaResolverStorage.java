@@ -23,6 +23,7 @@
  */
 package com.github.vladislavsevruk.resolver.resolver.storage;
 
+import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeBaseResolver;
 import com.github.vladislavsevruk.resolver.resolver.annotated.AnnotatedTypeResolver;
@@ -57,12 +58,12 @@ public final class TypeMetaResolverStorage implements TypeResolverStorage<TypeMe
     List<TypeResolver<TypeMeta<?>>> typeResolvers;
 
     public TypeMetaResolverStorage() {
-        this(TypeMetaResolvingContextManager.getContext().getTypeResolverPicker());
+        this(TypeMetaResolvingContextManager.getContext());
     }
 
-    public TypeMetaResolverStorage(TypeResolverPicker<TypeMeta<?>> typeResolverPicker) {
-        annotatedTypeResolvers = createAnnotatedTypeResolversList(typeResolverPicker);
-        typeResolvers = createTypeResolversList(typeResolverPicker);
+    public TypeMetaResolverStorage(ResolvingContext<TypeMeta<?>> resolvingContext) {
+        annotatedTypeResolvers = createAnnotatedTypeResolversList(resolvingContext.getTypeResolverPicker());
+        typeResolvers = createTypeResolversList(resolvingContext.getTypeResolverPicker());
     }
 
     private List<AnnotatedTypeResolver<TypeMeta<?>>> createAnnotatedTypeResolversList(

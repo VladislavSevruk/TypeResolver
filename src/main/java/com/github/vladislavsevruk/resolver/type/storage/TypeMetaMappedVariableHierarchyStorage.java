@@ -23,9 +23,9 @@
  */
 package com.github.vladislavsevruk.resolver.type.storage;
 
+import com.github.vladislavsevruk.resolver.context.ResolvingContext;
 import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
-import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 
 /**
  * Implementation of <code>MappedVariableHierarchyStorage</code> for TypeMeta.
@@ -36,10 +36,10 @@ import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 public final class TypeMetaMappedVariableHierarchyStorage extends BaseMappedVariableHierarchyStorage<TypeMeta<?>> {
 
     public TypeMetaMappedVariableHierarchyStorage() {
-        this(TypeMetaResolvingContextManager.getContext().getTypeVariableMapper());
+        this(TypeMetaResolvingContextManager.getContext());
     }
 
-    public TypeMetaMappedVariableHierarchyStorage(TypeVariableMapper<TypeMeta<?>> typeVariableMapper) {
-        super(typeVariableMapper);
+    public TypeMetaMappedVariableHierarchyStorage(ResolvingContext<TypeMeta<?>> resolvingContext) {
+        super(resolvingContext);
     }
 }

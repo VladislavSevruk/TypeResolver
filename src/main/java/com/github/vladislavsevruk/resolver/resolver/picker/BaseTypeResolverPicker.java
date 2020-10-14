@@ -50,7 +50,7 @@ public class BaseTypeResolverPicker<T> implements TypeResolverPicker<T> {
      */
     @Override
     public AnnotatedTypeResolver<T> pickAnnotatedTypeResolver(AnnotatedType annotatedType) {
-        for (AnnotatedTypeResolver<T> annotatedTypeResolver : resolvingContext.getTypeResolverStorage()
+        for (AnnotatedTypeResolver<T> annotatedTypeResolver : context().getTypeResolverStorage()
                 .getAnnotatedTypeResolvers()) {
             if (annotatedTypeResolver.canResolve(annotatedType)) {
                 return annotatedTypeResolver;
@@ -64,11 +64,15 @@ public class BaseTypeResolverPicker<T> implements TypeResolverPicker<T> {
      */
     @Override
     public TypeResolver<T> pickTypeResolver(Type type) {
-        for (TypeResolver<T> typeResolver : resolvingContext.getTypeResolverStorage().getTypeResolvers()) {
+        for (TypeResolver<T> typeResolver : context().getTypeResolverStorage().getTypeResolvers()) {
             if (typeResolver.canResolve(type)) {
                 return typeResolver;
             }
         }
         throw new TypeResolvingException("Cannot resolve type: " + type.getTypeName());
+    }
+
+    protected ResolvingContext<T> context() {
+        return resolvingContext;
     }
 }

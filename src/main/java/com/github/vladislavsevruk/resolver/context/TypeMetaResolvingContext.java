@@ -70,19 +70,17 @@ final class TypeMetaResolvingContext implements ResolvingContext<TypeMeta<?>> {
             ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverPicker<TypeMeta<?>>> typeResolverPickerFactoryMethod,
             ResolvingModuleFactoryMethod<TypeMeta<?>, TypeResolverStorage<TypeMeta<?>>> typeResolverStorageFactoryMethod,
             ResolvingModuleFactoryMethod<TypeMeta<?>, TypeVariableMapper<TypeMeta<?>>> typeVariableMapperFactoryMethod) {
-        this.typeResolverPicker = orDefault(typeResolverPickerFactoryMethod, TypeMetaResolverPicker::new);
-        log.debug(() -> String.format("Using '%s' as type resolver picker.", typeResolverPicker.getClass().getName()));
-        this.typeResolverStorage = orDefault(typeResolverStorageFactoryMethod,
-                context -> new TypeMetaResolverStorage(typeResolverPicker));
-        log.debug(
-                () -> String.format("Using '%s' as type resolver storage.", typeResolverStorage.getClass().getName()));
-        this.typeVariableMapper = orDefault(typeVariableMapperFactoryMethod,
-                context -> new TypeMetaVariableMapper(typeResolverPicker));
-        log.debug(() -> String.format("Using '%s' as type variable mapper.", typeVariableMapper.getClass().getName()));
         this.mappedVariableHierarchyStorage = orDefault(mappedVariableHierarchyStorageFactoryMethod,
-                context -> new TypeMetaMappedVariableHierarchyStorage(typeVariableMapper));
+                TypeMetaMappedVariableHierarchyStorage::new);
         log.debug(() -> String.format("Using '%s' as mapped variable hierarchy storage.",
                 mappedVariableHierarchyStorage.getClass().getName()));
+        this.typeResolverPicker = orDefault(typeResolverPickerFactoryMethod, TypeMetaResolverPicker::new);
+        log.debug(() -> String.format("Using '%s' as type resolver picker.", typeResolverPicker.getClass().getName()));
+        this.typeResolverStorage = orDefault(typeResolverStorageFactoryMethod, TypeMetaResolverStorage::new);
+        log.debug(
+                () -> String.format("Using '%s' as type resolver storage.", typeResolverStorage.getClass().getName()));
+        this.typeVariableMapper = orDefault(typeVariableMapperFactoryMethod, TypeMetaVariableMapper::new);
+        log.debug(() -> String.format("Using '%s' as type variable mapper.", typeVariableMapper.getClass().getName()));
     }
 
     private <T> T orDefault(ResolvingModuleFactoryMethod<TypeMeta<?>, T> factoryMethod,
