@@ -26,10 +26,11 @@ package com.github.vladislavsevruk.resolver.context;
 /**
  * Factory method for creating resolving module with received context.
  *
- * @param <T> resolving module related to this factory method.
+ * @param <T> type of mapped value for type variable.
+ * @param <U> resolving module related to this factory method.
  */
 @FunctionalInterface
-public interface ResolvingModuleFactoryMethod<T> {
+public interface ResolvingModuleFactoryMethod<T, U> {
 
     /**
      * Creates instance of related module using received context.
@@ -37,5 +38,5 @@ public interface ResolvingModuleFactoryMethod<T> {
      * @param context <code>ResolvingContext</code> with resolving modules.
      * @return instance of related resolving module.
      */
-    T get(ResolvingContext context);
+    U get(ResolvingContext<T> context);
 }

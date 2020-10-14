@@ -45,19 +45,19 @@ class TypeVariableMapTest {
 
     @Test
     void mapNotPresentTypeVariableEmptyMapTest() {
-        Assertions.assertNull(new TypeVariableMap().getActualType(typeVariable1));
+        Assertions.assertNull(new TypeVariableMap<>().getActualType(typeVariable1));
     }
 
     @Test
     void mapNotPresentTypeVariableNonEmptyMapTest() {
-        TypeVariableMap typeVariableMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = new TypeVariableMap<>();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
-        Assertions.assertNull(new TypeVariableMap().getActualType(typeVariable2));
+        Assertions.assertNull(new TypeVariableMap<>().getActualType(typeVariable2));
     }
 
     @Test
     void mapNotPresentTypeVariableSeveralItemsMapTest() {
-        TypeVariableMap typeVariableMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = new TypeVariableMap<>();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         typeVariableMap.addTypeVariable(typeVariable2, typeMeta2);
         Assertions.assertNull(typeVariableMap.getActualType(typeVariable3));
@@ -65,19 +65,19 @@ class TypeVariableMapTest {
 
     @Test
     void mapNullTypeVariableEmptyMapTest() {
-        Assertions.assertNull(new TypeVariableMap().getActualType(null));
+        Assertions.assertNull(new TypeVariableMap<>().getActualType(null));
     }
 
     @Test
     void mapNullTypeVariableNonEmptyMapTest() {
-        TypeVariableMap typeVariableMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = new TypeVariableMap<>();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         Assertions.assertNull(typeVariableMap.getActualType(null));
     }
 
     @Test
     void mapNullTypeVariableSeveralItemsMapTest() {
-        TypeVariableMap typeVariableMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = new TypeVariableMap<>();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         typeVariableMap.addTypeVariable(typeVariable2, typeMeta2);
         Assertions.assertNull(typeVariableMap.getActualType(null));
@@ -85,14 +85,14 @@ class TypeVariableMapTest {
 
     @Test
     void mapPresentTypeVariableNonEmptyMapTest() {
-        TypeVariableMap typeVariableMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = new TypeVariableMap<>();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         Assertions.assertEquals(typeMeta1, typeVariableMap.getActualType(typeVariable1));
     }
 
     @Test
     void mapPresentTypeVariableSeveralItemsMapTest() {
-        TypeVariableMap typeVariableMap = new TypeVariableMap();
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = new TypeVariableMap<>();
         typeVariableMap.addTypeVariable(typeVariable1, typeMeta1);
         typeVariableMap.addTypeVariable(typeVariable2, typeMeta2);
         Assertions.assertEquals(typeMeta1, typeVariableMap.getActualType(typeVariable1));

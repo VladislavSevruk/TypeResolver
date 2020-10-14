@@ -23,12 +23,13 @@
  */
 package com.github.vladislavsevruk.resolver.resolver.annotated;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPickerImpl;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeMetaResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,8 +50,8 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 class AnnotatedTypeBaseResolverTest {
 
-    private AnnotatedTypeBaseResolver realAnnotatedTypeBaseResolver = new AnnotatedTypeBaseResolver(
-            new TypeResolverPickerImpl());
+    private AnnotatedTypeBaseResolver<TypeMeta<?>> realAnnotatedTypeBaseResolver = new AnnotatedTypeBaseResolver<>(
+            new TypeMetaResolverPicker());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
@@ -83,7 +84,8 @@ class AnnotatedTypeBaseResolverTest {
         Mockito.when(typeResolver.resolve(typeVariableMap, innerType)).thenReturn(typeMeta);
         TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
         Mockito.when(typeResolverPicker.pickTypeResolver(innerType)).thenReturn(typeResolver);
-        AnnotatedTypeBaseResolver annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver(typeResolverPicker);
+        AnnotatedTypeBaseResolver<TypeMeta<?>> annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver<>(
+                typeResolverPicker);
         TypeMeta<?> result = annotatedTypeBaseResolver.resolve(typeVariableMap, annotatedTypeVariable);
         Assertions.assertEquals(typeMeta, result);
     }
@@ -95,9 +97,9 @@ class AnnotatedTypeBaseResolverTest {
         Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
         AnnotatedTypeVariable annotatedWildcardType = Mockito.mock(AnnotatedTypeVariable.class);
         Mockito.when(annotatedWildcardType.getType()).thenReturn(wildcardType);
-        TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Character.class);
-        TypeMeta typeMeta = new TypeMeta<>(Character[].class, new TypeMeta<?>[]{ innerTypeMeta }, true);
+        TypeMeta typeMeta = new TypeMeta<>(Character[].class, new TypeMeta<?>[]{ innerTypeMeta }, WildcardBound.UPPER);
         TypeMeta<?> result = realAnnotatedTypeBaseResolver.resolve(typeVariableMap, annotatedWildcardType);
         Assertions.assertEquals(typeMeta, result);
     }
@@ -114,7 +116,8 @@ class AnnotatedTypeBaseResolverTest {
         Mockito.when(typeResolver.resolve(typeVariableMap, innerType)).thenReturn(typeMeta);
         TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
         Mockito.when(typeResolverPicker.pickTypeResolver(innerType)).thenReturn(typeResolver);
-        AnnotatedTypeBaseResolver annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver(typeResolverPicker);
+        AnnotatedTypeBaseResolver<TypeMeta<?>> annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver<>(
+                typeResolverPicker);
         TypeMeta<?> result = annotatedTypeBaseResolver.resolve(typeVariableMap, annotatedWildcardType);
         Assertions.assertEquals(typeMeta, result);
     }
