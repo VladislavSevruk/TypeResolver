@@ -126,16 +126,14 @@ class ExecutableTypeMetaResolverTest {
     }
 
     @Test
-    void getParameterTypeNotOverridenObjectMethodThrowsExceptionClassTest()
-            throws NoSuchMethodException, SecurityException {
+    void getParameterTypeNotOverriddenObjectMethodThrowsExceptionClassTest() throws NoSuchMethodException {
         Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
                 () -> executableTypeResolver.getParameterTypes(TestModel.class, method));
     }
 
     @Test
-    void getParameterTypeNotOverridenObjectMethodThrowsExceptionTypeMetaTest()
-            throws NoSuchMethodException, SecurityException {
+    void getParameterTypeNotOverriddenObjectMethodThrowsExceptionTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class);
         Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
@@ -143,8 +141,7 @@ class ExecutableTypeMetaResolverTest {
     }
 
     @Test
-    void getParameterTypeNotOverridenObjectMethodThrowsExceptionTypeProviderTest()
-            throws NoSuchMethodException, SecurityException {
+    void getParameterTypeNotOverriddenObjectMethodThrowsExceptionTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
@@ -452,16 +449,14 @@ class ExecutableTypeMetaResolverTest {
     }
 
     @Test
-    void getReturnTypeNotOverridenObjectMethodThrowsExceptionClassTest()
-            throws NoSuchMethodException, SecurityException {
+    void getReturnTypeNotOverriddenObjectMethodThrowsExceptionClassTest() throws NoSuchMethodException {
         Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
                 () -> executableTypeResolver.getReturnType(TestModel.class, method));
     }
 
     @Test
-    void getReturnTypeNotOverridenObjectMethodThrowsExceptionTypeMetaTest()
-            throws NoSuchMethodException, SecurityException {
+    void getReturnTypeNotOverriddenObjectMethodThrowsExceptionTypeMetaTest() throws NoSuchMethodException {
         TypeMeta<?> typeMeta = new TypeMeta<>(TestModel.class);
         Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
@@ -469,8 +464,7 @@ class ExecutableTypeMetaResolverTest {
     }
 
     @Test
-    void getReturnTypeNotOverridenObjectMethodThrowsExceptionTypeProviderTest()
-            throws NoSuchMethodException, SecurityException {
+    void getReturnTypeNotOverriddenObjectMethodThrowsExceptionTypeProviderTest() throws NoSuchMethodException {
         TypeProvider<?> typeProvider = new TypeProvider<TestModel>() {};
         Method method = TestModel.class.getMethod("wait");
         Assertions.assertThrows(TypeResolvingException.class,
