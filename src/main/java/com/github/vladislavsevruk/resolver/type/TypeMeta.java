@@ -25,6 +25,8 @@ package com.github.vladislavsevruk.resolver.type;
 
 import lombok.Value;
 
+import java.util.Objects;
+
 /**
  * Metadata with actual types values for generic types.
  *
@@ -34,26 +36,30 @@ import lombok.Value;
 public class TypeMeta<T> {
 
     public static final TypeMeta<Object> OBJECT_META = new TypeMeta<>(Object.class);
-    public static final TypeMeta<Object> WILDCARD_META = new TypeMeta<>(Object.class, true);
+    public static final TypeMeta<Object> WILDCARD_META = new TypeMeta<>(Object.class, WildcardBound.UPPER);
     TypeMeta<?>[] genericTypes;
     Class<T> type;
-    boolean wildcard;
+    WildcardBound wildcardBound;
 
     public TypeMeta(Class<T> type) {
         this(type, new TypeMeta<?>[0]);
     }
 
     public TypeMeta(Class<T> type, TypeMeta<?>[] genericTypes) {
-        this(type, genericTypes, false);
+        this(type, genericTypes, null);
     }
 
-    public TypeMeta(Class<T> type, boolean isWildcard) {
-        this(type, new TypeMeta<?>[0], isWildcard);
+    public TypeMeta(Class<T> type, WildcardBound wildcardBound) {
+        this(type, new TypeMeta<?>[0], wildcardBound);
     }
 
-    public TypeMeta(Class<T> type, TypeMeta<?>[] genericTypes, boolean isWildcard) {
+    public TypeMeta(Class<T> type, TypeMeta<?>[] genericTypes, WildcardBound wildcardBound) {
         this.type = type;
         this.genericTypes = genericTypes;
-        this.wildcard = isWildcard;
+        this.wildcardBound = wildcardBound;
+    }
+
+    public boolean isWildcard() {
+        return Objects.nonNull(wildcardBound);
     }
 }

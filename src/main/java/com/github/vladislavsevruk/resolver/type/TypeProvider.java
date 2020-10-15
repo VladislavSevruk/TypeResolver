@@ -23,7 +23,7 @@
  */
 package com.github.vladislavsevruk.resolver.type;
 
-import com.github.vladislavsevruk.resolver.context.ResolvingContextManager;
+import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 
 import java.lang.reflect.TypeVariable;
@@ -67,7 +67,7 @@ public abstract class TypeProvider<T> implements Comparable<TypeProvider<T>> {
     @SuppressWarnings("java:S1452")
     public TypeMeta<?> getTypeMeta() {
         if (typeMeta == null) {
-            typeMeta = resolveGenericParameter(ResolvingContextManager.getContext().getTypeVariableMapper());
+            typeMeta = resolveGenericParameter(TypeMetaResolvingContextManager.getContext().getTypeVariableMapper());
         }
         return typeMeta;
     }
@@ -79,7 +79,7 @@ public abstract class TypeProvider<T> implements Comparable<TypeProvider<T>> {
      * @return resolved type meta for this instance.
      */
     @SuppressWarnings("java:S1452")
-    public TypeMeta<?> getTypeMeta(TypeVariableMapper typeVariableMapper) {
+    public TypeMeta<?> getTypeMeta(TypeVariableMapper<TypeMeta<?>> typeVariableMapper) {
         if (typeMeta == null) {
             typeMeta = resolveGenericParameter(typeVariableMapper);
         }
@@ -94,7 +94,7 @@ public abstract class TypeProvider<T> implements Comparable<TypeProvider<T>> {
         return getTypeMeta().hashCode();
     }
 
-    private TypeMeta<?> resolveGenericParameter(TypeVariableMapper typeVariableMapper) {
+    private TypeMeta<?> resolveGenericParameter(TypeVariableMapper<TypeMeta<?>> typeVariableMapper) {
         TypeVariable<? extends Class<?>> typeVariable = TypeProvider.class.getTypeParameters()[0];
         return typeVariableMapper.mapTypeVariables(getClass()).getTypeVariableMap(TypeProvider.class)
                 .getActualType(typeVariable);

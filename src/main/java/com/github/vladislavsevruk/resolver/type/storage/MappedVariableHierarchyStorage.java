@@ -28,8 +28,10 @@ import com.github.vladislavsevruk.resolver.type.TypeMeta;
 
 /**
  * Storage with mapped variable hierarchy.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface MappedVariableHierarchyStorage {
+public interface MappedVariableHierarchyStorage<T> {
 
     /**
      * Returns stored mapped variable hierarchy for received type meta.
@@ -37,5 +39,5 @@ public interface MappedVariableHierarchyStorage {
      * @param typeMeta <code>TypeMeta</code> to get <code>MappedVariableHierarchy</code> for.
      * @return <code>MappedVariableHierarchy</code> for received <code>TypeMeta</code>.
      */
-    MappedVariableHierarchy get(TypeMeta<?> typeMeta);
+    MappedVariableHierarchy<T> get(TypeMeta<?> typeMeta);
 }

@@ -24,7 +24,6 @@
 package com.github.vladislavsevruk.resolver.type;
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
@@ -32,21 +31,21 @@ import java.util.Map;
 
 /**
  * Represents type variables that were used in generic class declaration and their actual values.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-@ToString
 @EqualsAndHashCode
-public class TypeVariableMap {
+public class TypeVariableMap<T> {
 
-    private final Map<TypeVariable<? extends Class<?>>, TypeMeta<?>> typeVariableMappings = new HashMap<>();
+    private final Map<TypeVariable<? extends Class<?>>, T> typeVariableMappings = new HashMap<>();
 
     /**
      * Returns actual type for type variable that was used at class declaration.
      *
      * @param typeVariable <code>TypeVariable</code> to get matching actual <code>Type</code> for.
-     * @return actual <code>Type</code> that matches received <code>TypeVariable</code>.
+     * @return actual type that matches received <code>TypeVariable</code>.
      */
-    @SuppressWarnings("java:S1452")
-    public TypeMeta<?> getActualType(TypeVariable<? extends Class<?>> typeVariable) {
+    public T getActualType(TypeVariable<? extends Class<?>> typeVariable) {
         return typeVariableMappings.get(typeVariable);
     }
 
@@ -54,9 +53,9 @@ public class TypeVariableMap {
      * Adds mapped type variable.
      *
      * @param typeVariable <code>TypeVariable</code> that was used in generic class declaration.
-     * @param actualType   actual <code>TypeMeta</code> that matches received <code>TypeVariable</code>.
+     * @param actualType   actual type that matches received <code>TypeVariable</code>.
      */
-    void addTypeVariable(TypeVariable<? extends Class<?>> typeVariable, TypeMeta<?> actualType) {
+    void addTypeVariable(TypeVariable<? extends Class<?>> typeVariable, T actualType) {
         typeVariableMappings.put(typeVariable, actualType);
     }
 }

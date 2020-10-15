@@ -23,28 +23,24 @@
  */
 package com.github.vladislavsevruk.resolver.resolver.annotated;
 
-import com.github.vladislavsevruk.resolver.resolver.AnnotatedTypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
-import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
 
 /**
  * Resolves actual types for annotated types.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-@EqualsAndHashCode(exclude = "typeResolverPicker")
-public final class AnnotatedTypeBaseResolver implements AnnotatedTypeResolver {
+@Log4j2
+public final class AnnotatedTypeBaseResolver<T> implements AnnotatedTypeResolver<T> {
 
-    private static final Logger logger = LogManager.getLogger(AnnotatedTypeBaseResolver.class);
+    private TypeResolverPicker<T> typeResolverPicker;
 
-    private TypeResolverPicker typeResolverPicker;
-
-    public AnnotatedTypeBaseResolver(TypeResolverPicker typeResolverPicker) {
+    public AnnotatedTypeBaseResolver(TypeResolverPicker<T> typeResolverPicker) {
         this.typeResolverPicker = typeResolverPicker;
     }
 
@@ -60,8 +56,8 @@ public final class AnnotatedTypeBaseResolver implements AnnotatedTypeResolver {
      * {@inheritDoc}
      */
     @Override
-    public TypeMeta<?> resolve(TypeVariableMap typeVariableMap, AnnotatedType annotatedType) {
-        logger.debug(() -> "Resolving AnnotatedType.");
+    public T resolve(TypeVariableMap<T> typeVariableMap, AnnotatedType annotatedType) {
+        log.debug(() -> "Resolving AnnotatedType.");
         Type typeToResolve = annotatedType.getType();
         return typeResolverPicker.pickTypeResolver(typeToResolve).resolve(typeVariableMap, typeToResolve);
     }

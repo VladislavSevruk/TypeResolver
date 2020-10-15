@@ -23,12 +23,13 @@
  */
 package com.github.vladislavsevruk.resolver.resolver.annotated;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolver;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPickerImpl;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeMetaResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.simple.TypeResolver;
 import com.github.vladislavsevruk.resolver.test.data.TestTypeProvider;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,20 +48,20 @@ import java.lang.reflect.WildcardType;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class AnnotatedTypeBaseResolverTest {
+class AnnotatedTypeBaseResolverTest {
 
-    private AnnotatedTypeBaseResolver realAnnotatedTypeBaseResolver = new AnnotatedTypeBaseResolver(
-            new TypeResolverPickerImpl());
+    private AnnotatedTypeBaseResolver<TypeMeta<?>> realAnnotatedTypeBaseResolver = new AnnotatedTypeBaseResolver<>(
+            new TypeMetaResolverPicker());
 
     @ParameterizedTest
     @MethodSource("canResolveProvider")
-    public void canResolveTest(AnnotatedType type, Boolean expectedValue) {
+    void canResolveTest(AnnotatedType type, Boolean expectedValue) {
         Assertions.assertEquals(expectedValue, realAnnotatedTypeBaseResolver.canResolve(type));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveAnnotatedTypeVariableRealContextTest() {
+    void resolveAnnotatedTypeVariableRealContextTest() {
         TypeVariable<? extends Class<?>> typeVariable = Mockito.mock(TypeVariable.class);
         AnnotatedTypeVariable annotatedTypeVariable = Mockito.mock(AnnotatedTypeVariable.class);
         Mockito.when(annotatedTypeVariable.getType()).thenReturn(typeVariable);
@@ -73,7 +74,7 @@ public class AnnotatedTypeBaseResolverTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveAnnotatedTypeVariableTest() {
+    void resolveAnnotatedTypeVariableTest() {
         Type innerType = Mockito.mock(Type.class);
         AnnotatedTypeVariable annotatedTypeVariable = Mockito.mock(AnnotatedTypeVariable.class);
         Mockito.when(annotatedTypeVariable.getType()).thenReturn(innerType);
@@ -83,28 +84,29 @@ public class AnnotatedTypeBaseResolverTest {
         Mockito.when(typeResolver.resolve(typeVariableMap, innerType)).thenReturn(typeMeta);
         TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
         Mockito.when(typeResolverPicker.pickTypeResolver(innerType)).thenReturn(typeResolver);
-        AnnotatedTypeBaseResolver annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver(typeResolverPicker);
+        AnnotatedTypeBaseResolver<TypeMeta<?>> annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver<>(
+                typeResolverPicker);
         TypeMeta<?> result = annotatedTypeBaseResolver.resolve(typeVariableMap, annotatedTypeVariable);
         Assertions.assertEquals(typeMeta, result);
     }
 
     @Test
-    public void resolveAnnotatedWildcardTypeRealContextTest() {
+    void resolveAnnotatedWildcardTypeRealContextTest() {
         Class<?> boundType = Character[].class;
         WildcardType wildcardType = Mockito.mock(WildcardType.class);
         Mockito.when(wildcardType.getUpperBounds()).thenReturn(new Type[]{ boundType });
         AnnotatedTypeVariable annotatedWildcardType = Mockito.mock(AnnotatedTypeVariable.class);
         Mockito.when(annotatedWildcardType.getType()).thenReturn(wildcardType);
-        TypeVariableMap typeVariableMap = Mockito.mock(TypeVariableMap.class);
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = Mockito.mock(TypeVariableMap.class);
         TypeMeta<?> innerTypeMeta = new TypeMeta<>(Character.class);
-        TypeMeta typeMeta = new TypeMeta<>(Character[].class, new TypeMeta<?>[]{ innerTypeMeta }, true);
+        TypeMeta typeMeta = new TypeMeta<>(Character[].class, new TypeMeta<?>[]{ innerTypeMeta }, WildcardBound.UPPER);
         TypeMeta<?> result = realAnnotatedTypeBaseResolver.resolve(typeVariableMap, annotatedWildcardType);
         Assertions.assertEquals(typeMeta, result);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void resolveAnnotatedWildcardTypeTest() {
+    void resolveAnnotatedWildcardTypeTest() {
         Type innerType = Mockito.mock(Type.class);
         AnnotatedWildcardType annotatedWildcardType = Mockito.mock(AnnotatedWildcardType.class);
         Mockito.when(annotatedWildcardType.getType()).thenReturn(innerType);
@@ -114,7 +116,8 @@ public class AnnotatedTypeBaseResolverTest {
         Mockito.when(typeResolver.resolve(typeVariableMap, innerType)).thenReturn(typeMeta);
         TypeResolverPicker typeResolverPicker = Mockito.mock(TypeResolverPicker.class);
         Mockito.when(typeResolverPicker.pickTypeResolver(innerType)).thenReturn(typeResolver);
-        AnnotatedTypeBaseResolver annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver(typeResolverPicker);
+        AnnotatedTypeBaseResolver<TypeMeta<?>> annotatedTypeBaseResolver = new AnnotatedTypeBaseResolver<>(
+                typeResolverPicker);
         TypeMeta<?> result = annotatedTypeBaseResolver.resolve(typeVariableMap, annotatedWildcardType);
         Assertions.assertEquals(typeMeta, result);
     }
