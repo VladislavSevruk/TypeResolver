@@ -23,9 +23,10 @@
  */
 package com.github.vladislavsevruk.resolver.util;
 
-import com.github.vladislavsevruk.resolver.context.ResolvingContextManager;
+import com.github.vladislavsevruk.resolver.context.TypeMetaResolvingContextManager;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
 import com.github.vladislavsevruk.resolver.type.TypeVariableMap;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 
 /**
  * Utility methods for TypeMeta.
@@ -82,15 +83,16 @@ public final class TypeMetaUtil {
         if (donorReturnTypeMeta.getType().equals(acceptorClass)) {
             return donorReturnTypeMeta.getGenericTypes();
         }
-        TypeVariableMap typeVariableMap = ResolvingContextManager.getContext().getMappedVariableHierarchyStorage()
-                .get(donorReturnTypeMeta).getTypeVariableMap(acceptorClass);
-        return ResolvingContextManager.getContext().getTypeResolverPicker().pickTypeResolver(acceptorClass)
+        TypeVariableMap<TypeMeta<?>> typeVariableMap = TypeMetaResolvingContextManager.getContext()
+                .getMappedVariableHierarchyStorage().get(donorReturnTypeMeta).getTypeVariableMap(acceptorClass);
+        return TypeMetaResolvingContextManager.getContext().getTypeResolverPicker().pickTypeResolver(acceptorClass)
                 .resolve(typeVariableMap, acceptorClass).getGenericTypes();
     }
 
     private static boolean isGenericTypesMatch(TypeMeta<?> acceptorGenericTypeMeta, TypeMeta<?> donorGenericTypeMeta) {
         if (acceptorGenericTypeMeta.isWildcard()) {
-            return isTypesMatch(acceptorGenericTypeMeta, donorGenericTypeMeta);
+            return TypeMeta.WILDCARD_META.equals(acceptorGenericTypeMeta) || isWildcardTypeMatch(
+                    acceptorGenericTypeMeta, donorGenericTypeMeta);
         } else {
             if (!PrimitiveWrapperUtil.wrap(acceptorGenericTypeMeta.getType())
                     .equals(PrimitiveWrapperUtil.wrap(donorGenericTypeMeta.getType()))) {
@@ -123,5 +125,15 @@ public final class TypeMetaUtil {
             }
         }
         return true;
+    }
+
+    private static boolean isWildcardTypeMatch(TypeMeta<?> acceptorGenericTypeMeta, TypeMeta<?> donorGenericTypeMeta) {
+        if (donorGenericTypeMeta.isWildcard() && !acceptorGenericTypeMeta.getWildcardBound()
+                .equals(donorGenericTypeMeta.getWildcardBound())) {
+            return false;
+        }
+        return WildcardBound.UPPER.equals(acceptorGenericTypeMeta.getWildcardBound()) ? isTypesMatch(
+                acceptorGenericTypeMeta, donorGenericTypeMeta)
+                : isTypesMatch(donorGenericTypeMeta, acceptorGenericTypeMeta);
     }
 }

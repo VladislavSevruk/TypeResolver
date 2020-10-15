@@ -28,8 +28,10 @@ import com.github.vladislavsevruk.resolver.type.TypeMeta;
 
 /**
  * Maps type variables with actual types.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface TypeVariableMapper {
+public interface TypeVariableMapper<T> {
 
     /**
      * Generates class hierarchy with type variables bindings.
@@ -37,7 +39,7 @@ public interface TypeVariableMapper {
      * @param clazz <code>Class</code> to generate hierarchy for.
      * @return generated <code>MappedVariableHierarchy</code> with actual type mappings.
      */
-    MappedVariableHierarchy mapTypeVariables(Class<?> clazz);
+    MappedVariableHierarchy<T> mapTypeVariables(Class<?> clazz);
 
     /**
      * Generates class hierarchy with type variables bindings.
@@ -45,5 +47,5 @@ public interface TypeVariableMapper {
      * @param typeMeta <code>TypeMeta</code> with actual types to generate hierarchy for.
      * @return generated <code>MappedVariableHierarchy</code> with actual type mappings.
      */
-    MappedVariableHierarchy mapTypeVariables(TypeMeta<?> typeMeta);
+    MappedVariableHierarchy<T> mapTypeVariables(TypeMeta<?> typeMeta);
 }

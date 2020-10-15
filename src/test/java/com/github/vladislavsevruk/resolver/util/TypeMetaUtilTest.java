@@ -25,6 +25,7 @@ package com.github.vladislavsevruk.resolver.util;
 
 import com.github.vladislavsevruk.resolver.test.data.TestModel;
 import com.github.vladislavsevruk.resolver.type.TypeMeta;
+import com.github.vladislavsevruk.resolver.type.WildcardBound;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -35,10 +36,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-public class TypeMetaUtilTest {
+class TypeMetaUtilTest {
 
     @Test
-    public void isSameTypesAssignableComplexTypeMetaTest() {
+    void isSameTypesAssignableComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -47,7 +48,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesAssignableDeepNestingTypeAtComplexTypeMetaTest() {
+    void isSameTypesAssignableDeepNestingTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -58,7 +59,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesAssignableInnerTypeAtComplexTypeMetaTest() {
+    void isSameTypesAssignableInnerTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -67,14 +68,14 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesAssignableSimpleTypeMetaTest() {
+    void isSameTypesAssignableSimpleTypeMetaTest() {
         TypeMeta<Number> typeMeta1 = new TypeMeta<>(Number.class);
         TypeMeta<Long> typeMeta2 = new TypeMeta<>(Long.class);
         Assertions.assertFalse(TypeMetaUtil.isSameTypes(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isSameTypesDifferentDeepNestingLevelTest() {
+    void isSameTypesDifferentDeepNestingLevelTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -84,7 +85,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesDifferentNestingLevelMetaTest() {
+    void isSameTypesDifferentNestingLevelMetaTest() {
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(String.class) };
         TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
@@ -92,7 +93,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesEqualComplexTypeMetaTest() {
+    void isSameTypesEqualComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -101,7 +102,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesEqualDeepNestingTypeAtComplexTypeMetaTest() {
+    void isSameTypesEqualDeepNestingTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -112,14 +113,14 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesEqualSimpleTypeMetaTest() {
+    void isSameTypesEqualSimpleTypeMetaTest() {
         TypeMeta<Long> typeMeta1 = new TypeMeta<>(Long.class);
         TypeMeta<Long> typeMeta2 = new TypeMeta<>(Long.class);
         Assertions.assertTrue(TypeMetaUtil.isSameTypes(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isSameTypesNotAssignableComplexTypeMetaTest() {
+    void isSameTypesNotAssignableComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<Set> typeMeta1 = new TypeMeta<>(Set.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -128,7 +129,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesNotAssignableDeepNestingTypeAtComplexTypeMetaTest() {
+    void isSameTypesNotAssignableDeepNestingTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(String.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -139,7 +140,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesNotAssignableInnerTypeAtComplexTypeMetaTest() {
+    void isSameTypesNotAssignableInnerTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(String.class) };
@@ -148,21 +149,21 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesNotAssignableSimpleTypeMetaTest() {
+    void isSameTypesNotAssignableSimpleTypeMetaTest() {
         TypeMeta<String> typeMeta1 = new TypeMeta<>(String.class);
         TypeMeta<Long> typeMeta2 = new TypeMeta<>(Long.class);
         Assertions.assertFalse(TypeMetaUtil.isSameTypes(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isSameTypesPrimitiveAndWrapperTypeMetaTest() {
+    void isSameTypesPrimitiveAndWrapperTypeMetaTest() {
         TypeMeta<Long> primitiveTypeMeta = new TypeMeta<>(long.class);
         TypeMeta<Long> wrapperTypeMeta = new TypeMeta<>(Long.class);
         Assertions.assertTrue(TypeMetaUtil.isSameTypes(primitiveTypeMeta, wrapperTypeMeta));
     }
 
     @Test
-    public void isSameTypesReverseAssignableComplexTypeMetaTest() {
+    void isSameTypesReverseAssignableComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<ArrayList> typeMeta1 = new TypeMeta<>(ArrayList.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -171,7 +172,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesReverseAssignableInnerTypeAtComplexTypeMetaTest() {
+    void isSameTypesReverseAssignableInnerTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
@@ -180,27 +181,27 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isSameTypesReverseAssignableSimpleTypeMetaTest() {
+    void isSameTypesReverseAssignableSimpleTypeMetaTest() {
         TypeMeta<Long> typeMeta1 = new TypeMeta<>(Long.class);
         TypeMeta<Number> typeMeta2 = new TypeMeta<>(Number.class);
         Assertions.assertFalse(TypeMetaUtil.isSameTypes(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isSameTypesSameComplexTypeMetaTest() {
+    void isSameTypesSameComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta = new TypeMeta<>(List.class, innerTypeMeta);
         Assertions.assertTrue(TypeMetaUtil.isSameTypes(typeMeta, typeMeta));
     }
 
     @Test
-    public void isSameTypesSameSimpleTypeMetaTest() {
+    void isSameTypesSameSimpleTypeMetaTest() {
         TypeMeta<Long> typeMeta = new TypeMeta<>(Long.class);
         Assertions.assertTrue(TypeMetaUtil.isSameTypes(typeMeta, typeMeta));
     }
 
     @Test
-    public void isTypesMatchAssignableComplexTypeMetaTest() {
+    void isTypesMatchAssignableComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -209,7 +210,29 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchAssignableDeepNestingTypeAtComplexTypeMetaTest() {
+    void isTypesMatchAssignableDeepNestingLowerWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.LOWER) };
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta1) };
+        TypeMeta<List[]> typeMeta1 = new TypeMeta<>(List[].class, innerTypeMeta1);
+        TypeMeta<?>[] deepInnerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta2) };
+        TypeMeta<List[]> typeMeta2 = new TypeMeta<>(List[].class, innerTypeMeta2);
+        Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void isTypesMatchAssignableDeepNestingLowerWildcardTypesAtComplexTypeMetaTest() {
+        TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.LOWER) };
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta1) };
+        TypeMeta<List[]> typeMeta1 = new TypeMeta<>(List[].class, innerTypeMeta1);
+        TypeMeta<?>[] deepInnerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.LOWER) };
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta2) };
+        TypeMeta<List[]> typeMeta2 = new TypeMeta<>(List[].class, innerTypeMeta2);
+        Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void isTypesMatchAssignableDeepNestingTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -220,8 +243,8 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchAssignableDeepNestingWildcardTypeAtComplexTypeMetaTest() {
-        TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, true) };
+    void isTypesMatchAssignableDeepNestingUpperWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.UPPER) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta1) };
         TypeMeta<List[]> typeMeta1 = new TypeMeta<>(List[].class, innerTypeMeta1);
         TypeMeta<?>[] deepInnerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -231,7 +254,36 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchAssignableInnerTypeAtComplexTypeMetaTest() {
+    void isTypesMatchAssignableDeepNestingUpperWildcardTypesAtComplexTypeMetaTest() {
+        TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.UPPER) };
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta1) };
+        TypeMeta<List[]> typeMeta1 = new TypeMeta<>(List[].class, innerTypeMeta1);
+        TypeMeta<?>[] deepInnerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.UPPER) };
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta2) };
+        TypeMeta<List[]> typeMeta2 = new TypeMeta<>(List[].class, innerTypeMeta2);
+        Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void isTypesMatchAssignableInnerLowerWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void isTypesMatchAssignableInnerLowerWildcardTypesAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void isTypesMatchAssignableInnerTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -240,8 +292,8 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchAssignableInnerWildcardTypeAtComplexTypeMetaTest() {
-        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, true) };
+    void isTypesMatchAssignableInnerUpperWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.UPPER) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
@@ -249,14 +301,32 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchAssignableSimpleTypeMetaTest() {
+    void isTypesMatchAssignableInnerUpperWildcardTypesAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void isTypesMatchAssignableInnerWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ TypeMeta.WILDCARD_META };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void isTypesMatchAssignableSimpleTypeMetaTest() {
         TypeMeta<Number> typeMeta1 = new TypeMeta<>(Number.class);
         TypeMeta<Long> typeMeta2 = new TypeMeta<>(Long.class);
         Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isTypesMatchDescendantHasMoreTypeParametersTypeMetaTest() {
+    void isTypesMatchDescendantHasMoreTypeParametersTypeMetaTest() {
         TypeMeta<LinkedList> typeMeta1 = new TypeMeta<>(LinkedList.class,
                 new TypeMeta<?>[]{ new TypeMeta<>(Byte.class) });
         TypeMeta<TestModel> typeMeta2 = new TypeMeta<>(TestModel.class,
@@ -265,7 +335,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchDifferentDeepNestingLevelTest() {
+    void isTypesMatchDifferentDeepNestingLevelTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -275,7 +345,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchDifferentNestingLevelMetaTest() {
+    void isTypesMatchDifferentNestingLevelMetaTest() {
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(String.class) };
         TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
@@ -283,7 +353,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchEqualComplexTypeMetaTest() {
+    void isTypesMatchEqualComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -292,7 +362,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchEqualDeepNestingTypeAtComplexTypeMetaTest() {
+    void isTypesMatchEqualDeepNestingTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -303,14 +373,14 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchEqualSimpleTypeMetaTest() {
+    void isTypesMatchEqualSimpleTypeMetaTest() {
         TypeMeta<Long> typeMeta1 = new TypeMeta<>(Long.class);
         TypeMeta<Long> typeMeta2 = new TypeMeta<>(Long.class);
         Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isTypesMatchNotAssignableComplexTypeMetaTest() {
+    void isTypesMatchNotAssignableComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<Set> typeMeta1 = new TypeMeta<>(Set.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -319,7 +389,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchNotAssignableDeepNestingTypeAtComplexTypeMetaTest() {
+    void isTypesMatchNotAssignableDeepNestingTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(String.class) };
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Set.class, deepInnerTypeMeta1) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
@@ -330,7 +400,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchNotAssignableInnerTypeAtComplexTypeMetaTest() {
+    void isTypesMatchNotAssignableInnerTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(String.class) };
@@ -339,35 +409,35 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchNotAssignableSimpleTypeMetaTest() {
+    void isTypesMatchNotAssignableSimpleTypeMetaTest() {
         TypeMeta<String> typeMeta1 = new TypeMeta<>(String.class);
         TypeMeta<Long> typeMeta2 = new TypeMeta<>(Long.class);
         Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isTypesMatchObjectAcceptorTypeMetaTest() {
+    void isTypesMatchObjectAcceptorTypeMetaTest() {
         TypeMeta<Object> objectTypeMeta = new TypeMeta<>(Object.class);
         TypeMeta<Boolean> modelTypeMeta = new TypeMeta<>(Boolean.class);
         Assertions.assertTrue(TypeMetaUtil.isTypesMatch(objectTypeMeta, modelTypeMeta));
     }
 
     @Test
-    public void isTypesMatchObjectDonorTypeMetaTest() {
+    void isTypesMatchObjectDonorTypeMetaTest() {
         TypeMeta<String> modelTypeMeta = new TypeMeta<>(String.class);
         TypeMeta<Object> objectTypeMeta = new TypeMeta<>(Object.class);
         Assertions.assertFalse(TypeMetaUtil.isTypesMatch(modelTypeMeta, objectTypeMeta));
     }
 
     @Test
-    public void isTypesMatchPrimitiveAndWrapperTypeMetaTest() {
+    void isTypesMatchPrimitiveAndWrapperTypeMetaTest() {
         TypeMeta<Long> primitiveTypeMeta = new TypeMeta<>(long.class);
         TypeMeta<Long> wrapperTypeMeta = new TypeMeta<>(Long.class);
         Assertions.assertTrue(TypeMetaUtil.isTypesMatch(primitiveTypeMeta, wrapperTypeMeta));
     }
 
     @Test
-    public void isTypesMatchReverseAssignableComplexTypeMetaTest() {
+    void isTypesMatchReverseAssignableComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<ArrayList> typeMeta1 = new TypeMeta<>(ArrayList.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
@@ -376,7 +446,7 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchReverseAssignableInnerTypeAtComplexTypeMetaTest() {
+    void isTypesMatchReverseAssignableInnerTypeAtComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
         TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
@@ -385,30 +455,106 @@ public class TypeMetaUtilTest {
     }
 
     @Test
-    public void isTypesMatchReverseAssignableSimpleTypeMetaTest() {
+    void isTypesMatchReverseAssignableSimpleTypeMetaTest() {
         TypeMeta<Long> typeMeta1 = new TypeMeta<>(Long.class);
         TypeMeta<Number> typeMeta2 = new TypeMeta<>(Number.class);
         Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
     }
 
     @Test
-    public void isTypesMatchSameComplexTypeMetaTest() {
+    void isTypesMatchSameComplexTypeMetaTest() {
         TypeMeta<?>[] innerTypeMeta = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
         TypeMeta<List> typeMeta = new TypeMeta<>(List.class, innerTypeMeta);
         Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta, typeMeta));
     }
 
     @Test
-    public void isTypesMatchSameSimpleTypeMetaTest() {
+    void isTypesMatchSameSimpleTypeMetaTest() {
         TypeMeta<Long> typeMeta = new TypeMeta<>(Long.class);
         Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta, typeMeta));
     }
 
     @Test
-    public void isTypesMatchSuperclassHasMoreTypeParametersTypeMetaTest() {
+    void isTypesMatchSuperclassHasMoreTypeParametersTypeMetaTest() {
         TypeMeta<Hashtable> typeMeta1 = new TypeMeta<>(Hashtable.class,
                 new TypeMeta<?>[]{ TypeMeta.OBJECT_META, TypeMeta.OBJECT_META });
         TypeMeta<Properties> typeMeta2 = new TypeMeta<>(Properties.class);
         Assertions.assertTrue(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchAssignableDeepNestingLowerWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.LOWER) };
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta1) };
+        TypeMeta<List[]> typeMeta1 = new TypeMeta<>(List[].class, innerTypeMeta1);
+        TypeMeta<?>[] deepInnerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta2) };
+        TypeMeta<List[]> typeMeta2 = new TypeMeta<>(List[].class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchAssignableDeepNestingUpperWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] deepInnerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.UPPER) };
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta1) };
+        TypeMeta<List[]> typeMeta1 = new TypeMeta<>(List[].class, innerTypeMeta1);
+        TypeMeta<?>[] deepInnerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(List.class, deepInnerTypeMeta2) };
+        TypeMeta<List[]> typeMeta2 = new TypeMeta<>(List[].class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchAssignableInnerLowerWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchAssignableInnerLowerWildcardTypesAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchAssignableInnerUpperWildcardTypeAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchAssignableInnerUpperWildcardTypesAtComplexTypeMetaTest() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchingWildcardBoundTypeAtComplexTypeMeta1Test() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
+    }
+
+    @Test
+    void typesNotMatchingWildcardBoundTypeAtComplexTypeMeta2Test() {
+        TypeMeta<?>[] innerTypeMeta1 = new TypeMeta<?>[]{ new TypeMeta<>(Number.class, WildcardBound.UPPER) };
+        TypeMeta<List> typeMeta1 = new TypeMeta<>(List.class, innerTypeMeta1);
+        TypeMeta<?>[] innerTypeMeta2 = new TypeMeta<?>[]{ new TypeMeta<>(Integer.class, WildcardBound.LOWER) };
+        TypeMeta<List> typeMeta2 = new TypeMeta<>(List.class, innerTypeMeta2);
+        Assertions.assertFalse(TypeMetaUtil.isTypesMatch(typeMeta1, typeMeta2));
     }
 }

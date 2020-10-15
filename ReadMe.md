@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/VladislavSevruk/TypeResolver.svg?branch=master)](https://travis-ci.com/VladislavSevruk/TypeResolver)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VladislavSevruk_TypeResolver&metric=alert_status)](https://sonarcloud.io/dashboard?id=VladislavSevruk_TypeResolver)
 [![Code Coverage](https://sonarcloud.io/api/project_badges/measure?project=VladislavSevruk_TypeResolver&metric=coverage)](https://sonarcloud.io/component_measures?id=VladislavSevruk_TypeResolver&metric=coverage)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vladislavsevruk/type-resolver/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.vladislavsevruk/type-resolver)
 
 # Java Type Resolver
 This utility library helps to determine real types for generics, arrays, wildcards and other complex types on runtime. 
@@ -30,13 +31,13 @@ Add the following dependency to your pom.xml:
 <dependency>
       <groupId>com.github.vladislavsevruk</groupId>
       <artifactId>type-resolver</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
 </dependency>
 ```
 ### Gradle
 Add the following dependency to your build.gradle:
 ```groovy
-implementation 'com.github.vladislavsevruk:type-resolver:1.0.1'
+implementation 'com.github.vladislavsevruk:type-resolver:1.0.2'
 ```
 
 ## Main entities
@@ -84,13 +85,15 @@ for generating __TypeMeta__ for generics.
   ```
 
 ### FieldTypeResolver
-[FieldTypeResolver](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolver.java) can be used to 
-determine __TypeMeta__ for field of provided class. Library has [default implementation](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java) 
+[FieldTypeResolver](src/main/java/com/github/vladislavsevruk/resolver/resolver/field/FieldTypeResolver.java) can be used to 
+determine __TypeMeta__ for field of provided class. Library has 
+[default implementation](src/main/java/com/github/vladislavsevruk/resolver/resolver/field/FieldTypeMetaResolver.java) 
 of this interface.
 
 ### ExecutableTypeResolver
-[ExecutableTypeResolver](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolver.java) can be 
-used to determine __TypeMeta__ for return and argument types of provided method. Library has [default implementation](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java) 
+[ExecutableTypeResolver](src/main/java/com/github/vladislavsevruk/resolver/resolver/executable/ExecutableTypeResolver.java) can be 
+used to determine __TypeMeta__ for return and argument types of provided method. Library has 
+[default implementation](src/main/java/com/github/vladislavsevruk/resolver/resolver/executable/ExecutableTypeMetaResolver.java) 
 of this interface.
 
 ## Usage
@@ -103,10 +106,11 @@ public class Cake<T> {
 }
 ```
 
-and we need to determine its fields type. We can use [FieldTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/FieldTypeResolverImpl.java)
+and we need to determine its fields type. We can use 
+[FieldTypeMetaResolver](src/main/java/com/github/vladislavsevruk/resolver/resolver/field/FieldTypeMetaResolver.java)
 for this purpose:
 ```kotlin
-FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
+FieldTypeResolver<TypeMeta<?>> fieldTypeResolver = new FieldTypeMetaResolver();
 // get class field to determine its type
 Field fieldToResolve = Cake.class.getDeclaredField("ingredients");
 TypeMeta<?> fieldTypeMeta = fieldTypeResolver.resolveField(Cake.class, fieldToResolve);
@@ -122,7 +126,7 @@ Resulted __TypeMeta__ will have following structure:
 If we need to determine type of field that use generic parameter(s) we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```kotlin
-FieldTypeResolver fieldTypeResolver = new FieldTypeResolverImpl();
+FieldTypeResolver<TypeMeta<?>> fieldTypeResolver = new FieldTypeMetaResolver();
 // get class field to determine its type
 Field fieldToResolve = Cake.class.getDeclaredField("filling");
 // create type provider with generic class where field declared
@@ -151,9 +155,10 @@ public class Cake<T> {
 }
 ```
 
-To determine their argument or return types we can use [ExecutableTypeResolverImpl](src/main/java/com/github/vladislavsevruk/resolver/resolver/ExecutableTypeResolverImpl.java):
+To determine their argument or return types we can use 
+[ExecutableTypeMetaResolver](src/main/java/com/github/vladislavsevruk/resolver/resolver/executable/ExecutableTypeMetaResolver.java):
 ```kotlin
-ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
+ExecutableTypeResolver<TypeMeta<?>> executableTypeResolver = new ExecutableTypeMetaResolver();
 // get method to determine its return and argument types
 Method methodToResolve = Cake.class.getDeclaredMethod("getIngredients");
 TypeMeta<?> methodReturnTypeMeta = executableTypeResolver.getReturnType(Cake.class, methodToResolve);
@@ -176,7 +181,7 @@ Resulted __TypeMeta__ items will have following structures:
 If we need to determine types of method that uses generic parameters we may use subclass of 
 [TypeProvider](src/main/java/com/github/vladislavsevruk/resolver/type/TypeProvider.java):
 ```kotlin
-ExecutableTypeResolver executableTypeResolver = new ExecutableTypeResolverImpl();
+ExecutableTypeResolver<TypeMeta<?>> executableTypeResolver = new ExecutableTypeMetaResolver();
 // get method to determine its return and argument types
 Method methodToResolve = Cake.class.getDeclaredMethod("setFilling", Object.class);
 // create type provider with generic class where field declared

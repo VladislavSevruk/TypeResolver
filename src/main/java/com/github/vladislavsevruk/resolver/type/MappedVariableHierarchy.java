@@ -25,9 +25,7 @@ package com.github.vladislavsevruk.resolver.type;
 
 import com.github.vladislavsevruk.resolver.exception.TypeResolvingException;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
@@ -36,14 +34,14 @@ import java.util.Map;
 /**
  * Represents class hierarchy with type variables that were used in generic class declaration and their actual values
  * for this hierarchy.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-@ToString
+@Log4j2
 @EqualsAndHashCode
-public class MappedVariableHierarchy {
+public class MappedVariableHierarchy<T> {
 
-    private static final Logger logger = LogManager.getLogger(MappedVariableHierarchy.class);
-
-    private final Map<Class<?>, TypeVariableMap> classMappedVariables = new HashMap<>();
+    private final Map<Class<?>, TypeVariableMap<T>> classMappedVariables = new HashMap<>();
 
     /**
      * Builds superclasses hierarchy skeleton for received class.
@@ -51,7 +49,7 @@ public class MappedVariableHierarchy {
      * @param clazz <code>Class</code> to build hierarchy for.
      */
     public MappedVariableHierarchy(Class<?> clazz) {
-        logger.debug(() -> String.format("Creating class variable hierarchy for class '%s'.", clazz.getName()));
+        log.debug(() -> String.format("Creating class variable hierarchy for class '%s'.", clazz.getName()));
         buildHierarchy(clazz);
     }
 
@@ -60,10 +58,10 @@ public class MappedVariableHierarchy {
      *
      * @param clazz        <code>Class</code> to add mapped type variable for.
      * @param typeVariable <code>TypeVariable</code> that was used in generic class declaration.
-     * @param actualType   actual <code>TypeMeta</code> that matches received <code>TypeVariable</code>.
+     * @param actualType   actual value that matches received <code>TypeVariable</code>.
      * @throws TypeResolvingException provided received <code>Class</code> isn't present at this hierarchy.
      */
-    public void addTypeVariable(Class<?> clazz, TypeVariable<? extends Class<?>> typeVariable, TypeMeta<?> actualType) {
+    public void addTypeVariable(Class<?> clazz, TypeVariable<? extends Class<?>> typeVariable, T actualType) {
         getTypeVariableMap(clazz).addTypeVariable(typeVariable, actualType);
     }
 
@@ -74,8 +72,8 @@ public class MappedVariableHierarchy {
      * @return <code>TypeVariableMap</code> with mapped variables for received <code>Class</code>.
      * @throws TypeResolvingException provided received <code>Class</code> isn't present at this hierarchy.
      */
-    public TypeVariableMap getTypeVariableMap(Class<?> clazz) {
-        TypeVariableMap typeVariableMap = classMappedVariables.get(clazz);
+    public TypeVariableMap<T> getTypeVariableMap(Class<?> clazz) {
+        TypeVariableMap<T> typeVariableMap = classMappedVariables.get(clazz);
         if (typeVariableMap == null) {
             throw new TypeResolvingException(
                     String.format("Class '%s' isn't present at this hierarchy.", clazz.getName()));
@@ -84,7 +82,7 @@ public class MappedVariableHierarchy {
     }
 
     private void buildHierarchy(Class<?> clazz) {
-        TypeVariableMap typeVariableMap = new TypeVariableMap();
+        TypeVariableMap<T> typeVariableMap = new TypeVariableMap<>();
         classMappedVariables.put(clazz, typeVariableMap);
         for (Class<?> classInterface : clazz.getInterfaces()) {
             if (!classMappedVariables.containsKey(classInterface)) {

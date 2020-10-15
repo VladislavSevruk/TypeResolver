@@ -23,27 +23,35 @@
  */
 package com.github.vladislavsevruk.resolver.context;
 
-import com.github.vladislavsevruk.resolver.resolver.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.picker.TypeResolverPicker;
+import com.github.vladislavsevruk.resolver.resolver.storage.TypeResolverStorage;
 import com.github.vladislavsevruk.resolver.type.mapper.TypeVariableMapper;
 import com.github.vladislavsevruk.resolver.type.storage.MappedVariableHierarchyStorage;
 
 /**
  * Resolving context with replaceable modules.
+ *
+ * @param <T> type of mapped value for type variable.
  */
-public interface ResolvingContext {
+public interface ResolvingContext<T> {
 
     /**
      * Returns current instance of <code>MappedVariableHierarchyStorage</code> stored at context.
      */
-    MappedVariableHierarchyStorage getMappedVariableHierarchyStorage();
+    MappedVariableHierarchyStorage<T> getMappedVariableHierarchyStorage();
 
     /**
      * Returns current instance of <code>TypeResolverPicker</code> stored at context.
      */
-    TypeResolverPicker getTypeResolverPicker();
+    TypeResolverPicker<T> getTypeResolverPicker();
+
+    /**
+     * Returns current instance of <code>TypeResolverStorage</code> stored at context.
+     */
+    TypeResolverStorage<T> getTypeResolverStorage();
 
     /**
      * Returns current instance of <code>TypeVariableMapper</code> stored at context.
      */
-    TypeVariableMapper getTypeVariableMapper();
+    TypeVariableMapper<T> getTypeVariableMapper();
 }
