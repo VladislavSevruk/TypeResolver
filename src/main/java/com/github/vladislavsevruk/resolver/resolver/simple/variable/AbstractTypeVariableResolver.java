@@ -58,7 +58,7 @@ public abstract class AbstractTypeVariableResolver<T> implements TypeResolver<T>
             log.debug(() -> String.format("Actual type for '%s' is '%s'.", type.getTypeName(), getName(resolvedType)));
             return resolvedType;
         }
-        log.info(() -> String
+        log.debug(() -> String
                 .format("Failed to find type variable '%s' in class declaration. Probably generic type used in "
                                 + "method declaration directly. Using 'java.lang.Object' for '%<s' type variable.",
                         type.getTypeName()));
